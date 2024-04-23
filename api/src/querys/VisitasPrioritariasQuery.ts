@@ -1,26 +1,9 @@
 import { databases } from "../api";
+import { DefaultFormat } from "../functions/DefaultFormat";
 import DynamicParameters from "../functions/DynamicParameters";
 import { IVisitasPrioriFiltros } from "../interfaces/IVisitasPrioritarias";
 
 export default class VisitasPrioritariasQuery {
-
-    // Lida com os tipos bigInt que não suporta a serialização de objetos em formato JSON.
-    DefaultFormat(obj: any): any {
-        if (typeof obj === 'bigint') {
-            return Number(obj);
-        }
-        if (Buffer.isBuffer(obj)){
-            return Number(obj[0]);
-        }
-        else if (typeof obj === 'object' && obj !== null) {
-            for (const key in obj) {
-                if (Object.prototype.hasOwnProperty.call(obj, key)) {
-                    obj[key] = this.DefaultFormat(obj[key]);
-                }
-            }
-        }
-        return obj;
-    }
 
     async execute(filtros: IVisitasPrioriFiltros) {
 
@@ -133,7 +116,7 @@ export default class VisitasPrioritariasQuery {
             parametros_dinamicos.Add("dataFinal", filtros.data_final);
         }
         if (filtros.RegionalId) {
-            query_base += " AND re.Regional_Id = :regionalId ";
+            query_filtros += " AND re.Regional_Id = :regionalId ";
             parametros_dinamicos.Add("regionalId", filtros.RegionalId);
         }
         //Fim de Filtros de consulta base.
@@ -873,7 +856,7 @@ export default class VisitasPrioritariasQuery {
 
         query_base += query_filtros
 
-        const relatorio = this.DefaultFormat(await databases.MDBClient.query(query_base, parametros_dinamicos.GetAll()))
+        const relatorio = DefaultFormat(await databases.MDBClient.query(query_base, parametros_dinamicos.GetAll()))
 
         return relatorio
 

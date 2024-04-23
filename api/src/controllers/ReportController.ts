@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
 import VisitasPrioritariasQuery from "../querys/VisitasPrioritariasQuery";
+import ProdutividadeACS_PorDiaQuery from "../querys/ProdutividadeACSQuery";
+import ProdutividadeACS_ConsolidadoQuery from "../querys/ProdutividadeACSQuery";
+import ProdutividadeUBS_Consolidado from "../querys/ProdutividadeUBSQuery";
 
 
 
@@ -24,7 +27,22 @@ export default class ReportController{
 
     handleVisitaGrupoPrioritario = async (req: Request, res: Response) => {
         const params = req.body
-        this.executeHandler(req, res, VisitasPrioritariasQuery, params)
-        
+        this.executeHandler(req, res, VisitasPrioritariasQuery, params)       
     }
+
+    handleProdutividadeACS_Consolidado = async (req: Request, res: Response) => {
+        const params = req.body
+        this.executeHandler(req, res, ProdutividadeACS_PorDiaQuery, params)
+    }
+
+    handleProdutividadeACS_PorDia = async (req:Request, res: Response) => {
+        const params = req.body
+        this.executeHandler(req, res, ProdutividadeACS_ConsolidadoQuery, params)
+    }
+
+    handleProdutividadeUBS_Consolidado = async (req:Request, res: Response) => {
+        const params = req.body
+        this.executeHandler(req, res, ProdutividadeUBS_Consolidado, params)
+    }
+
 }

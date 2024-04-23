@@ -1,5 +1,5 @@
 export default class DynamicParameters {
-    public parameters: { [key: string]: { value: any, } };
+    private parameters: { [key: string]: { value: any, } };
 
     constructor() {
         this.parameters = {};
