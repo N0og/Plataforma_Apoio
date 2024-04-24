@@ -1,11 +1,11 @@
-import { databases } from "../api";
-import { DefaultFormat } from "../functions/DefaultFormat";
-import DynamicParameters from "../functions/DynamicParameters";
-import { IVisitasPrioriFiltros } from "../interfaces/IVisitasPrioritarias";
+import { databases } from "../../api";
+import { DefaultTypesJSON } from "../../utils/DefaultTypesJSON";
+import DynamicParameters from "../../utils/DynamicParameters";
+import { IVisitasPrioriFiltros } from "../../interfaces/IVisitasPrioritarias";
 
 export default class VisitasPrioritariasQuery {
 
-    async execute(filtros: IVisitasPrioriFiltros) {
+    async execute(filtros_body: IVisitasPrioriFiltros, filtros_query: IVisitasPrioriFiltros) {
 
         // Declaração da query base para seleção dos dados
         let query_base = `
@@ -56,73 +56,73 @@ export default class VisitasPrioritariasQuery {
         let query_filtros = "";
 
         //Filtros de consulta base.
-        if (filtros.unidadeId && filtros.unidadeId > 0) {
+        if (filtros_body.unidadeId && filtros_body.unidadeId > 0) {
             query_filtros_dinamica += " AND  VisitaDomiciliar.Estabelecimento_Id = :estabelecimento_Id ";
             query_filtros += " AND p.Estabelecimento_Id = :estabelecimento_Id ";
-            parametros_dinamicos.Add("estabelecimento_Id", filtros.unidadeId);
+            parametros_dinamicos.Add("estabelecimento_Id", filtros_body.unidadeId);
         }
 
-        if (filtros.profissionalId) {
+        if (filtros_body.profissionalId) {
             query_filtros_dinamica += " AND  VisitaDomiciliar.Profissional_Id = :profissionalId ";
             query_filtros += " AND p.Id = :profissionalId";
-            parametros_dinamicos.Add("profissionalId", filtros.profissionalId)
+            parametros_dinamicos.Add("profissionalId", filtros_body.profissionalId)
         }
 
-        if (filtros.equipeId) {
+        if (filtros_body.equipeId) {
             query_filtros_dinamica += " AND  VisitaDomiciliar.CodigoEquipe = :codigoEquipe ";
             query_filtros += " AND p.Equipe_Id = :codigoEquipe ";
-            parametros_dinamicos.Add("codigoEquipe", filtros.equipeId)
+            parametros_dinamicos.Add("codigoEquipe", filtros_body.equipeId)
         }
 
-        if (filtros.micro_area) {
+        if (filtros_body.micro_area) {
             query_filtros_dinamica += " AND  VisitaDomiciliar.MicroArea = :microArea ";
-            parametros_dinamicos.Add("microArea", filtros.micro_area);
+            parametros_dinamicos.Add("microArea", filtros_body.micro_area);
         }
 
-        if (filtros.cartao_sus) {
+        if (filtros_body.cartao_sus) {
             query_filtros_dinamica += " AND  VisitaDomiciliar.CnsDoIndividuo = :cartaoSus ";
-            parametros_dinamicos.Add("cartaoSus", filtros.cartao_sus);
+            parametros_dinamicos.Add("cartaoSus", filtros_body.cartao_sus);
         }
 
-        if (filtros.compartilhada) {
+        if (filtros_body.compartilhada) {
             query_filtros_dinamica += " AND  VisitaDomiciliar.VisitaCompartilhada = :visitaCompartilhada ";
-            parametros_dinamicos.Add("visitaCompartilhada", filtros.compartilhada)
+            parametros_dinamicos.Add("visitaCompartilhada", filtros_body.compartilhada)
         }
-        if (filtros.desfecho) {
+        if (filtros_body.desfecho) {
             query_filtros_dinamica += " AND  VisitaDomiciliar.Desfecho = :desfecho ";
-            parametros_dinamicos.Add("desfecho", filtros.desfecho)
+            parametros_dinamicos.Add("desfecho", filtros_body.desfecho)
         }
-        if (filtros.fora_area) {
+        if (filtros_body.fora_area) {
             query_filtros_dinamica += " AND  VisitaDomiciliar.ForaDeArea = :foraDeArea ";
-            parametros_dinamicos.Add("foraDeArea", filtros.fora_area)
+            parametros_dinamicos.Add("foraDeArea", filtros_body.fora_area)
         }
 
-        if (filtros.tipo_visita) {
+        if (filtros_body.tipo_visita) {
             query_filtros_dinamica += " AND VisitaDomiciliar.TipoDeVisita = :tipoDeVisitaId";
-            parametros_dinamicos.Add("tipoDeVisitaId", filtros.tipo_visita)
+            parametros_dinamicos.Add("tipoDeVisitaId", filtros_body.tipo_visita)
         }
 
-        if (filtros.cadastro_atualizacao == 1) {
+        if (filtros_body.cadastro_atualizacao == 1) {
             query_filtros_dinamica += " AND VisitaDomiciliar.MotivosDaVisita REGEXP 'CADASTRO_ATUALIZACAO|(^|,)(1)(,|$)' ";
         }
 
-        if (filtros.cadastro_atualizacao == 0) {
+        if (filtros_body.cadastro_atualizacao == 0) {
             query_filtros_dinamica += " AND VisitaDomiciliar.MotivosDaVisita NOT REGEXP 'CADASTRO_ATUALIZACAO|(^|,)(1)(,|$)' ";
         }
 
-        if (filtros.data_inicial != null && filtros.data_final != null) {
+        if (filtros_body.data_inicial != null && filtros_body.data_final != null) {
             query_filtros_dinamica += " AND  DATE(VisitaDomiciliar.DataCadastro) BETWEEN DATE(:dataInicial) AND DATE(:dataFinal)";
-            parametros_dinamicos.Add("dataInicial", filtros.data_inicial);
-            parametros_dinamicos.Add("dataFinal", filtros.data_final);
+            parametros_dinamicos.Add("dataInicial", filtros_body.data_inicial);
+            parametros_dinamicos.Add("dataFinal", filtros_body.data_final);
         }
-        if (filtros.RegionalId) {
-            query_filtros += " AND re.Regional_Id = :regionalId ";
-            parametros_dinamicos.Add("regionalId", filtros.RegionalId);
+        if (filtros_body.distritoId) {
+            query_filtros += " AND re.Regional_Id = :distritoId ";
+            parametros_dinamicos.Add("distritoId", filtros_body.distritoId);
         }
         //Fim de Filtros de consulta base.
 
         //Filtros de consulta dinâmica.
-        if (filtros.gestante) {
+        if (filtros_body.gestante) {
             query_dinamica += `,
             (
                 SELECT
@@ -151,7 +151,7 @@ export default class VisitasPrioritariasQuery {
             ) AS AcompGestanteMeta
 `;
         }
-        if (filtros.puerpera) {
+        if (filtros_body.puerpera) {
             query_dinamica += `,
             (
                 SELECT
@@ -179,7 +179,7 @@ export default class VisitasPrioritariasQuery {
             ) AS AcompPuerperaMeta
 `;
         }
-        if (filtros.recem_nascido) {
+        if (filtros_body.recem_nascido) {
             query_dinamica += `,
             (
                 SELECT
@@ -213,7 +213,7 @@ export default class VisitasPrioritariasQuery {
             ) AS AcompRecemNascidoMeta
 `;
         }
-        if (filtros.crianca) {
+        if (filtros_body.crianca) {
             query_dinamica += `,
             (
                 SELECT
@@ -254,7 +254,7 @@ export default class VisitasPrioritariasQuery {
             ) AS AcompCriancaMeta
 `;
         }
-        if (filtros.idoso) {
+        if (filtros_body.idoso) {
             query_dinamica += `,
             (
                 SELECT
@@ -291,7 +291,7 @@ export default class VisitasPrioritariasQuery {
             ) AS AcompIdosoMeta
  `;
         }
-        if (filtros.desnutricao) {
+        if (filtros_body.desnutricao) {
             query_dinamica += `,
             (
                 SELECT
@@ -321,7 +321,7 @@ export default class VisitasPrioritariasQuery {
             ) AS AcompDesnutricaoMeta
 `;
         }
-        if (filtros.reabilitacao_deficiencia) {
+        if (filtros_body.reabilitacao_deficiencia) {
             query_dinamica += `,
             (
                 SELECT
@@ -351,7 +351,7 @@ export default class VisitasPrioritariasQuery {
             ) AS AcompReabilitacaoOuDeficienciaMeta
 `;
         }
-        if (filtros.hipertensao) {
+        if (filtros_body.hipertensao) {
             query_dinamica += `,
             (
                 SELECT
@@ -380,7 +380,7 @@ export default class VisitasPrioritariasQuery {
             ) AS AcompHipertensoMeta
 `;
         }
-        if (filtros.diabetes) {
+        if (filtros_body.diabetes) {
             query_dinamica += `,(
                 SELECT
                     COUNT(DISTINCT Individuo_Id)
@@ -408,7 +408,7 @@ export default class VisitasPrioritariasQuery {
             ) AS AcompDiabetesMeta
 `;
         }
-        if (filtros.asma) {
+        if (filtros_body.asma) {
             query_dinamica += `,
             (
                 SELECT
@@ -437,7 +437,7 @@ export default class VisitasPrioritariasQuery {
             ) AS AcompAsmaMeta
 `;
         }
-        if (filtros.dpoc) {
+        if (filtros_body.dpoc) {
             query_dinamica += `,
             (
                 SELECT
@@ -466,7 +466,7 @@ export default class VisitasPrioritariasQuery {
             ) AS AcompEfisemaMeta
 `;
         }
-        if (filtros.cancer) {
+        if (filtros_body.cancer) {
             query_dinamica += `,
             (
                 SELECT
@@ -495,7 +495,7 @@ export default class VisitasPrioritariasQuery {
             ) AS AcompCancerMeta
 `;
         }
-        if (filtros.outras_doencas_cronicas) {
+        if (filtros_body.outras_doencas_cronicas) {
             query_dinamica += `,
             (
                 SELECT
@@ -524,7 +524,7 @@ export default class VisitasPrioritariasQuery {
             ) AS AcompOutrasDoencasCronicasMeta
 `;
         }
-        if (filtros.hanseniase) {
+        if (filtros_body.hanseniase) {
             query_dinamica += `,
             (
                 SELECT
@@ -553,7 +553,7 @@ export default class VisitasPrioritariasQuery {
             ) AS AcompHanseniaseMeta
 `;
         }
-        if (filtros.tuberculose) {
+        if (filtros_body.tuberculose) {
             query_dinamica += `,
             (
                 SELECT
@@ -582,7 +582,7 @@ export default class VisitasPrioritariasQuery {
             ) AS AcompTuberculoseMeta
 `;
         }
-        if (filtros.sintomas_respiratorio) {
+        if (filtros_body.sintomas_respiratorio) {
             query_dinamica += `,
             (
                 SELECT
@@ -611,7 +611,7 @@ export default class VisitasPrioritariasQuery {
             ) AS AcompSintomaticoRespiratorioMeta
 `;
         }
-        if (filtros.tabagista) {
+        if (filtros_body.tabagista) {
             query_dinamica += `,
             (
                 SELECT
@@ -641,7 +641,7 @@ export default class VisitasPrioritariasQuery {
 `;
         }
 
-        if (filtros.vulnerabilidade_social) {
+        if (filtros_body.vulnerabilidade_social) {
             query_dinamica += `,
             (
                 SELECT
@@ -670,7 +670,7 @@ export default class VisitasPrioritariasQuery {
             ) AS AcompVulnerabilidadeSocialMeta
 `;
         }
-        if (filtros.bolsa_familia) {
+        if (filtros_body.bolsa_familia) {
             query_dinamica += `,
             (
                 SELECT
@@ -699,7 +699,7 @@ export default class VisitasPrioritariasQuery {
             ) AS AcompAcompBolsaFamiliaMeta
 `;
         }
-        if (filtros.saude_mental) {
+        if (filtros_body.saude_mental) {
             query_dinamica += `,
             (
                 SELECT
@@ -728,7 +728,7 @@ export default class VisitasPrioritariasQuery {
             ) AS AcompSaudeMentalMeta`
         }
 
-        if (filtros.usuario_alcool) {
+        if (filtros_body.usuario_alcool) {
             query_dinamica += `,
             (
                 SELECT
@@ -758,7 +758,7 @@ export default class VisitasPrioritariasQuery {
 `;
         }
 
-        if (filtros.outras_drogas) {
+        if (filtros_body.outras_drogas) {
             query_dinamica += `,
             (
                 SELECT
@@ -787,7 +787,7 @@ export default class VisitasPrioritariasQuery {
             ) AS AcompOutrasDrogasMeta`
         }
 
-        if (filtros.diarreira) {
+        if (filtros_body.diarreira) {
             query_dinamica += `,
             (
                 SELECT
@@ -815,7 +815,7 @@ export default class VisitasPrioritariasQuery {
             ) AS AcompDiarreiaMeta`
         }
 
-        if (filtros.egresso_internacao) {
+        if (filtros_body.egresso_internacao) {
             query_dinamica += `,
             (
                 SELECT
@@ -856,7 +856,7 @@ export default class VisitasPrioritariasQuery {
 
         query_base += query_filtros
 
-        const relatorio = DefaultFormat(await databases.MDBClient.query(query_base, parametros_dinamicos.GetAll()))
+        const relatorio = DefaultTypesJSON(await databases.MDBClient.query(query_base, parametros_dinamicos.GetAll()))
 
         return relatorio
 

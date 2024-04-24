@@ -2,11 +2,10 @@ export function queryConvert(parameterizedSql: string, params: {[key: string]: a
   const keys = Object.keys(params);
   const values = Object.values(params);
 
-  let index = 1;
   let text = parameterizedSql;
 
   keys.forEach((key, index) => {
-    const regex = new RegExp(`\\$${key}\\b`, 'g'); 
+    const regex = new RegExp(`\\:${key}\\b`, 'g'); 
     text = text.replace(regex, `$${index + 1}`);
   });
   

@@ -1,10 +1,11 @@
 export interface IProdutividadeUBS{
+    
     //Filtros Vínculo e Data.
-    unidade?: number;
+    unidade?: string;
     equipe?: number;
-    profissional?: number;
-    micro_area?: number;
+    profissionalId?: number;
     cartao_sus?: string;
+    cpf?: string;
     data_inicial: Date;
     data_final: Date;
     cbo: { [key: string]: IFiltro_CBO[] };
@@ -23,14 +24,12 @@ export interface ICBO{
     CBO: string;
 }
 
-/*
-
-ESF - Atendimento individual - Médico - Enfermeiro - Tec.Enfermargem - Aux. Enfermagem.
-ESB - Atendimento odonto individual - Cirurgião Dentista - Aux. Saúde Bucal - Tec. Saúde Bucal.
-E-MULTI - Atendimento individual - Psicólogo, Fisioterapeuta, etc...
-
-tb_fat_atendimento_individual; -->
-tb_fat_atendimento_individual_odonto; -->
-tb_fat_procedimento; -->
-
-*/
+export interface IDATA_ProdutividadeUBS{
+    ESTABELECIMENTO: string;
+    CNES:string;
+    INE:string;
+    "NOME EQUIPE":string;
+    MUNICIPIO: string;
+    UF: string;
+    [categoria:string]: string
+}

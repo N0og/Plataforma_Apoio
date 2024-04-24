@@ -1,4 +1,5 @@
 export interface IVisitasPrioriFiltros{
+
     //Filtros Vínculo e Data.
     distritoId?: number;
     unidadeId?: number;
@@ -14,7 +15,6 @@ export interface IVisitasPrioriFiltros{
     micro_area_temp?: boolean;
     data_inicial?: Date;
     data_final?: Date;
-    RegionalId?: number;
     //#endregion
 
     //Filtros Condições de Saúde.
@@ -45,4 +45,5 @@ export interface IVisitasPrioriFiltros{
     diarreira?:boolean;
     egresso_internacao?:boolean;
     //#endregion
+    
 }

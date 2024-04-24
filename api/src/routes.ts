@@ -5,10 +5,12 @@ export const router = Router();
 
 router.get('/')
 
-router.get('/reports/VisitasPrioritarias', new ReportController().handleVisitaGrupoPrioritario)
+//#region Relatórios
+router.get('/api/reports/VisitasPrioritarias', new ReportController().handleVisitaGrupoPrioritario)
 
-router.get('/reports/ProdutividadeACS/VisitasPorDia', new ReportController().handleProdutividadeACS_Consolidado)
+router.get('/api/reports/ProdutividadeACS/VisitasPorDia', new ReportController().handleProdutividadeACS_PorDia)
 
-router.get('/reports/ProdutividadeACS/Consolidado', new ReportController().handleProdutividadeACS_Consolidado)
+router.get('/api/reports/ProdutividadeACS/Consolidado', new ReportController().handleProdutividadeACS_Consolidado)
 
-router.get('/reports/ProdutividadeUBS/Consolidado', new ReportController().handleProdutividadeUBS_Consolidado)
+router.get('/api/reports/ProdutividadeUBS/Consolidado', new ReportController().handleProdutividadeUBS_Consolidado)
+//#endregion
