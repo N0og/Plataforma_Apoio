@@ -1,7 +1,7 @@
 import { databases } from "../../api"
-import DynamicParameters from "../../utils/DynamicParameters"
+import DynamicParameters from "../../utils/toReports/DynamicParameters"
 import { ICBO, IFiltro_CBO, IProdutividadeUBS } from "../../interfaces/IProdutividadeUBS"
-import { queryConvert } from "../../utils/pgPlaceHolders"
+import { queryConvert } from "../../utils/toBD/Upg/pgPlaceHolders"
 
 
 

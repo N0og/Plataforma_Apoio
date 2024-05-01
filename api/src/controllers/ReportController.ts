@@ -3,6 +3,7 @@ import VisitasPrioritariasQuery from "../services/queryServices/VisitasPrioritar
 import {ProdutividadeACS_PorDiaQuery, ProdutividadeACS_ConsolidadoQuery} from "../services/queryServices/ProdutividadeACSQuery";
 import ProdutividadeUBS_ConsolidadoQuery from "../services/queryServices/ProdutividadeUBSQuery";
 import ExcelBuilder from "../utils/excel_builder/ExcelBuilder"
+import CompletudeQuery from "../services/queryServices/CompletudeQuery";
 
 
 export default class ReportController{
@@ -51,6 +52,12 @@ export default class ReportController{
         const params = req.body
         const req_params = req.query
         this.executeHandler(req, res, ProdutividadeUBS_ConsolidadoQuery, params, req_params, `ProdutividadeUBS${new Date().toLocaleDateString('pt-BR')}`)
+    }
+
+    handleCompletude = async (req:Request, res: Response) => {
+        const params = req.body
+        const req_params = req.query
+        this.executeHandler(req, res, CompletudeQuery, req.body, req.query, `Completude${new Date().toLocaleDateString('pt-BR')}`)
     }
 
 }

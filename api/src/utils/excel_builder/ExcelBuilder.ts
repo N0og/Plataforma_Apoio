@@ -1,7 +1,7 @@
 import { Workbook, Worksheet, } from 'excel4node';
 import { isDate } from 'util/types';
 import { WorkbookConfig, WorksheetConfig, styles } from './configs/WorkBookConfig';
-import AdjustLength from '../AdjustColumnsLength';
+import AdjustLength from './AdjustColumnsLength';
 
 export default class ExcelBuilder{
     private planilha: Workbook;

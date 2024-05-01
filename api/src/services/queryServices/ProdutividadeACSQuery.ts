@@ -1,6 +1,6 @@
 import { databases } from "../../api";
-import { DefaultTypesJSON } from "../../utils/DefaultTypesJSON";
-import DynamicParameters from "../../utils/DynamicParameters";
+import { DefaultTypesJSON } from "../../utils/toBD/DefaultTypesJSON";
+import DynamicParameters from "../../utils/toReports/DynamicParameters";
 
 
 export class ProdutividadeACS_PorDiaQuery{
