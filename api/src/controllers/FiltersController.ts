@@ -19,18 +19,9 @@ export default class FiltersController{
         }
     }
 
-    handleFilterUBS = async (req: Request, res: Response) => {
+    handleFilter = async (req: Request, res: Response) => {
         const params = req.query
         //Em desenvolvimento
     }
 
-    handleFilterACS = async (req: Request, res: Response) => {
-        const params = req.query
-        //Em desenvolvimento
-    }
-
-    handleFilterVisitasPrioritarias = async (req: Request, res: Response) => {
-        const params = req.query
-         //Em desenvolvimento
-    }
 }

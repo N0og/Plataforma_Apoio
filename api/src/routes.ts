@@ -16,12 +16,7 @@ router.get('/api/reports/ProdutividadeACS/Consolidado', new ReportController().h
 router.get('/api/reports/ProdutividadeUBS/Consolidado', new ReportController().handleProdutividadeUBS_Consolidado)
 
 router.get('/api/reports/Completude', new ReportController().handleCompletude)
+
+router.get('/api/reports/DuplicadosPEC', new ReportController().handleDuplicadosPEC)
 //#endregion
 
-//#region filters
-router.get('/api/filters/ProdutividadeUBS', new FiltersController().handleFilterUBS)
-
-router.get('/api/filters/ProdutividadeACS', new FiltersController().handleFilterACS)
-
-router.get('/api/filters/VisitasPrioritarias', new FiltersController().handleFilterVisitasPrioritarias)
-//#endregion
