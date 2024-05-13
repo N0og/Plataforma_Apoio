@@ -1,11 +1,11 @@
-import { databases } from "../../api";
-import { DefaultTypesJSON } from "../../utils/toBD/DefaultTypesJSON";
-import DynamicParameters from "../../utils/toReports/DynamicParameters";
+import { ConnectDBs } from "../../database/init";
+import { DefaultTypesJSON } from "../../utils/bd/DefaultTypesJSON";
+import DynamicParameters from "../../utils/reports/DynamicParameters";
 
 
 export class ProdutividadeACS_PorDiaQuery{
     // Produtividade ACS Visitas Por Dia.
-    async execute (filtros_body: any, filtros_query: any){
+    async execute (dbClient:ConnectDBs, filtros_body: any, filtros_query: any){
         let query_base = `
             SELECT DISTINCT
             COUNT( VisitaDomiciliar.Id ) AS 'TotalVisitaDia',
@@ -110,13 +110,13 @@ export class ProdutividadeACS_PorDiaQuery{
                 Dia
         `
     
-        const relatorio = await databases.MDBClient.query(query_base, parametros_dinamicos.GetAll())
+        const relatorio = await dbClient.getMariaDB().query(query_base, parametros_dinamicos.GetAll())
         return DefaultTypesJSON(relatorio[0])
     }
 }
 
 export class ProdutividadeACS_ConsolidadoQuery{
-    async execute(filtros_body:any, filtros_query:any){
+    async execute(dbClient:ConnectDBs, filtros_body:any, filtros_query:any){
 
         const parametros_dinamicos = new DynamicParameters()
         let query_base_filtros = ""
@@ -615,7 +615,7 @@ export class ProdutividadeACS_ConsolidadoQuery{
             AND p.Ativo = TRUE
 `;
 
-    const relatorio = await databases.MDBClient.query(query_base, parametros_dinamicos.GetAll())
+    const relatorio = await dbClient.getMariaDB().query(query_base, parametros_dinamicos.GetAll())
 
     return DefaultTypesJSON(relatorio[0])
     }

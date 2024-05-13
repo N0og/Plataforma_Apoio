@@ -1,12 +1,12 @@
-import { CheckedFCI, IFCI } from "../../../interfaces/ICompletude";
+import { CheckedFCI, IATT_CPF } from "../../../interfaces/ICompletude";
 import checkBirthday from "../CheckBirthday";
 
 
 
-export default function checkFCI(fci: IFCI): CheckedFCI {
+export default function checkFCI(fci: IATT_CPF): CheckedFCI {
     let invalidacoes: Array<string> = []
 
-    let campos = 48
+    let campos = 50
     let faltantes = 0
 
     if (!fci.st_recusa_cadastro) {
@@ -248,6 +248,16 @@ export default function checkFCI(fci: IFCI): CheckedFCI {
                 && !fci.st_defi_outra)) {
             faltantes += 1
             invalidacoes.push("Tipo Deficiencia Ausente")
+        }
+
+        if (fci.st_alimentos_acab_sem_dinheiro == null){ 
+            faltantes += 1
+            invalidacoes.push("TRIA 1 Ausente")
+        }
+
+        if (fci.st_comeu_que_tinha_dnheir_acab == null){
+            faltantes +=1
+            invalidacoes.push("TRIA 2 Ausente")
         }
 
         // Informações de Gestante.

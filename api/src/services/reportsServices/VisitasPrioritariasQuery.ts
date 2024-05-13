@@ -1,11 +1,11 @@
-import { databases } from "../../api";
-import { DefaultTypesJSON } from "../../utils/toBD/DefaultTypesJSON";
-import DynamicParameters from "../../utils/toReports/DynamicParameters";
+import { DefaultTypesJSON } from "../../utils/bd/DefaultTypesJSON";
+import DynamicParameters from "../../utils/reports/DynamicParameters";
 import { IVisitasPrioriFiltros } from "../../interfaces/IVisitasPrioritarias";
+import { ConnectDBs } from "../../database/init";
 
 export default class VisitasPrioritariasQuery {
 
-    async execute(filtros_body: IVisitasPrioriFiltros, filtros_query: IVisitasPrioriFiltros) {
+    async execute(dbClient:ConnectDBs, filtros_body: IVisitasPrioriFiltros, filtros_query: IVisitasPrioriFiltros) {
 
         // Declaração da query base para seleção dos dados
         let query_base = `
@@ -856,7 +856,7 @@ export default class VisitasPrioritariasQuery {
 
         query_base += query_filtros
 
-        const relatorio = DefaultTypesJSON(await databases.MDBClient.query(query_base, parametros_dinamicos.GetAll()))
+        const relatorio = DefaultTypesJSON(await dbClient.getMariaDB().query(query_base, parametros_dinamicos.GetAll()))
 
         return relatorio
 

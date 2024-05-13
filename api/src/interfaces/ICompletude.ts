@@ -1,4 +1,5 @@
-export interface IFCI {
+export interface IATT_CPF {
+    cds_id?: number,
     cns_prof?: string,
     cbo_prof?: string,
     nu_cnes?: string,
@@ -111,8 +112,28 @@ export interface IFCI {
     st_hig_pess_sanitario?: boolean,
     st_hig_pess_higiene_bucal?: boolean,
     st_hig_pess_outros?: boolean,
-    st_recusa_cadastro?: boolean
+    st_recusa_cadastro?: boolean,
+    "CIDADÃO"?: string,
+    "DOCUMENTO PESSOAL"?: string,
+    "É RESPONSÁVEL FAMILIAR"?: string,
+    "ULTIMA ATUALIZAÇÃO"?: Date,
+    "STATUS DOCUMENTO"?: string,
+    "TEMPO SEM ATUALIZAR"?: string,
+    "MESES SEM ATUALIZAR"?: string,
+    "MICRO ÁREA"?: string,
+    "PROFISSIONAL CADASTRANTE"?: string,
+    "CBO PROFISSIONAL"?: string,
+    "DESCRIÇÃO CBO"?: string,
+    "UNIDADE DE SAÚDE"?: string,
+    "CNES"?: string,
+    "NOME EQUIPE"?: string,
+    "INE"?: string,
+    "TIPO DE EQUIPE"?: string,
+    "STATUS DE RECUSA"?: string,
+    "COMPLETUDE": string,
+    "ERROS": string 
 }
+
 
 export interface ICompletudeFilters{
     distritoId?: number;
@@ -122,18 +143,6 @@ export interface ICompletudeFilters{
     micro_area?: string;
     data_inicial: Date;
     data_final: Date;
-}
-
-export interface ICompletudeReport{
-    "NOME": string,
-    "DOCUMENTO PESSOAL": string,
-    "DATA DE REGISTRO": Date,
-    "NASCIMENTO": Date,
-    "COMPLETUDE": string,
-    "CNES": string,
-    "INE": string,
-    "CNS PROFISSIONAL": string,
-    "ERROS": string 
 }
 
 export type CheckedFCI = {

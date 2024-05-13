@@ -1,12 +1,12 @@
-import { databases } from "../../api"
-import DynamicParameters from "../../utils/toReports/DynamicParameters"
+import DynamicParameters from "../../utils/reports/DynamicParameters"
 import { IProdutividadeUBS } from "../../interfaces/IProdutividadeUBS"
-import { queryConvert } from "../../utils/toBD/Upg/pgPlaceHolders"
+import { queryConvert } from "../../utils/bd/pg/pgPlaceHolders"
+import { ConnectDBs } from "../../database/init"
 
 
 
 export default class ProdutividadeUBS_ConsolidadoQuery {
-    async execute(filtros_body: IProdutividadeUBS) {
+    async execute(dbClient:ConnectDBs, filtros_body: IProdutividadeUBS) {
         
         const parametros_dinamicos = new DynamicParameters()
         let query_base_filtros = ""
@@ -75,6 +75,7 @@ export default class ProdutividadeUBS_ConsolidadoQuery {
             UPPER(tdta.ds_tipo_atendimento) as "TIPO ATENDIMENTO",
             tdla.ds_local_atendimento as "LOCAL DE ATENDIMENTO",
             tdt.dt_registro,
+            tdt.ds_dia_semana,
             count(tdp.no_profissional) as REALIZADOS
         from
             tb_fat_atendimento_individual tfai
@@ -92,6 +93,8 @@ export default class ProdutividadeUBS_ConsolidadoQuery {
             inner join tb_dim_tipo_atendimento tdta on tdta.co_seq_dim_tipo_atendimento = tfai.co_dim_tipo_atendimento
             inner join tb_dim_tipo_ficha tdtf on tdtf.co_seq_dim_tipo_ficha = tfai.co_dim_tipo_ficha
             inner join tb_dim_local_atendimento tdla on tdla.co_seq_dim_local_atendimento = tfai.co_dim_local_atendimento
+        Where
+            1 = 1
         group by
             "CNES",
             "ESTABELECIMENTO",
@@ -105,6 +108,7 @@ export default class ProdutividadeUBS_ConsolidadoQuery {
             "TIPO DE FICHA",
             "TIPO ATENDIMENTO",
             "LOCAL DE ATENDIMENTO",
+            tdt.ds_dia_semana,
             tdt.dt_registro  
         union
         Select
@@ -122,6 +126,7 @@ export default class ProdutividadeUBS_ConsolidadoQuery {
             UPPER(tdta.ds_tipo_atendimento) as "TIPO ATENDIMENTO",
             tdla.ds_local_atendimento as "LOCAL DE ATENDIMENTO",
             tdt.dt_registro,
+            tdt.ds_dia_semana,
             count(tdp.no_profissional) as REALIZADOS
         from
             tb_fat_atendimento_odonto tfao
@@ -139,6 +144,8 @@ export default class ProdutividadeUBS_ConsolidadoQuery {
             inner join tb_dim_tipo_atendimento tdta on tdta.co_seq_dim_tipo_atendimento = tfao.co_dim_tipo_atendimento
             inner join tb_dim_tipo_ficha tdtf on tdtf.co_seq_dim_tipo_ficha = tfao.co_dim_tipo_ficha
             inner join tb_dim_local_atendimento tdla on tdla.co_seq_dim_local_atendimento = tfao.co_dim_local_atendimento
+        Where
+            1 = 1
         group by
             "CNES",
             "ESTABELECIMENTO",
@@ -152,6 +159,7 @@ export default class ProdutividadeUBS_ConsolidadoQuery {
             "TIPO DE FICHA",
             "TIPO ATENDIMENTO",
             "LOCAL DE ATENDIMENTO",
+            tdt.ds_dia_semana,
             tdt.dt_registro 
         union
         SELECT
@@ -169,6 +177,7 @@ export default class ProdutividadeUBS_ConsolidadoQuery {
             'PROCEDIMENTOS' as "TIPO ATENDIMENTO",
             tdla.ds_local_atendimento as "LOCAL DE ATENDIMENTO",
             tdt.dt_registro,
+            tdt.ds_dia_semana,
             count(tdp.no_profissional) AS REALIZADOS
         FROM
             tb_fat_procedimento tfp
@@ -199,6 +208,7 @@ export default class ProdutividadeUBS_ConsolidadoQuery {
             "TIPO DE FICHA",
             "TIPO ATENDIMENTO",
             "LOCAL DE ATENDIMENTO",
+            tdt.ds_dia_semana,
             tdt.dt_registro
         union
         SELECT
@@ -216,6 +226,7 @@ export default class ProdutividadeUBS_ConsolidadoQuery {
             'VISITA DOMICILAR' as "TIPO ATENDIMENTO",
             'DOMICÍLIO' as "LOCAL DE ATENDIMENTO",
             tdt.dt_registro,
+            tdt.ds_dia_semana,
             COUNT(tdp.no_profissional) AS REALIZADOS
         FROM tb_fat_visita_domiciliar tfvd 
         inner join tb_dim_unidade_saude tdus on tdus.co_seq_dim_unidade_saude = tfvd.co_dim_unidade_saude 
@@ -227,6 +238,8 @@ export default class ProdutividadeUBS_ConsolidadoQuery {
         inner join tb_dim_tipo_ficha tdtf on tdtf.co_seq_dim_tipo_ficha = tfvd.co_dim_tipo_ficha 
         inner join tb_dim_desfecho_visita tddv on tddv.co_seq_dim_desfecho_visita = tfvd.co_dim_desfecho_visita 
         inner join tb_dim_tempo tdt on tdt.co_seq_dim_tempo = tfvd.co_dim_tempo 
+        where 
+        1=1
         group by
             tdus.nu_cnes,
             tdus.no_unidade_saude,
@@ -240,6 +253,58 @@ export default class ProdutividadeUBS_ConsolidadoQuery {
             "TIPO DE FICHA",
             "TIPO ATENDIMENTO",
             "LOCAL DE ATENDIMENTO",
+            tdt.ds_dia_semana,
+            tdt.dt_registro
+        union
+        select 
+            distinct
+            tdus.nu_cnes As "CNES",
+            UPPER(tdus.no_unidade_saude) As "ESTABELECIMENTO",
+            tde.no_equipe as "NOME EQUIPE",
+            tte.sg_tipo_equipe as "TIPO DE EQUIPE",
+            tde.nu_ine as "INE",
+            tdc.nu_cbo as "CBO",
+            tdc.no_cbo as "DESCRIÇÃO DO CBO",
+            tdp.no_profissional as "PROFISSIONAL",
+            tdtf.ds_tipo_ficha as "TIPO DE REGISTRO",
+            'VACINA' as "TIPO DE FICHA",
+            Case
+                When tfvv.st_registro_anterior = 1
+                Then 'TRANSCRIÇÃO'
+                When tfvv.st_registro_anterior = 0
+                Then 'APLICAÇÃO'
+                Else 'REGISTRO NÃO TIPIFICADO.'
+            End as "TIPO ATENDIMENTO",
+            tdla.ds_local_atendimento as "LOCAL DE ATENDIMENTO",
+            tdt.dt_registro,
+            tdt.ds_dia_semana,
+            COUNT(tdp.no_profissional) AS REALIZADOS
+        from 
+        tb_fat_vacinacao tfv 
+        inner join tb_fat_vacinacao_vacina tfvv On tfvv.co_fat_vacinacao = tfv.co_seq_fat_vacinacao
+        inner join tb_dim_unidade_saude tdus on tdus.co_seq_dim_unidade_saude = tfv.co_dim_unidade_saude 
+        inner join tb_dim_equipe tde on tde.co_seq_dim_equipe = tfv.co_dim_equipe 
+        inner join tb_equipe te on te.nu_ine = tde.nu_ine 
+        left join tb_tipo_equipe tte on tte.co_seq_tipo_equipe = te.tp_equipe 
+        inner join tb_dim_cbo tdc on tdc.co_seq_dim_cbo = tfv.co_dim_cbo 
+        inner join tb_dim_profissional tdp on tdp.co_seq_dim_profissional = tfv.co_dim_profissional 
+        inner join tb_dim_tipo_ficha tdtf on tfv.co_dim_tipo_ficha = tdtf.co_seq_dim_tipo_ficha 
+        inner join tb_dim_tempo tdt  on tdt.co_seq_dim_tempo = tfv.co_dim_tempo 
+        inner join tb_dim_local_atendimento tdla on tfv.co_dim_local_atendimento = tdla.co_seq_dim_local_atendimento 
+        group by
+            tdus.nu_cnes,
+            tdus.no_unidade_saude,
+            tde.no_equipe,
+            tte.sg_tipo_equipe,
+            tde.nu_ine,
+            tdc.nu_cbo,
+            tdc.no_cbo,
+            tdp.no_profissional,
+            tdtf.ds_tipo_ficha,
+            "TIPO DE FICHA",
+            "TIPO ATENDIMENTO",
+            "LOCAL DE ATENDIMENTO",
+            tdt.ds_dia_semana,
             tdt.dt_registro) subquery
         `
         
@@ -301,9 +366,10 @@ export default class ProdutividadeUBS_ConsolidadoQuery {
             subquery."LOCAL DE ATENDIMENTO",
             "ANO",
             "MES"
+        order by "MES"
         `
 
-        const result = await databases.PSQLClient.query(queryConvert(query_base, parametros_dinamicos.GetAll()))
+        const result = await dbClient.getPostgDB().query(queryConvert(query_base, parametros_dinamicos.GetAll()))
     
         return result.rows;
            

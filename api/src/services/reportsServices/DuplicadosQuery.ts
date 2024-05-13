@@ -1,7 +1,7 @@
-import { databases } from "../../api";
+import { ConnectDBs } from "../../database/init";
 
 export default class DuplicadosPECQuery{
-    async execute(filtros_body:any){
+    async execute(dbClient:ConnectDBs ,filtros_body:any){
         const query_base = `
             select distinct 
                 tc.no_cidadao as "NOME",
@@ -75,7 +75,7 @@ export default class DuplicadosPECQuery{
                 tc.no_cidadao asc
         `
 
-        const result = await databases.PSQLClient.query(query_base)
+        const result = await dbClient.getPostgDB().query(query_base)
     
         return result.rows;
     }

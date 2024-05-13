@@ -1,8 +1,10 @@
-import { Request, Response } from "express";
+import { Response, Request } from "express";
+import UpdateDBService from "../services/dbServices/UpdateDBService";
 
-export default class FiltersController{
+export default class DBController{
     async executeHandler(req:Request, res:Response, serviceClass:any, serviceParams:any){
         try {
+            
             const serviceInstance = new serviceClass();
             const result = await serviceInstance.execute(serviceParams);
 
@@ -19,9 +21,8 @@ export default class FiltersController{
         }
     }
 
-    handleFilter = async (req: Request, res: Response) => {
-        const params = req.query
-        //Em desenvolvimento
+    handleUpdateDb = async (req: Request, res: Response) => {
+        this.executeHandler(req, res, UpdateDBService, {})
     }
 
 }

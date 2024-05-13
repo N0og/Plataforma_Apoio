@@ -1,0 +1,23 @@
+{
+  "ESTADO": {
+    "MUNICIPIO": {
+      "ESTABLECIMENTO": "IP"
+    },
+    "MUNICIPIO2": {
+      "ESTABLECIMENTO": "IP",
+      "ESTABLECIMENTO2": "IP",
+      "ESTABLECIMENTO3": "IP"
+    }
+  },
+  "ESTADO2": {
+    "MUNICIPIO": {
+      "ESTABLECIMENTO": "IP"
+    },
+    "MUNICIPIO2": {
+      "ESTABLECIMENTO": "IP",
+      "ESTABLECIMENTO2": "IP",
+      "ESTABLECIMENTO3": "IP"
+    }
+  }
+}
+    

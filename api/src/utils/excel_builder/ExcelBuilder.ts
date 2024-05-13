@@ -1,54 +1,65 @@
 import { Workbook, Worksheet, } from 'excel4node';
 import { isDate } from 'util/types';
 import { WorkbookConfig, WorksheetConfig, styles } from './configs/WorkBookConfig';
-import AdjustLength from './AdjustColumnsLength';
 
-export default class ExcelBuilder{
+export default class ExcelBuilder {
     private planilha: Workbook;
     private consolidado: Worksheet;
+    private columns: any;
 
-    async execute(json:any, municipio?:string, unidade?:string){
-        return new Promise((resolve, reject)=>{
+    constructor() {
+        this.planilha = new Workbook(new WorkbookConfig())
+        this.consolidado = this.planilha.addWorksheet('CONSOLIDADO', new WorksheetConfig());
 
-            this.planilha = new Workbook(new WorkbookConfig())
-            this.consolidado = this.planilha.addWorksheet('CONSOLIDADO', new WorksheetConfig());
-        
-            const columns = Object.keys(json[0]);
+    }
 
-            columns.forEach((column:string, col_index:number)=>{
-                this.consolidado.cell(1, col_index+1).string(column).style(styles.cabecalho)
+
+    insert_columns(json: any) {
+
+        this.columns = Object.keys(json[0]);
+
+        this.columns.forEach((column: string, col_index: number) => {
+            this.consolidado.cell(1, col_index + 1).string(column).style(styles.cabecalho)
+        })
+    }
+
+    insert(json: any, municipio?: string, unidade?: string) {
+
+        json.forEach((row: Object, row_index: number) => {
+            this.columns.forEach((column: string, col_index: number) => {
+                let value: any = Object.values(row)[col_index];
+                if (typeof value === "string") {
+                    this.consolidado.cell(row_index + 2, col_index + 1).string(value)
+                }
+
+                else if (typeof value === "number") {
+                    this.consolidado.cell(row_index + 2, col_index + 1).number(value).style(styles.numeros)
+                }
+
+                else if (typeof value === "boolean") {
+                    this.consolidado.cell(row_index + 2, col_index + 1).bool(value).style(styles.numeros)
+                }
+
+                else if (isDate(value)) {
+                    this.consolidado.cell(row_index + 2, col_index + 1).date(value).style(styles.numeros)
+                }
+
             })
 
-            json.forEach((row:Object, row_index:number)=>{
-                columns.forEach((column:string, col_index:number)=>{
-                    let value:any = Object.values(row)[col_index];
-                    if (typeof value === "string"){
-                        this.consolidado.cell(row_index+2, col_index+1).string(value)
-                    }
+        })
 
-                    else if (typeof value === "number"){
-                        this.consolidado.cell(row_index+2, col_index+1).number(value).style(styles.numeros)
-                    }
-                    
-                    else if (typeof value === "boolean"){
-                        this.consolidado.cell(row_index+2, col_index+1).bool(value).style(styles.numeros)
-                    }
 
-                    else if (isDate(value)){
-                        this.consolidado.cell(row_index+2, col_index+1).date(value).style(styles.numeros)
-                    }
-                    
-                })
-                    
-            })
-           
+    }
+
+    async save_worksheet() {
+        return new Promise((resolve, reject) => {
             this.planilha.writeToBuffer()
-            .then(buffer => {
-                resolve(buffer);
-            })
-            .catch(err =>{
-                reject(err);
-            })
+                .then(buffer => {
+                    resolve(buffer);
+                })
+                .catch(err => {
+                    reject(err);
+                })
         })
     }
 
