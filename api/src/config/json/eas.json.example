@@ -1,0 +1,42 @@
+{
+  "ESTADO": {
+    "MUNICIPIO": {
+      "IBGE": "0000000",
+      "CREDENCIAIS": {
+        "user": "name",
+        "password": "pwd"
+      },
+      "DBNAME": "NAME"
+    }
+    ,
+    "MUNICIPIO2": {
+      "IBGE": "0000000",
+      "CREDENCIAIS": {
+        "user": "name",
+        "password": "pwd"
+      },
+      "DBNAME": "NAME"
+    }
+  }
+  ,
+  "ESTADO2": {
+    "MUNICIPIO": {
+      "IBGE": "0000000",
+      "CREDENCIAIS": {
+        "user": "name",
+        "password": "pwd"
+      },
+      "DBNAME": "NAME"
+    }
+    ,
+    "MUNICIPIO2": {
+      "IBGE": "0000000",
+      "CREDENCIAIS": {
+        "user": "name",
+        "password": "pwd"
+      },
+      "DBNAME": "NAME"
+    }
+  }
+}
+    

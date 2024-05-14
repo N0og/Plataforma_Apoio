@@ -19,51 +19,73 @@ export class ConnectDBs {
         this.PSQLConfig = new ConfigPostgresDatabase();
     }
 
-    async connect() {
+    async connect(driver:string) {
 
-        this.PSQLPool = new PGPool(this.PSQLConfig);
-        this.MDBPool = MDPool(this.MDBConfig);
-
-        try {
-            await this.PSQLPool.connect()
-            await this.MDBPool.getConnection();
-            return true
-        } catch (error) {
-            return new Error(`Falha ao conectar com o banco de dados. ${error}`)
+        if (driver == 'mdb'){    
+            this.MDBPool = MDPool(this.MDBConfig);
+            try {
+                await this.MDBPool.getConnection();
+                return true
+            } catch (error) {
+                return new Error(`Falha ao conectar com o banco de dados. ${error}`)
+            }
         }
+
+        else if (driver == 'psql'){
+            this.PSQLPool = new PGPool(this.PSQLConfig);
+            try {
+                await this.PSQLPool.connect()
+                return true
+            } catch (error) {
+                return new Error(`Falha ao conectar com o banco de dados. ${error}`)
+            }
+        }
+
+        else return new Error(`Banco de dados não selecionado.`)
+        
     }
 
     async changeDB(driver: string, config: Partial<DatabaseConfig>) {
-        if (driver === 'mariadb') {
-            this.MDBConfig.changeConfig(config)
+
+        let change = false
+
+        if (driver === 'mdb') {
+            change = this.MDBConfig.changeConfig(config)
         }
 
-        else if (driver === 'postgres') {
-            this.PSQLConfig.changeConfig(config)
+        else if (driver === 'psql') {
+            change = this.PSQLConfig.changeConfig(config)
         }
 
         else return new Error("DB Driver não compatível.")
 
-        await this.disconnect();
-        return await this.connect();
+        if (change){
+            await this.disconnect(driver);
+            return await this.connect(driver);
+        }
+
     }
 
-    async disconnect() {
-        if (this.PSQLPool) {
-            this.PSQLPool.removeAllListeners()
-            this.PSQLPool.end().catch(err => {
-                console.error('Erro ao fechar pool PostgreSQL:', err);
-            });
+    async disconnect(driver:string) {
 
-         
+        if (driver === 'mdb') {
+            if (this.PSQLPool) {
+                this.PSQLPool.removeAllListeners()
+                this.PSQLPool.end().catch(err => {
+                    console.error('Erro ao fechar pool PostgreSQL:', err);
+                });
+            }
         }
 
-        if (this.MDBPool) {
-            this.MDBPool.end().catch(err => {
-                console.error('Erro ao fechar pool MariaDB:', err);
-            });
-
+        if (driver === 'psql') {
+            if (this.MDBPool) {
+                this.MDBPool.end().catch(err => {
+                    console.error('Erro ao fechar pool MariaDB:', err);
+                });
+            }
         }
+
+    
     }
 
     getMariaDB() {

@@ -18,13 +18,25 @@ export interface DatabaseConfig {
 
 export class ConfigPostgresDatabase implements PGConfig, DatabaseConfig {
     host: string;
-    user = process.env.PGDBUSER;
-    database = process.env.PGDBNAME;
-    password = process.env.PGDBPASSWORD;
-    port = parseInt(process.env.PGDBPORT || "5432");
+    user: string;
+    database: string;
+    password: string;
+    port: number;
+    connectionTimeoutMillis = 5000;
 
     changeConfig(config: Partial<DatabaseConfig>) {
-        Object.assign(this, config);
+        if (
+            this.host !== config.host || 
+            this.user !== config.user || 
+            this.database !== config.database || 
+            this.password !== config.password || 
+            this.port !== config.port
+            ) {
+                Object.assign(this, config);
+                return true
+            }
+        return false
+        
     }
 }
 
@@ -37,8 +49,21 @@ export class ConfigMariaDBDatabase implements PoolOptions, DatabaseConfig {
     namedPlaceholders = true;
 
     changeConfig(config: Partial<DatabaseConfig>) {
-        Object.assign(this, config);
+
+        if (
+            this.host !== config.host || 
+            this.user !== config.user || 
+            this.database !== config.database || 
+            this.password !== config.password || 
+            this.port !== config.port
+            ) {
+                Object.assign(this, config);
+                return true
+            }
+        return false
+
     }
+
 }
 
 export const ConfigAPIDatabase: DataSourceOptions = {

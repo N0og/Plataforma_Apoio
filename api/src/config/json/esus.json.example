@@ -1,22 +1,65 @@
 {
   "ESTADO": {
     "MUNICIPIO": {
-      "ESTABLECIMENTO": "IP"
-    },
-    "MUNICIPIO2": {
-      "ESTABLECIMENTO": "IP",
-      "ESTABLECIMENTO2": "IP",
-      "ESTABLECIMENTO3": "IP"
+      "IBGE": "0000000",
+      "CREDENCIAIS": {
+        "bd_name": "name",
+        "bd_user": "user",
+        "bd_port": "port",
+        "bd_pwd": "pwd",
+        "user": "user",
+        "password": "pwd"
+      },
+      "IPS": {
+        "INSTALACAO": "IP"
+      }
     }
-  },
+    ,
+    "MUNICIPIO2": {
+      "IBGE": "0000000",
+      "CREDENCIAIS": {
+        "bd_name": "name",
+        "bd_user": "user",
+        "bd_port": "port",
+        "bd_pwd": "pwd",
+        "user": "user",
+        "password": "pwd"
+      },
+      "IPS": {
+        "INSTALACAO": "IP"
+      }
+    }
+  }
+  ,
   "ESTADO2": {
     "MUNICIPIO": {
-      "ESTABLECIMENTO": "IP"
-    },
+      "IBGE": "0000000",
+      "CREDENCIAIS": {
+        "bd_name": "name",
+        "bd_user": "user",
+        "bd_port": "port",
+        "bd_pwd": "pwd",
+        "user": "user",
+        "password": "pwd"
+      },
+      "IPS": {
+        "INSTALACAO": "IP"
+      }
+    }
+    ,
     "MUNICIPIO2": {
-      "ESTABLECIMENTO": "IP",
-      "ESTABLECIMENTO2": "IP",
-      "ESTABLECIMENTO3": "IP"
+      "IBGE": "0000000",
+      "CREDENCIAIS": {
+        "bd_name": "name",
+        "bd_user": "user",
+        "bd_port": "port",
+        "bd_pwd": "pwd",
+        "user": "user",
+        "password": "pwd"
+      },
+      "IPS": {
+        "INSTALACAO": "IP"
+      }
     }
   }
 }

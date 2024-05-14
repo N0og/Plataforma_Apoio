@@ -10,7 +10,6 @@ export default class VisitasPrioritariasQuery {
         // Declaração da query base para seleção dos dados
         let query_base = `
         SELECT
-            p.Id,
             p.Nome,
             p.Equipe_Id Ine,
             p.Estabelecimento_Id Cnes,
@@ -856,9 +855,9 @@ export default class VisitasPrioritariasQuery {
 
         query_base += query_filtros
 
-        const relatorio = DefaultTypesJSON(await dbClient.getMariaDB().query(query_base, parametros_dinamicos.GetAll()))
+        const relatorio = await dbClient.getMariaDB().query(query_base, parametros_dinamicos.GetAll())
 
-        return relatorio
+        return DefaultTypesJSON(relatorio[0])
 
 
     }

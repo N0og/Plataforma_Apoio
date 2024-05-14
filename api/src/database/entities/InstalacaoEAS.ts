@@ -1,22 +1,19 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Municipio } from "./Municipios";
 
-@Entity('tb_instalacoes_esus')
-export class Instalacao {
+@Entity('tb_instalacoes_eas')
+export class Instalacao_EAS {
     @PrimaryGeneratedColumn()
-    id_instalacoes_pec: number
+    id_instalacao_eas: number
 
     @Column()
-    ip_address: string
-
-    @Column()
-    no_instalacao: string
+    name_db: string
 
     @Column({nullable: true})
-    user_pec: string
+    user_eas: string
 
     @Column({nullable: true})
-    password_pec: string
+    password_eas: string
 
     @ManyToOne(() => Municipio, (municipio) => municipio.instalacoes)
     @JoinColumn({name:"municipio_id"})

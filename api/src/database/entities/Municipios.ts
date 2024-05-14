@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Estado } from "./Estados";
-import { Instalacao } from "./Instalacao";
+import { Instalacao_eSUS } from "./InstalacaoeSUS";
 
 @Entity('tb_municipio')
 export class Municipio {
@@ -17,6 +17,6 @@ export class Municipio {
     @JoinColumn({name:"estado_id"})
     uf: Estado
 
-    @OneToMany(() => Instalacao, (instalacao) => instalacao.municipio)
-    instalacoes: Instalacao[]
+    @OneToMany(() => Instalacao_eSUS, (instalacao) => instalacao.municipio)
+    instalacoes: Instalacao_eSUS[]
 }
