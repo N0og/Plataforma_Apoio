@@ -11,7 +11,7 @@ const api = express()
 api.use(express.json())
 
 api.use(cors({
-    origin: process.env.FRONT_END_ADDRESS
+    origin: '*'
 }))
 
 api.use(router)

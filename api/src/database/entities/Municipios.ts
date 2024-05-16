@@ -13,6 +13,18 @@ export class Municipio {
     @Column({ type: "varchar", length: "50", nullable: true})
     nu_ibge: string
 
+    @Column()
+    ivs: string
+
+    @Column()
+    habitantes_ibge: number
+
+    @Column()
+    porte_populacional: string
+
+    @Column()
+    ied: string
+
     @ManyToOne(() => Estado, (estado) => estado.municipios)
     @JoinColumn({name:"estado_id"})
     uf: Estado

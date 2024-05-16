@@ -1,0 +1,184 @@
+
+
+
+.container_top .left_container_top{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 25%;
+    height: 100%;
+}
+
+.container_top .left_container_top .title_top{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    width: 100%;
+    gap: 0.5vw;
+    height: 100%;
+    h1{
+        font-family: 'Arial';
+        font-size: 2vi;
+        color: black;
+    }
+
+    span{
+        font-family: 'Arial';
+        font-size: 2vi;
+        color: #D49292;
+    }
+}
+
+
+
+.container_top .mid_container_top{
+    display: flex;
+    width: 50%;
+    height: 100%;
+}
+
+.container_top .right_container_top{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 25%;
+    height: 100%;
+}
+
+.container_top .right_container_top .submenu_top{
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding-right: 5%;
+}
+
+.container_top .right_container_top .submenu_top .item_container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+    height: 100%;
+    .item{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 2.7vi;
+        height: 2.5vi;
+        border-radius: 50%; 
+        transition: 0.1s;
+        button{
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background-color: #D49292;;
+            color: #ffff;
+            font-size:1.2vi;
+            transition: 80ms;
+            
+            opacity: 65%;
+        }
+    } 
+}
+
+.container_top .right_container_top .submenu_top .item_container .item:hover{
+    width: 2.9vi;
+    height: 2.6vi;
+    button{
+        font-size:1.4vi;
+        opacity: 100%;
+    }
+}
+
+.container_top .right_container_top .submenu_top .item_container .item:active{
+    width: 2.7vi;
+    height: 2.4vi;
+    button:active{
+        font-size:1.3vi;
+    }
+}
+
+
+.container_top .right_container_top .submenu_top .item_login_container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+    height: 100%;
+    .item_hover{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 2.5vi;
+        height: 2.7vi;
+        opacity: 100%;
+        background-color: transparent;
+        border-radius: 25px ;
+        transition: 0.5s;
+
+        span{
+            position: absolute;
+            opacity: 0%;
+            transform: translateX(-4vw) ;
+            user-select: none;
+            cursor: pointer;
+            transition: 0.18s;
+            font-size:1vi;
+            font-family: 'Arial';
+        }
+
+        .item_login{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 2.7vi;
+            height: 2.5vi;
+            border-radius: 50%; 
+            transition: all 0.1s;
+
+            button{
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                border: none;
+                cursor: pointer;
+                font-size:1.2vi;
+                transition: 0.2s;
+                background-color: #D49292;
+                color: #ffff;
+                opacity: 65%;
+            }
+        }
+    }
+}
+
+.container_top .right_container_top .submenu_top .item_login_container .item_hover:hover{
+    padding-left: 5.5vw; 
+    margin-left: -5.5vw; 
+    height: 2.6vi;
+    opacity: 100%;
+    background-color:rgb(237, 237, 237);
+    span{
+        opacity: 100%;
+    }
+
+    .item_login{
+        button{
+            opacity: 100%;
+        }
+    }
+}
+
+
+.container_top .right_container_top .submenu_top .item_login_container .item_hover .item_login button:active{
+    font-size:1vi;
+}

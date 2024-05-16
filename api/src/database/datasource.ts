@@ -19,7 +19,7 @@ export interface DatabaseConfig {
 export class ConfigPostgresDatabase implements PGConfig, DatabaseConfig {
     host: string;
     user: string;
-    database: string;
+    database: string = "esus";
     password: string;
     port: number;
     connectionTimeoutMillis = 5000;

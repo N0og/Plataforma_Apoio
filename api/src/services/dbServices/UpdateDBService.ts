@@ -1,7 +1,6 @@
 import { InsertResult } from "typeorm";
 import { estadoRepository, instalacaoEASRepository, instalacaoESUSRepository, ConneSUSRepository, municipioRepository, ConnEASRepository } from "../../database/repository/DBRepositorys";
 import JSONLoader from "../../utils/bd/JSONLoader";
-import { Municipio } from "../../database/entities/Municipios";
 
 
 export default class UpdateDBService {
@@ -13,6 +12,10 @@ export default class UpdateDBService {
             for (const MUNICIPIO of Object.keys(ESUS_IPS[ESTADO])) {
 
                 let IBGE = ESUS_IPS[ESTADO][MUNICIPIO]['IBGE']
+                let IVS = ESUS_IPS[ESTADO][MUNICIPIO]['IVS']
+                let POP_IBGE = ESUS_IPS[ESTADO][MUNICIPIO]['POP_IBGE']
+                let PORT_IBGE = ESUS_IPS[ESTADO][MUNICIPIO]['PORT_IBGE']
+                let IED = ESUS_IPS[ESTADO][MUNICIPIO]['IED']
                 let CREDENCIAIS = ESUS_IPS[ESTADO][MUNICIPIO]['CREDENCIAIS']
                 let IPS = ESUS_IPS[ESTADO][MUNICIPIO]['IPS']
 
@@ -31,6 +34,10 @@ export default class UpdateDBService {
                         new_municipio = await municipioRepository.insert({
                             no_municipio: MUNICIPIO,
                             nu_ibge: IBGE,
+                            ivs: IVS,
+                            habitantes_ibge: POP_IBGE,
+                            porte_populacional: PORT_IBGE,
+                            ied: IED,
                             uf: new_uf.generatedMaps[0]
                         })
 
@@ -55,7 +62,7 @@ export default class UpdateDBService {
                                 port_esus: CREDENCIAIS.bd_port,
                                 db_user_esus: CREDENCIAIS.bd_user,
                                 db_password_esus: CREDENCIAIS.bd_pwd,
-                                id_instalacao_esus: new_instalacao.generatedMaps[0].id_instalacoes_pec                            
+                                id_instalacao_esus: new_instalacao.generatedMaps[0].id_instalacoes_pec
                             }
                         })
 
@@ -69,6 +76,10 @@ export default class UpdateDBService {
                         new_municipio = await municipioRepository.insert({
                             no_municipio: MUNICIPIO,
                             nu_ibge: IBGE,
+                            ivs: IVS,
+                            habitantes_ibge: POP_IBGE,
+                            porte_populacional: PORT_IBGE,
+                            ied: IED,
                             uf: { id_uf: old_uf.id_uf }
                         })
 
@@ -113,7 +124,11 @@ export default class UpdateDBService {
 
                         await municipioRepository.update(old_instalacao.municipio,
                             {
-                                nu_ibge: IBGE
+                                nu_ibge: IBGE,
+                                ivs: IVS,
+                                habitantes_ibge: POP_IBGE,
+                                porte_populacional: PORT_IBGE,
+                                ied: IED
                             })
 
                         await instalacaoESUSRepository.update(old_instalacao.id_instalacao_esus,
@@ -146,7 +161,7 @@ export default class UpdateDBService {
                                 }
                             })
                         }
-                        
+
                         continue
                     }
 
@@ -178,45 +193,53 @@ export default class UpdateDBService {
             }
         }
 
-    for (const ESTADO of Object.keys(EAS_IPS)) {
-        for (const MUNICIPIO of Object.keys(EAS_IPS[ESTADO])) {
+        for (const ESTADO of Object.keys(EAS_IPS)) {
+            for (const MUNICIPIO of Object.keys(EAS_IPS[ESTADO])) {
 
-            let IBGE = EAS_IPS[ESTADO][MUNICIPIO]['IBGE']
-            let CREDENCIAIS = EAS_IPS[ESTADO][MUNICIPIO]['CREDENCIAIS']
-            let DBNAME = EAS_IPS[ESTADO][MUNICIPIO]['DBNAME']
+                let IBGE = EAS_IPS[ESTADO][MUNICIPIO]['IBGE']
+                let IVS = ESUS_IPS[ESTADO][MUNICIPIO]['IVS']
+                let POP_IBGE = ESUS_IPS[ESTADO][MUNICIPIO]['POP_IBGE']
+                let PORT_IBGE = ESUS_IPS[ESTADO][MUNICIPIO]['PORT_IBGE']
+                let IED = ESUS_IPS[ESTADO][MUNICIPIO]['IED']
+                let CREDENCIAIS = ESUS_IPS[ESTADO][MUNICIPIO]['CREDENCIAIS']
+                let DBNAME = EAS_IPS[ESTADO][MUNICIPIO]['DBNAME']
 
-            let new_municipio: InsertResult, new_uf: InsertResult, new_instalacao: InsertResult
+                let new_municipio: InsertResult, new_uf: InsertResult, new_instalacao: InsertResult
 
-            let old_uf = await estadoRepository.findOneBy({ sg_uf: ESTADO })
+                let old_uf = await estadoRepository.findOneBy({ sg_uf: ESTADO })
 
-            if (!old_uf) {
+                if (!old_uf) {
 
-                new_uf = await estadoRepository.insert({ sg_uf: ESTADO })
+                    new_uf = await estadoRepository.insert({ sg_uf: ESTADO })
 
-                new_municipio = await municipioRepository.insert({
-                    no_municipio: MUNICIPIO,
-                    nu_ibge: IBGE,
-                    uf: new_uf.generatedMaps[0]
-                })
+                    new_municipio = await municipioRepository.insert({
+                        no_municipio: MUNICIPIO,
+                        nu_ibge: IBGE,
+                        ivs: IVS,
+                        habitantes_ibge: POP_IBGE,
+                        porte_populacional: PORT_IBGE,
+                        ied: IED,
+                        uf: new_uf.generatedMaps[0]
+                    })
 
-                new_instalacao = await instalacaoEASRepository.insert({
-                    name_db: DBNAME,
-                    user_eas: CREDENCIAIS.user,
-                    password_eas: CREDENCIAIS.password,
-                    municipio: new_municipio.generatedMaps[0]
-                })
+                    new_instalacao = await instalacaoEASRepository.insert({
+                        name_db: DBNAME,
+                        user_eas: CREDENCIAIS.user,
+                        password_eas: CREDENCIAIS.password,
+                        municipio: new_municipio.generatedMaps[0]
+                    })
 
-                ConnEASRepository.insert({
-                    dados: {
-                        uf: ESTADO,
-                        municipio: MUNICIPIO,
-                        db_name_eas: DBNAME,
-                        id_instalacao_eas: new_instalacao.generatedMaps[0].id_instalacao_eas
-                    }
-                })
+                    ConnEASRepository.insert({
+                        dados: {
+                            uf: ESTADO,
+                            municipio: MUNICIPIO,
+                            db_name_eas: DBNAME,
+                            id_instalacao_eas: new_instalacao.generatedMaps[0].id_instalacao_eas
+                        }
+                    })
 
-                continue
-            }
+                    continue
+                }
 
                 let old_muni = await municipioRepository.findOneBy({ no_municipio: MUNICIPIO })
 
@@ -225,6 +248,10 @@ export default class UpdateDBService {
                     new_municipio = await municipioRepository.insert({
                         no_municipio: MUNICIPIO,
                         nu_ibge: IBGE,
+                        ivs: IVS,
+                        habitantes_ibge: POP_IBGE,
+                        porte_populacional: PORT_IBGE,
+                        ied: IED,
                         uf: { id_uf: old_uf.id_uf }
                     })
 
@@ -260,7 +287,11 @@ export default class UpdateDBService {
 
                     await municipioRepository.update(old_instalacao.municipio,
                         {
-                            nu_ibge: IBGE
+                            nu_ibge: IBGE,
+                            ivs: IVS,
+                            habitantes_ibge: POP_IBGE,
+                            porte_populacional: PORT_IBGE,
+                            ied: IED
                         })
 
                     await instalacaoEASRepository.update(old_instalacao.id_instalacao_eas,

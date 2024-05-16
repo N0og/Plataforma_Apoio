@@ -1,0 +1,150 @@
+.container_map{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    padding-top: 1vw;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+
+    .page-title{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 5%;
+        text-align: center;
+        gap: 0.5vw;
+        font-family: 'Arial';
+        h2{
+            font-size: 2vi;
+        }
+        span{
+            font-size: 2vi;
+            color: #d49292;
+        }
+    }
+}
+
+.container_filters{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    height: 7%;
+    gap: 2vw;
+    margin: 0.5vw;
+    background-color: #f3f3f3;
+
+    .back_button_container{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        left: 0px;
+        justify-content: center;
+        height: 100%;
+        width: 7%;
+        
+        
+        .back_button{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            font-size: 2.1vi;
+            width: 40%;
+            height: 70%;
+            color: #D49292;
+
+            i{
+                position: absolute;
+            }
+
+            button{
+                width:100%;
+                height: 100%;
+                position: absolute;
+                z-index: 100%;
+                cursor: pointer;
+                background-color: transparent;
+                border-radius: 100%;
+                z-index: 999;
+                border: none;
+            }
+        }
+    }
+
+    .icon_container{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        left: 7%;
+        height: 100%;
+        width: 5vw;
+        color: #D49292;
+        font-size: 3vi;
+    }
+
+    .municipio_container{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        right:5%;
+        gap: 2vw;
+
+        .filter-container{
+            width: 100%;
+        }
+    }
+}
+
+.container_layer{
+    width: 90%;
+    height: 80%;
+    background-color: transparent;
+    
+   
+}
+
+.container_layer .leaflet-container {
+    min-width: 85vw;
+    min-height: 71.9vh;
+    background-color: rgb(237, 237, 237);
+    border: 1px solid black;
+  }
+
+
+.container_legenda{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    margin-top: 0.5vh;
+    gap: 3vw;
+
+    .item_legenda{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        
+        .red,
+        .yellow,
+        .green{
+            width: 3.3vw;
+            height: 4vh;
+        }
+
+        span{
+            font-family: Arial, Helvetica, sans-serif;
+        }
+    }
+    
+}

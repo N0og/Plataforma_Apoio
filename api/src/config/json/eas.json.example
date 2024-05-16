@@ -2,6 +2,10 @@
   "ESTADO": {
     "MUNICIPIO": {
       "IBGE": "0000000",
+      "IVS": "3",
+      "POP_IBGE": POPULAÇÃO SEGUNDO O IBGE,
+      "PORT_IBGE": EX: "3 - Acima de 50mil até 100mil hab.",
+      "IED": EX: "3",
       "CREDENCIAIS": {
         "user": "name",
         "password": "pwd"
@@ -11,6 +15,9 @@
     ,
     "MUNICIPIO2": {
       "IBGE": "0000000",
+      "POP_IBGE": POPULAÇÃO SEGUNDO O IBGE,
+      "PORT_IBGE": EX: "3 - Acima de 50mil até 100mil hab.",
+      "IED": EX: "3",
       "CREDENCIAIS": {
         "user": "name",
         "password": "pwd"
@@ -22,6 +29,9 @@
   "ESTADO2": {
     "MUNICIPIO": {
       "IBGE": "0000000",
+      "POP_IBGE": POPULAÇÃO SEGUNDO O IBGE,
+      "PORT_IBGE": EX: "3 - Acima de 50mil até 100mil hab.",
+      "IED": EX: "3",
       "CREDENCIAIS": {
         "user": "name",
         "password": "pwd"
@@ -31,6 +41,9 @@
     ,
     "MUNICIPIO2": {
       "IBGE": "0000000",
+      "POP_IBGE": POPULAÇÃO SEGUNDO O IBGE,
+      "PORT_IBGE": EX: "3 - Acima de 50mil até 100mil hab.",
+      "IED": EX: "3",
       "CREDENCIAIS": {
         "user": "name",
         "password": "pwd"
