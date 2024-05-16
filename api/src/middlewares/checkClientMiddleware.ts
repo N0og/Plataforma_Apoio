@@ -25,14 +25,6 @@ export default class CheckClientMiddleware {
             return res.status(500).json({ error: 'Repositório de conexão não definido.' });
         }
 
-        const IPS = await this.ConnRepository.createQueryBuilder("jsonIP")
-                .select("dados->>'municipio'", "municipio")
-                .distinct(true).getRawMany()
-
-        if (!(Object.values(IPS).some(valor => valor.municipio === dbname))){
-            return res.status(400).json({error:'Cliente não identificado'})
-        }
-
         next()
     }
 }

@@ -118,8 +118,6 @@ export default class IEDService {
         
         }
 
-        console.log(relatorio[0])
-
         return relatorio[0]
     }
 }

@@ -52,15 +52,7 @@ export default class ExcelBuilder {
     }
 
     async save_worksheet() {
-        return new Promise((resolve, reject) => {
-            this.planilha.writeToBuffer()
-                .then(buffer => {
-                    resolve(buffer);
-                })
-                .catch(err => {
-                    reject(err);
-                })
-        })
+        return await this.planilha.writeToBuffer()
     }
 
 }

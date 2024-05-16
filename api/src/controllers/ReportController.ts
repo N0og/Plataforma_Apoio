@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
-import VisitasPrioritariasQuery from "../services/reportsServices/VisitasPrioritariasQuery";
-import { ProdutividadeACS_PorDiaQuery, ProdutividadeACS_ConsolidadoQuery } from "../services/reportsServices/ProdutividadeACSQuery";
-import ProdutividadeUBS_ConsolidadoQuery from "../services/reportsServices/ProdutividadeUBSQuery";
+import VisitasPrioritariasQuery from "../services/reportsServices/VisitasPrioritariasService";
+import { ProdutividadeACS_PorDiaQuery, ProdutividadeACS_ConsolidadoQuery } from "../services/reportsServices/ProdutividadeACSService";
+import ProdutividadeUBS_ConsolidadoQuery from "../services/reportsServices/ProdutividadeUBSService";
 import ExcelBuilder from "../utils/excel_builder/ExcelBuilder"
-import CompletudeQuery from "../services/reportsServices/CompletudeQuery";
-import DuplicadosPECQuery from "../services/reportsServices/DuplicadosQuery";
+import CompletudeQuery from "../services/reportsServices/CompletudeService";
+import DuplicadosPECQuery from "../services/reportsServices/DuplicadosService";
 import { ConnEASRepository, ConneSUSRepository } from "../database/repository/DBRepositorys";
 import { ConnectDBs } from "../database/init";
+import JSZip from "jszip";
 
 
 export default class ReportController {
@@ -16,99 +17,112 @@ export default class ReportController {
 
             const dbClient = new ConnectDBs();
 
-            const { dbname } = req.query
+            const dbname = Array.isArray(req.query.dbname) ? req.query.dbname : Array(req.query.dbname)
+
             const { dbtype } = query_params
 
-            console.log(`\nSOLICITAÇÃO ATENDIDA PARA: ${dbname} DE: ${req.ip}\n`) //LOGGER
+            console.log(`\nSOLICITAÇÃO ATENDIDA PARA: ${dbname.join('|')} DE: ${req.ip}\n`) //LOGGER
 
             const MUNICIPIOS_EXCEL: { [key: string]: { excel_builder: ExcelBuilder, result: any[] } } = {}
 
-            const IPSESUS = await ConneSUSRepository.createQueryBuilder("jsonIP")
-                .where("jsonIP.dados @> :dados", { dados: JSON.stringify({ municipio: dbname }) })
-                .getMany()
+            for (const municipio in dbname) {
 
-            const IPSEAS = await ConnEASRepository.createQueryBuilder("jsonIP")
-                .where("jsonIP.dados @> :dados", { dados: JSON.stringify({ municipio: dbname }) })
-                .getOne()
+                let mun = dbname[municipio]
 
-            let bd_error: { [key: string]: { address: string, error: string } }[] = []
+                const IPSESUS = await ConneSUSRepository.createQueryBuilder("jsonIP")
+                    .where("jsonIP.dados @> :dados", { dados: JSON.stringify({ municipio: mun }) })
+                    .getMany()
 
-            if (IPSEAS && dbtype === 'mdb') {
-                if (!(IPSEAS!.dados.municipio in MUNICIPIOS_EXCEL)) {
-                    MUNICIPIOS_EXCEL[IPSEAS!.dados.municipio] = { excel_builder: new ExcelBuilder(), result: [] }
-                }
+                const IPSEAS = await ConnEASRepository.createQueryBuilder("jsonIP")
+                    .where("jsonIP.dados @> :dados", { dados: JSON.stringify({ municipio: mun }) })
+                    .getOne()
 
-                let bd_changed = await dbClient.changeDB(dbtype, { database: IPSEAS!.dados.db_name_eas! })
+                let bd_error: { [key: string]: { address: string, error: string } }[] = []
+            
 
-                if (bd_changed instanceof Error) {
-                    return res.status(400).json({ error: bd_changed.message })
-                }
-
-                const serviceInstance = new serviceClass();
-                const result = await serviceInstance.execute(dbClient, body_params, query_params);
-
-                MUNICIPIOS_EXCEL[IPSEAS!.dados.municipio].excel_builder.insert_columns(result)
-
-                MUNICIPIOS_EXCEL[IPSEAS!.dados.municipio].excel_builder.insert(result)
-
-                MUNICIPIOS_EXCEL[IPSEAS!.dados.municipio].result.concat(result)
-
-            }
-
-            else if (IPSESUS && dbtype === 'psql') {
-
-                for (let ip of IPSESUS) {
-
-                    if (!(ip.dados.municipio in MUNICIPIOS_EXCEL)) {
-                        MUNICIPIOS_EXCEL[ip.dados.municipio] = { excel_builder: new ExcelBuilder(), result: [] }
+                if (IPSEAS && dbtype === 'mdb') {
+                    if (!(IPSEAS!.dados.municipio in MUNICIPIOS_EXCEL)) {
+                        MUNICIPIOS_EXCEL[IPSEAS!.dados.municipio] = { excel_builder: new ExcelBuilder(), result: [] }
                     }
 
-                    let bd_changed = await dbClient.changeDB(dbtype, {
-                        host: ip.dados.ip_esus!,
-                        port: ip.dados.port_esus!,
-                        user: ip.dados.db_user_esus!,
-                        password: ip.dados.db_password_esus!
-                    })
+                    let bd_changed = await dbClient.changeDB(dbtype, { database: IPSEAS!.dados.db_name_eas! })
 
                     if (bd_changed instanceof Error) {
-                        const _instalacao = ip.dados.instalacao_esus!
-                        const _ip = ip.dados.ip_esus!
-                        const erro = { instalacao: { address: _ip, error: bd_changed.message } }
-                        bd_error.push(erro)
-                        continue
+                        return res.status(400).json({ error: bd_changed.message })
                     }
 
                     const serviceInstance = new serviceClass();
                     const result = await serviceInstance.execute(dbClient, body_params, query_params);
 
-                    MUNICIPIOS_EXCEL[ip.dados.municipio].excel_builder.insert_columns(result)
+                    MUNICIPIOS_EXCEL[IPSEAS!.dados.municipio].excel_builder.insert_columns(result)
 
-                    MUNICIPIOS_EXCEL[ip.dados.municipio].excel_builder.insert(result)
+                    MUNICIPIOS_EXCEL[IPSEAS!.dados.municipio].excel_builder.insert(result)
 
-                    MUNICIPIOS_EXCEL[ip.dados.municipio].result.concat(result)
+                    MUNICIPIOS_EXCEL[IPSEAS!.dados.municipio].result.concat(result)
 
+                }
+
+                else if (IPSESUS && dbtype === 'psql') {
+
+                    for (let ip of IPSESUS) {
+
+                        if (!(ip.dados.municipio in MUNICIPIOS_EXCEL)) {
+                            MUNICIPIOS_EXCEL[ip.dados.municipio] = { excel_builder: new ExcelBuilder(), result: [] }
+                        }
+
+                        let bd_changed = await dbClient.changeDB(dbtype, {
+                            host: ip.dados.ip_esus!,
+                            port: ip.dados.port_esus!,
+                            user: ip.dados.db_user_esus!,
+                            password: ip.dados.db_password_esus!
+                        })
+
+                        if (bd_changed instanceof Error) {
+                            const _instalacao = ip.dados.instalacao_esus!
+                            const _ip = ip.dados.ip_esus!
+                            const erro = { instalacao: { address: _ip, error: bd_changed.message } }
+                            bd_error.push(erro)
+                            continue
+                        }
+
+                        const serviceInstance = new serviceClass();
+                        const result = await serviceInstance.execute(dbClient, body_params, query_params);
+
+                        MUNICIPIOS_EXCEL[ip.dados.municipio].excel_builder.insert_columns(result)
+
+                        MUNICIPIOS_EXCEL[ip.dados.municipio].excel_builder.insert(result)
+
+                        MUNICIPIOS_EXCEL[ip.dados.municipio].result.concat(result)
+
+                    }
+                }
+
+                else {
+                    console.error("Falha na solicitação")
+                    return res.status(400).json({ error: 'Falha na solicitação' })
+                }
+
+                if (bd_error.length == IPSESUS.length) {
+                    return res.status(503).json({ error: `BD's indisponíveis: ${dbname}` })
                 }
             }
 
-            else {
-                console.error("Falha na solicitação")
-                return res.status(400).json({ error: 'Falha na solicitação' })
-            }
+            console.log(`\nSOLICITAÇÃO RESPONDIDA PARA: ${req.ip} DE: ${dbname.join('|')}\n`)
 
-            if (bd_error.length == IPSESUS.length) {
-                return res.status(503).json({ error: `BD's indisponíveis: ${dbname}` })
-            }
-
-            console.log(`\nSOLICITAÇÃO RESPONDIDA PARA: ${req.ip} DE: ${dbname}\n`)
-
+            const zip = new JSZip();
             for (let MunicipioExcel of Object.keys(MUNICIPIOS_EXCEL)) {
 
                 if ("download" in query_params && query_params["download"] === 'true') {
-                    res.set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                    res.set('Content-Disposition', `attachment; filename="${tipo}-${MunicipioExcel}.xlsx"`);
-                    res.json({ warnings: [bd_error] })
-                    return res.send(await MUNICIPIOS_EXCEL[MunicipioExcel].excel_builder.save_worksheet())
+                    const worksheetBuffer:Buffer = await MUNICIPIOS_EXCEL[MunicipioExcel].excel_builder.save_worksheet();
+                    zip.file(`${tipo}-${MunicipioExcel}.xlsx`, worksheetBuffer);
                 }
+            }
+
+            if ("download" in query_params && query_params["download"] === 'true') {
+                const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
+                res.set('Content-Type', 'application/zip');
+                res.set('Content-Disposition', `attachment; filename="${tipo}-${new Date().toLocaleDateString('pt-BR')}.zip"`);
+                res.send(zipBuffer);
             }
 
         } catch (error) {

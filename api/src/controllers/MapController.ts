@@ -17,8 +17,6 @@ export default class MapController {
 
             let resultTotal: { [key: string]: any }[] = []
 
-            console.log(dbname)
-
             for (const municipio in dbname) {
 
                 let mun = dbname[municipio]

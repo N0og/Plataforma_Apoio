@@ -24,17 +24,17 @@ export const Mapa = () => {
 
     const greenIcon = new Icon({
         iconUrl:"marker_green.png",
-        iconSize: [90, 52]
+        iconSize: [52, 52]
     })
 
     const redIcon = new Icon({
         iconUrl:"marker_red.png",
-        iconSize: [90, 52]
+        iconSize: [52, 52]
     })
 
     const yellowIcon = new Icon({
         iconUrl:"marker_yellow.png",
-        iconSize: [90, 52]
+        iconSize: [52, 52]
     })
 
     const getIcon = (municipio:any) => {
