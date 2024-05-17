@@ -1,9 +1,9 @@
 import { SetStateAction, useState } from "react";
 import './FiltroSimples.css'
-import { SimpleFilterPartition } from "../../../../interfaces/IFilterPartition";
+import { ISimpleFilterPartition } from "../../../../interfaces/IFilters";
 
 
-export const FiltroSimples: React.FC<{ name: string, filters: SimpleFilterPartition[], changeFilter: React.Dispatch<SetStateAction<SimpleFilterPartition[]>> }> = ({ name, filters, changeFilter }) => {
+export const FiltroSimples: React.FC<{ name: string, filters: ISimpleFilterPartition[], changeFilter: React.Dispatch<SetStateAction<ISimpleFilterPartition[]>> }> = ({ name, filters, changeFilter }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [counter, setCounter] = useState<number>(0);
 

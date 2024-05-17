@@ -6,7 +6,7 @@ export default class CheckClientMiddleware {
     ConnRepository: typeof ConnEASRepository | typeof ConneSUSRepository | null = null;
 
     execute = async (req: Request, res: Response, next: NextFunction) => {
-        const { dbname, dbtype } = req.query
+        const { dbtype } = req.query
 
         if (dbtype === 'mdb'){
             this.ConnRepository = ConnEASRepository;

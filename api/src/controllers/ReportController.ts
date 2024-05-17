@@ -5,9 +5,10 @@ import ProdutividadeUBS_ConsolidadoQuery from "../services/reportsServices/Produ
 import ExcelBuilder from "../utils/excel_builder/ExcelBuilder"
 import CompletudeQuery from "../services/reportsServices/CompletudeService";
 import DuplicadosPECQuery from "../services/reportsServices/DuplicadosService";
-import { ConnEASRepository, ConneSUSRepository } from "../database/repository/DBRepositorys";
+import { ConnEASRepository, ConneSUSRepository, municipioRepository } from "../database/repository/DBRepositorys";
 import { ConnectDBs } from "../database/init";
 import JSZip from "jszip";
+import AcessosEASService from "../services/reportsServices/AcessosEASService";
 
 
 export default class ReportController {
@@ -17,8 +18,23 @@ export default class ReportController {
 
             const dbClient = new ConnectDBs();
 
-            const dbname = Array.isArray(req.query.dbname) ? req.query.dbname : Array(req.query.dbname)
+            let dbname = Array.isArray(req.query.dbname) ? req.query.dbname : Array(req.query.dbname)
 
+            if (typeof dbname[0] == "undefined"){
+
+                if (query_params.download){
+                    let mun = await municipioRepository.find()
+                    const clients = mun.map(client=>{
+                        return client.no_municipio
+                    })
+                    dbname = clients
+                }
+                else{
+                    console.error("Falha na solicitação")
+                    return res.status(400).json({ error: 'Falha na solicitação' })
+                }
+            }
+            
             const { dbtype } = query_params
 
             console.log(`\nSOLICITAÇÃO ATENDIDA PARA: ${dbname.join('|')} DE: ${req.ip}\n`) //LOGGER
@@ -26,6 +42,7 @@ export default class ReportController {
             const MUNICIPIOS_EXCEL: { [key: string]: { excel_builder: ExcelBuilder, result: any[] } } = {}
 
             for (const municipio in dbname) {
+
 
                 let mun = dbname[municipio]
 
@@ -98,8 +115,7 @@ export default class ReportController {
                 }
 
                 else {
-                    console.error("Falha na solicitação")
-                    return res.status(400).json({ error: 'Falha na solicitação' })
+                    continue
                 }
 
                 if (bd_error.length == IPSESUS.length) {
@@ -111,7 +127,6 @@ export default class ReportController {
 
             const zip = new JSZip();
             for (let MunicipioExcel of Object.keys(MUNICIPIOS_EXCEL)) {
-
                 if ("download" in query_params && query_params["download"] === 'true') {
                     const worksheetBuffer:Buffer = await MUNICIPIOS_EXCEL[MunicipioExcel].excel_builder.save_worksheet();
                     zip.file(`${tipo}-${MunicipioExcel}.xlsx`, worksheetBuffer);
@@ -168,6 +183,12 @@ export default class ReportController {
         const body_params = req.body
         const query_params = req.query
         this.executeHandler(req, res, DuplicadosPECQuery, body_params, query_params, `DuplicadosPEC${new Date().toLocaleDateString('pt-BR')}`)
+    }
+
+    handleAcessosRetaguarda = async (req: Request, res: Response) => {
+        const body_params = req.body
+        const query_params = req.query
+        this.executeHandler(req, res, AcessosEASService, body_params, query_params, `AcessosEAS${new Date().toLocaleDateString('pt-BR')}`)
     }
 
 }

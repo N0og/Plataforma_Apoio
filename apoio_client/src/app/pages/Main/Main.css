@@ -1,25 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+:root{
+    --cor-light: #fff;
+    --cor-rose: #de8484;
+    --cor-white-backgroud: rgb(248, 248, 248);
+    --cor-shadow-min: rgb(217, 217, 217);
+    --cor-shadow-mid: rgb(198, 186, 186);
+    --cor-min_grey: rgb(242, 242, 242);
+    --cor_black: #000   
+}
+
 *{
     margin: 0;
     padding: 0;
+    font-family: 'Roboto';
 }
 
 .body_page{
     display: flex;
     flex-direction: column;
     user-select: none;
+    position: relative;
+    
+    font-family: 'Roboto';
 }
 
 .container_top{
     display: flex;
     flex-direction: row;
     justify-content: center;
-    position:static;
+    position: fixed;
     align-items: center;
-    background-color: rgb(248, 248, 248);
-    box-shadow: 0px 1px 15px 0px rgb(217, 217, 217);
+    background-color: var(--cor-white-backgroud);
+    box-shadow: 0px 1px 15px 0px var(--cor-shadow-min);
     width: 100vw;
-    height: 8vh;
-    user-select: none;
+    height: 3vw;
+    z-index: 9999;
+    
+    font-family: 'Roboto';
 }
 
 .container_bottom{
@@ -27,18 +45,37 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    position: relative;
     width: 100vw;
-    height: 92vh;
+    margin-top: 2vw;
+    height: 93.6vh;
     transition: 0.5s;
+    font-family: 'Roboto';
 }
+
+.container_bottom .side_bar_container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    left: 0px;
+    width: 4%;
+    height: 100%;
+    transition: 0.5s;
+    border-right: 1px solid var(--cor-min_grey);
+    z-index: 9998;
+}
+
 
 .container_bottom .content_container{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border-left: 1px solid rgb(222, 222, 222);
+    flex-wrap: wrap;
     width: 96%;
+    margin-left: 4%;
     height: 100%;
 }
 

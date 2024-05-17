@@ -159,6 +159,7 @@ export class SQL_COMPLETUDE{
             tfci.st_recusa_cadastro,
             tcci.no_cidadao as "CIDADÃO",
             CASE 
+                WHEN (tfc.nu_cpf_cidadao = '0          ' and tfc.nu_cns = '0              ') then 'SEM DOCUMENTO'
                 WHEN tfc.nu_cpf_cidadao = '0          ' then tfc.nu_cns 
                 else tfc.nu_cpf_cidadao
             end as "DOCUMENTO PESSOAL",
@@ -169,7 +170,7 @@ export class SQL_COMPLETUDE{
             tdtficha.dt_registro as "ULTIMA ATUALIZAÇÃO",
             CASE 
                 WHEN tfc.nu_cpf_cidadao = '0          ' then 'SEM CPF' 
-                WHEN tfc.nu_cpf_cidadao = '0          ' and tfc.nu_cns = '0              ' then 'SEM DOCUMENTO'
+                WHEN (tfc.nu_cpf_cidadao = '0          ' and tfc.nu_cns = '0              ') then 'SEM DOCUMENTO'
                 else 'COM CPF'
             end as "STATUS DOCUMENTO",
             case 
@@ -177,7 +178,7 @@ export class SQL_COMPLETUDE{
                 when (extract(year from justify_interval(now() - tdtficha.dt_registro))*12+extract(month from justify_interval(now() - tdtficha.dt_registro))) <= 12 then '4 A 12 MESES'
                 when (extract(year from justify_interval(now() - tdtficha.dt_registro))*12+extract(month from justify_interval(now() - tdtficha.dt_registro))) <= 24 then '13 A 24 MESES'
                 when (extract(year from justify_interval(now() - tdtficha.dt_registro))*12+extract(month from justify_interval(now() - tdtficha.dt_registro))) > 24 then 'MAIS DE 2 ANOS'
-            end as "TEMPO SEM ATUALIZAÇÃO",
+            end as "TEMPO SEM ATUALIZAR",
             case 
                 when (extract(year from justify_interval(now() - tdtficha.dt_registro))*12+extract(month from justify_interval(now() - tdtficha.dt_registro))) = 1 then concat((extract(year from justify_interval(now() - tdtficha.dt_registro))*12+extract(month from justify_interval(now() - tdtficha.dt_registro))), ' MÊS')
                 else concat((extract(year from justify_interval(now() - tdtficha.dt_registro))*12+extract(month from justify_interval(now() - tdtficha.dt_registro))), ' MESES')
@@ -185,7 +186,7 @@ export class SQL_COMPLETUDE{
             tfci.nu_micro_area as "MICRO ÁREA",
             tdp.no_profissional as "PROFISSIONAL CADASTRANTE",
             tdcprof.nu_cbo as "CBO PROFISSIONAL",
-            tdcprof.no_cbo as "DESCRIÇÃO DO CBO",
+            tdcprof.no_cbo as "DESCRIÇÃO CBO",
             tdus.no_unidade_saude as "UNIDADE DE SAÚDE",
             tdus.nu_cnes as "CNES",
             tde.no_equipe as "NOME EQUIPE",

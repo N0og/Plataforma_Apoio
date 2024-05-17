@@ -13,13 +13,12 @@
         align-items: center;
         text-align: center;
         gap: 0.5vw;
-        font-family: 'Arial';
         h2{
-            font-size: 2vi;
+            font-size: 2vw;
         }
         span{
-            font-size: 2vi;
-            color: #d49292;
+            font-size: 2vw;
+            color: var(--cor-rose);
         }
     }
 }
@@ -28,8 +27,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 2vw;
     flex-wrap: wrap;
+    padding-top: 2vw;
     width: 100%;
     gap: 2vw;
 }

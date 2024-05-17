@@ -4,12 +4,12 @@ import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import axios from 'axios';
 
 //Components
-import { FiltroSimples } from '../../../components/Components';
+import { FiltroSimples, FiltroDinamico } from '../../../components/Components';
 import { Icon } from 'leaflet';
 
 
 //Interfaces
-import { ISimpleFilterPartition } from '../../../../interfaces/IFilters';
+import { IDynamicFilterPartition, ISimpleFilterPartition } from '../../../../interfaces/IFilters';
 import { IIEDResponse } from '../../../../interfaces/IResponses';
 
 //Styles
@@ -20,6 +20,7 @@ import 'leaflet/dist/leaflet.css';
 export const Mapa = () => {
 
     const [MUNICIPIOFilters, setMUNICIPIOFilters] = useState<ISimpleFilterPartition[]>([]);
+    const [UNIDADESFilters, setUNIDADESFilters] = useState<IDynamicFilterPartition>({});
     const [IEDFilters, setIEDFilters] = useState<IIEDResponse[]>([]);
 
     const greenIcon = new Icon({
@@ -93,25 +94,26 @@ export const Mapa = () => {
 
     return (
         <div className='container_map'>
+            
             <div className='page-title'>
-                <h2>MAPA</h2>
-                <span>ESTABELECIMENTOS</span>
-            </div>
-            <div className="container_filters">
                 <div className='back_button_container'>
                     <div className='back_button'>
                         <button></button>
                         <i className="fa-solid fa-circle-chevron-left"></i>
                     </div>
                 </div>
-                <div className='icon_container'>
-
-                </div>
-                <div className='municipio_container'>
-                    <FiltroSimples name={"MUNICÍPIO"} filters={MUNICIPIOFilters} changeFilter={setMUNICIPIOFilters} />
+                <h2>MAPA</h2>
+                <span>EQUIPES</span> <h2>-</h2> <span>RETERRITORIALIZAÇÃO</span>
+            </div>
+            <div className="container_filters">
+                <div className='subcontainer_filters'>
+                    <div className='municipio_filter'>
+                        <FiltroSimples name={"MUNICÍPIO"} filters={MUNICIPIOFilters} changeFilter={setMUNICIPIOFilters} />
+                    </div>
                 </div>
             </div>
-            <div className="container_layer">
+            
+            <div className='LayerContainer'>
                 <MapContainer center={[-7.11532, -34.861]} zoom={13} >
                     <TileLayer
                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

@@ -21,7 +21,7 @@ export interface IVisitasPrioriFiltros{
     gestante?: boolean;
     idoso?: boolean;
     crianca?: boolean;
-    hipertensao?:boolean;
+    hipertenso?:boolean;
     dpoc?:boolean;
     outras_doencas?:boolean;
     sintomas_respiratorio?:boolean;

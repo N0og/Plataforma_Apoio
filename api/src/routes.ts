@@ -21,6 +21,8 @@ router.get('/api/v1/reports/ProdutividadeUBS/Consolidado', new CheckClientMiddle
 router.get('/api/v1/reports/Completude', new CheckClientMiddleware().execute, new ReportController().handleCompletude)
 
 router.get('/api/v1/reports/DuplicadosPEC', new CheckClientMiddleware().execute, new ReportController().handleDuplicadosPEC)
+
+router.get('/api/v1/reports/AcessosEAS', new CheckClientMiddleware().execute, new ReportController().handleAcessosRetaguarda)
 //#endregion
 
 //#region Database

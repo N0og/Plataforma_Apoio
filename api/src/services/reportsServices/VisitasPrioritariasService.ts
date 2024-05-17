@@ -10,15 +10,13 @@ export default class VisitasPrioritariasQuery {
         // Declaração da query base para seleção dos dados
         let query_base = `
         SELECT
-            p.Nome,
-            p.Equipe_Id Ine,
-            p.Estabelecimento_Id Cnes,
-            p.MicroArea,
-            p.CartaoSus,
-            p.EquipamentoRecebido,
-            p.AcessoMobile,
-            p.Cpf,
-            e.Nome Estabelecimento
+            p.Nome as "PROFISSIONAL",
+            p.CartaoSus as "CNS",
+            e.Nome as "ESTABELECIMENTO",
+            p.Equipe_Id as "INE",
+            p.Estabelecimento_Id as "CNES",
+            p.EquipamentoRecebido as "EQUIPAMENTO_RECEBIDO",
+            p.AcessoMobile as "ACESSO_MOBILE",
 `;
         // Contagem total de indivíduos base
         let query_total_individuos_base = `
@@ -290,6 +288,40 @@ export default class VisitasPrioritariasQuery {
             ) AS AcompIdosoMeta
  `;
         }
+        if (filtros_body.domiciliados_acamados) {
+            query_dinamica += `,
+            (
+                SELECT
+                    COUNT(DISTINCT Individuo_Id)
+                FROM
+                    VisitaDomiciliar
+                    left join Individuo i on i.Id = VisitaDomiciliar.Individuo_Id
+                WHERE
+                    1 = 1
+                    AND VisitaDomiciliar.Profissional_Id = p.Id
+                    AND VisitaDomiciliar.DesfechoDeCadastro = 0
+                    AND i.Deletado = 0
+                    AND i.MudouSe = 0
+                    and i.Transferencia = 0
+                    and i.CadastroTemporario = 0
+                    and (i.EstaAcamado = 1 or i.EstaDomiciliado = 1)
+                    AND(
+                        FIND_IN_SET('ACOMP_DOMICILIADOS_ACAMADOS', MotivosDaVisita)
+                    ) ${query_filtros_dinamica}
+            ) AS AcompDomiciliadosAcamados,
+            (
+                ${query_total_individuos_base}
+                    and (i.EstaAcamado = 1 or i.EstaDomiciliado = 1)
+            ) AS AcompDomiciliadosAcamadosTotal,
+            (
+                SELECT
+                    IFNULL(
+                        ROUND(SUM(((AcompDomiciliadosAcamados*100)/AcompDomiciliadosAcamadosTotal)),1)
+                        , 0
+                    )
+            ) AS AcompDomiciliadosAcamadosMeta
+`;
+        }
         if (filtros_body.desnutricao) {
             query_dinamica += `,
             (
@@ -350,7 +382,7 @@ export default class VisitasPrioritariasQuery {
             ) AS AcompReabilitacaoOuDeficienciaMeta
 `;
         }
-        if (filtros_body.hipertensao) {
+        if (filtros_body.hipertenso) {
             query_dinamica += `,
             (
                 SELECT
@@ -757,6 +789,8 @@ export default class VisitasPrioritariasQuery {
 `;
         }
 
+        
+
         if (filtros_body.outras_drogas) {
             query_dinamica += `,
             (
@@ -844,16 +878,17 @@ export default class VisitasPrioritariasQuery {
 `;
         }
 
-        query_base += query_dinamica
-
-        query_base += `  
-            FROM Profissional p 
+        query_base += `
+            ${query_dinamica}, 
+            p.MicroArea as "MICROAREA",
+            p.Cpf as "CPF_PROF"
+        FROM Profissional p 
             LEFT JOIN Estabelecimento e ON (e.Id = p.Estabelecimento_Id) 
             LEFT JOIN RegionalEstabelecimento re ON (re.Estabelecimento_Id = p.Estabelecimento_Id) 
-            WHERE p.Ocupacao_Id =  1349 
-`;
-
-        query_base += query_filtros
+        WHERE 
+            p.Ocupacao_Id =  1349 
+            ${query_filtros}
+        `;
 
         const relatorio = await dbClient.getMariaDB().query(query_base, parametros_dinamicos.GetAll())
 

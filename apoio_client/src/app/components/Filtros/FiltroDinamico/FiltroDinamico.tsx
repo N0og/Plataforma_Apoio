@@ -1,9 +1,9 @@
 import { SetStateAction, useState } from "react";
 import './FiltroDinamico.css'
-import { DynamicFilterPartition } from "../../../../interfaces/IFilterPartition";
+import { IDynamicFilterPartition } from "../../../../interfaces/IFilters";
 
 
-export const FiltroDinamico:React.FC<{name:string, filter:DynamicFilterPartition, changeFilter:React.Dispatch<SetStateAction<DynamicFilterPartition>>}> = ({name, filter, changeFilter}) => {
+export const FiltroDinamico:React.FC<{name:string, filter:IDynamicFilterPartition, changeFilter:React.Dispatch<SetStateAction<IDynamicFilterPartition>>}> = ({name, filter, changeFilter}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [counter, setCounter] = useState<number>(0);
   

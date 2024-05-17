@@ -2,131 +2,147 @@
     display: flex;
     flex-direction: column;
     justify-content: start;
-    padding-top: 1vw;
     align-items: center;
+    padding-top: 2vw;
     width: 100%;
     height: 100%;
+    gap: 0.5vw;
 
     .page-title{
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: center; 
+        position: relative;
         width: 100%;
-        height: 5%;
+        height: 7%;
         text-align: center;
-        gap: 0.5vw;
-        font-family: 'Arial';
+        text-wrap: nowrap;
+        background-color: rgba(245, 245, 245, 0.452);
+        gap: 0.8vw;
+
+        .back_button_container{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            left: 0px;
+            justify-content: center;
+            height: 100%;
+            width: 7%;
+            
+            
+            .back_button{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                font-size: 2.1vw;
+                width: 40%;
+                height: 70%;
+                color: var(--cor-rose);
+    
+                i{
+                    position: absolute;
+                }
+    
+                button{
+                    width:100%;
+                    height: 100%;
+                    position: absolute;
+                    z-index: 100%;
+                    cursor: pointer;
+                    background-color: transparent;
+                    border-radius: 100%;
+                    z-index: 999;
+                    border: none;
+                }
+            }
+        }
+
         h2{
-            font-size: 2vi;
+            font-size: 2vw;
+            color: var(--cor-black);
         }
         span{
-            font-size: 2vi;
-            color: #d49292;
+            font-size: 2vw;
+            color: var(--cor-rose);
         }
     }
 }
 
 .container_filters{
     display: flex;
-    justify-content: center;
     align-items: center;
     position: relative;
     width: 100%;
-    height: 7%;
+    height: 6%;
     gap: 2vw;
-    margin: 0.5vw;
-    background-color: #f3f3f3;
 
-    .back_button_container{
+    .subcontainer_filters{
         display: flex;
+        flex-direction: row;
         justify-content: center;
         align-items: center;
-        position: absolute;
-        left: 0px;
-        justify-content: center;
         height: 100%;
-        width: 7%;
-        
-        
-        .back_button{
+        flex-wrap: nowrap;
+        position: absolute;
+        left: 10vw;
+        gap: 1.5vw;
+
+        .municipio_filter{
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             justify-content: center;
             align-items: center;
-            position: relative;
-            font-size: 2.1vi;
-            width: 40%;
-            height: 70%;
-            color: #D49292;
 
-            i{
-                position: absolute;
-            }
-
-            button{
-                width:100%;
-                height: 100%;
-                position: absolute;
-                z-index: 100%;
-                cursor: pointer;
-                background-color: transparent;
-                border-radius: 100%;
-                z-index: 999;
-                border: none;
-            }
+            
         }
     }
-
-    .icon_container{
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        position: absolute;
-        left: 7%;
-        height: 100%;
-        width: 5vw;
-        color: #D49292;
-        font-size: 3vi;
-    }
-
-    .municipio_container{
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        position: absolute;
-        right:5%;
-        gap: 2vw;
-
-        .filter-container{
-            width: 100%;
-        }
-    }
-}
-
-.container_layer{
-    width: 90%;
-    height: 80%;
-    background-color: transparent;
     
-   
 }
 
-.container_layer .leaflet-container {
-    min-width: 85vw;
-    min-height: 71.9vh;
+.LayerContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 76vw;
+    height: 75vh;
+    background-color: transparent;
+}
+
+.container_map .leaflet-container {
+    width: 76vw;
+    height: 70vh;
     background-color: rgb(237, 237, 237);
     border: 1px solid black;
+    border-radius: 1vw;
+    z-index: 999;
   }
 
+  /* Estilizando o botão de zoom mais */
+.leaflet-control-zoom-in {
+    display: none;
+}
 
-.container_legenda{
+/* Estilizando o botão de zoom menos */
+.leaflet-control-zoom-out {
+    z-index: 1;
+}
+
+
+
+.container_map .container_legenda{
     display: flex;
     flex-direction: row;
-    justify-content: start;
+    justify-content: center;
     align-items: center;
+    height: 10%;
+    background-color: var(--cor-min_grey);
+    width: 100%;
     margin-top: 0.5vh;
+    border-radius: 1vw;
     gap: 3vw;
 
     .item_legenda{
@@ -134,16 +150,17 @@
         flex-direction: row;
         justify-content: center;
         align-items: center;
+        gap: 0.5vw;
         
         .red,
         .yellow,
         .green{
-            width: 1.6vw;
-            height: 3.3vh;
+            width: 1.2vw;
+            height: 1.3vw;
         }
 
         span{
-            font-family: Arial, Helvetica, sans-serif;
+            font-size: 1.3vw;
         }
     }
     

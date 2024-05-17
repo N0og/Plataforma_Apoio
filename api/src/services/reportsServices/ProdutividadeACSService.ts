@@ -103,6 +103,8 @@ export class ProdutividadeACS_ConsolidadoQuery{
             return new Error("Filtro de período obrigatório")
         }
 
+        
+
         parametros_dinamicos.Add("DataInicial", filtros_body.data_inicial)
         parametros_dinamicos.Add("DataFinal", filtros_body.data_final)
 
