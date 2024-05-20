@@ -174,8 +174,8 @@ export class SQL_COMPLETUDE{
                 else 'COM CPF'
             end as "STATUS DOCUMENTO",
             case 
-                when (extract(year from justify_interval(now() - tdtficha.dt_registro))*12+extract(month from justify_interval(now() - tdtficha.dt_registro))) <= 3 then 'ATÉ 3 MESES'
-                when (extract(year from justify_interval(now() - tdtficha.dt_registro))*12+extract(month from justify_interval(now() - tdtficha.dt_registro))) <= 12 then '4 A 12 MESES'
+                when (extract(year from justify_interval(now() - tdtficha.dt_registro))*12+extract(month from justify_interval(now() - tdtficha.dt_registro))) <= 4 then 'ATÉ 4 MESES'
+                when (extract(year from justify_interval(now() - tdtficha.dt_registro))*12+extract(month from justify_interval(now() - tdtficha.dt_registro))) <= 12 then '5 A 12 MESES'
                 when (extract(year from justify_interval(now() - tdtficha.dt_registro))*12+extract(month from justify_interval(now() - tdtficha.dt_registro))) <= 24 then '13 A 24 MESES'
                 when (extract(year from justify_interval(now() - tdtficha.dt_registro))*12+extract(month from justify_interval(now() - tdtficha.dt_registro))) > 24 then 'MAIS DE 2 ANOS'
             end as "TEMPO SEM ATUALIZAR",
@@ -236,5 +236,185 @@ export class SQL_COMPLETUDE{
             and tcci.st_versao_atual = 1
             and tfci.co_dim_tipo_saida_cadastro = 3
             and tfc.co_fat_cidadao_raiz = tfc.co_seq_fat_cidadao
+    `
+}
+
+export class SQL_COMPLETUDE_EAS{
+    SQL_BASE: string = `
+    SELECT
+    i.Id as cds_id,
+    p.CartaoSus as cns_prof,
+    o.Codigo as cbo_prof,
+    e.Cnes as nu_cnes,
+    eq.id as nu_ine,
+    i.DataAlteracao as dt_registro,
+    CASE 
+        when (i.Cpf is null or i.Cpf = '') then i.CartaoSUS 
+        else i.Cpf
+    END as doc_cid,
+    i.EhResponsavelFamiliar as st_responsavel_familiar,
+    i.ResponsavelCartaoSUS  as doc_resp,
+    i.Nome as no_cidadao,
+    case 
+        when i.ForaDeArea = 1 then 'FA'
+        when i.MicroArea is not null then i.MicroArea
+    end as nu_micro_area,
+    i.NomeSocial as no_social_cidadao,
+    i.DataNascimento as dt_nascimento,
+    case 
+        when i.Sexo = 1 then 'Feminino' 
+        when i.Sexo = 0 then 'Masculino' 
+        when i.Sexo = 3 then null 
+    end as ds_sexo,
+    i.RacaOuCor as ds_raca_cor,
+    i.Etnia as no_etnia,
+    i.PisPasep as nu_pis_pasep,
+    i.NomeDaMae as no_mae_cidadao,
+    i.NomeDoPai as no_pai_cidadao,
+    i.TemMaeDesconhecida as st_desconhece_mae,
+    i.TemPaiDesconhecido as st_desconhece_pai,
+    i.Nacionalidade as no_identificador,
+    i.PaisDeNascimentoNome as no_pais,
+    i.NaturalizacaoData as dt_natualizacao,
+    i.NaturalizacaoPortaria as nu_portaria_naturalizacao,
+    i.CidadeDeNascimento as no_municipio,
+    i.UFDeNascimento as sg_uf,
+    i.DataEntradaNoPais as dt_entrada_brasil,
+    i.Telefone as nu_celular_cidadao,
+    i.Email as no_email,
+    i.ParentescoComRespFamiliar as ds_tipo_parentesco,
+    i.Ocupacao_Id as cbo_cidadao,
+    i.FrequentaEscola as st_frequenta_creche,
+    i.GrauDeInstrucao as ds_dim_tipo_escolaridade,
+    i.SituacaoTrabalhista as ds_dim_situacao_trabalho,
+    i.ResponsavelPorCrianca as st_respons_crianca_adulto_resp,
+    i.ResponsavelPorCrianca as st_respons_crianca_outra_crian,
+    i.ResponsavelPorCrianca as st_respons_crianca_adolescente,
+    i.ResponsavelPorCrianca as st_respons_crianca_sozinha,
+    i.ResponsavelPorCrianca as st_respons_crianca_creche,
+    i.ResponsavelPorCrianca as st_respons_crianca_outro,
+    i.FrequentaBenzedeiro as st_frequenta_cuidador,
+    i.ParticipaDeGrupoComunitario as st_participa_grupo_comunitario,
+    i.TemPlanoDeSaudePrivado as st_plano_saude_privado,
+    i.MembroComunidade as st_comunidade_tradicional,
+    i.Comunidade_Id as ds_povo_comunidade_tradicional,
+    i.InformarOrientacaoSexual  as st_informar_orientacao_sexual,
+    i.OrientacaoSexual as ds_dim_tipo_orientacao_sexual,
+    i.InformarIdentidadeDeGenero as st_informar_identidade_genero,
+    i.IdentidadeDeGenero as ds_identidade_genero,
+    i.TemDeficiencia as st_deficiencia,
+    case when i.Deficiencias = '' then null else i.Deficiencias end as st_defi_auditiva,
+    case when i.Deficiencias = '' then null else i.Deficiencias end as st_defi_intelectual_cognitiva,
+    case when i.Deficiencias = '' then null else i.Deficiencias end as st_defi_outra,
+    case when i.Deficiencias = '' then null else i.Deficiencias end as st_defi_visual,
+    case when i.Deficiencias = '' then null else i.Deficiencias end as st_defi_fisica,
+    i.AlimentosAcabaramAntesTerDinheiroComprarMais as st_alimentos_acab_sem_dinheiro,
+    i.ComeuAlgunsAlimentosQueTinhaDinheiroAcabou as st_comeu_que_tinha_dnheir_acab,
+    i.MotivoDeSaida as co_dim_tipo_saida_cadastro,
+    i.DataDoObito as dt_obito,
+    i.NumeroDeclaracaoDeObito as nu_obito_do,
+    i.EstaGestante as st_gestante,
+    i.Maternidade as no_maternidade_referencia,
+    i.PesoConsiderado as ds_dim_tipo_condicao_peso,
+    i.EhFumante as st_fumante,
+    i.DependeDeAlcool as st_alcool,
+    i.DependeDeDrogas as st_outra_droga,
+    i.TemHipertensao as st_hipertensao_arterial,
+    i.TemDiabetes as st_diabete,
+    i.TeveDerrameAVC as st_avc,
+    i.TeveInfarto as st_infarto,
+    case when i.DoencasCardiacas = '' then 0 else 1 end as st_doenca_cardiaca,
+    case when i.DoencasCardiacas = '' then 0 else 1 end as st_doenca_card_insuficiencia,
+    case when i.DoencasCardiacas = '' then 0 else 1 end as st_doenca_card_outro,
+    case when i.DoencasCardiacas = '' then 0 else 1 end as st_doenca_card_n_sabe,
+    case when i.ProblemasRenais = '' then 0 else 1 end as st_problema_rins,
+    case when i.ProblemasRenais = '' then 0 else 1 end as st_problema_rins_insuficiencia,
+    case when i.ProblemasRenais = '' then 0 else 1 end as st_problema_rins_outro,
+    case when i.ProblemasRenais = '' then 0 else 1 end as st_problema_rins_nao_sabe,
+    case when i.DoencasRespiratorias = '' then 0 else 1 end as st_doenca_respiratoria,
+    case when i.DoencasRespiratorias = '' then 0 else 1 end as st_doenca_respira_asma,
+    case when i.DoencasRespiratorias = '' then 0 else 1 end as st_doenca_respira_dpoc_enfisem,
+    case when i.DoencasRespiratorias = '' then 0 else 1 end as st_doenca_respira_outra,
+    case when i.DoencasRespiratorias = '' then 0 else 1 end as st_doenca_respira_n_sabe,
+    i.TemHanseniase as st_hanseniase,
+    i.TemTuberculose as st_tuberculose,
+    i.TemCancer as st_cancer,
+    i.TeveInternacao as st_internacao_12,
+    i.InternacaoMotivo as no_causa_internacao12,
+    i.TemTratPsiquiatrico as st_tratamento_psiquiatra,
+    i.EstaAcamado as st_acamado,
+    i.EstaDomiciliado as st_domiciliado,
+    i.UsaPlantasMedicinais as st_usa_planta_medicinal,
+    i.PlantasMedicinais as no_plantas_medicinais,
+    i.EstaEmSituacaoDeRua as st_morador_rua,
+    sdr.TempoEmRua as ds_dim_tempo_morador_rua,
+    sdr.RecebeBeneficio as st_recebe_beneficio,
+    sdr.ReferenciaFamiliar as st_referencia_familiar,
+    sdr.AlimentacaoDiaria as ds_dim_frequencia_alimentacao,
+    sdr.OrigensDaAlimentacao as st_orig_alimen_restaurante_pop,
+    sdr.OrigensDaAlimentacao as st_orig_alimen_doacao_rest,
+    sdr.OrigensDaAlimentacao as st_orig_alimen_outros,
+    sdr.OrigensDaAlimentacao as st_orig_alimen_doacao_reli,
+    sdr.OrigensDaAlimentacao as st_orig_alimen_doacao_popular,
+    sdr.AcompInstituicao as st_acompanhado_instituicao,
+    sdr.NomeInstituicao as no_acompanhado_instituicao,
+    sdr.VisitaFamiliares as st_visita_familiar_frequente,
+    sdr.GrauDeParentesco as no_visita_familiar_parentesco,
+    sdr.AcessosAHigiene as st_higiene_pessoal_acesso,
+    sdr.AcessosAHigiene as st_hig_pess_banho,
+    sdr.AcessosAHigiene as st_hig_pess_sanitario,
+    sdr.AcessosAHigiene as st_hig_pess_higiene_bucal,
+    sdr.AcessosAHigiene as st_hig_pess_outros,
+    case when i.MotivoDaRecusa is null then 0 else 1 end as st_recusa_cadastro,
+    i.Nome as "CIDADÃO",
+    CASE 
+        when (i.cpf is null and i.CartaoSUS = '') then 'SEM DOCUMENTO'
+        when (i.Cpf is null or i.Cpf = '') then i.CartaoSUS 
+        else i.Cpf
+    END as "DOCUMENTO PESSOAL",
+    case
+        when i.EhResponsavelFamiliar = 1 then 'SIM'
+        else 'NÃO'
+    end as "É RESPONSÁVEL FAMILIAR",
+    i.DataAlteracao as "ULTIMA ATUALIZAÇÃO",
+    CASE 
+        when (i.cpf is null and i.CartaoSUS = '') then 'SEM DOCUMENTO'
+        when i.Cpf is null then 'SEM DOCUMENTO'
+        else 'COM CPF'
+    END as "STATUS DOCUMENTO",
+    CASE 
+        WHEN TIMESTAMPDIFF(MONTH, i.DataAlteracao, NOW()) <= 4 THEN 'ATÉ 4 MESES'
+        WHEN TIMESTAMPDIFF(MONTH, i.DataAlteracao, NOW()) <= 12 THEN '5 A 12 MESES'
+        WHEN TIMESTAMPDIFF(MONTH, i.DataAlteracao, NOW()) <= 24 THEN '13 A 24 MESES'
+        ELSE 'MAIS DE 2 ANOS'
+    END AS "TEMPO SEM ATUALIZAR",
+    case 
+        when i.ForaDeArea = 1 then 'FA'
+        when i.MicroArea is not null then i.MicroArea
+    end as "MICRO ÁREA",
+    p.Nome as "PROFISSIONAL CADASTRANTE",
+    o.Codigo  as "CBO PROFISSIONAL",
+    o.Descricao as "DESCRICAO CBO",
+    e.Nome as "Estabelecimento",
+    e.Cnes as "CNES",
+    eq.Nome as "NOME EQUIPE",
+    eq.id as "INE",
+    case
+        when eq.TipoEquipe = 70 then 'ESF'
+        when eq.TipoEquipe = 71 then 'ESB'
+        when eq.TipoEquipe = 72 then 'EMULTI'
+    end as "TIPO DE EQUIPE",
+    i.MotivoDaRecusa as "STATUS DE RECUSA"
+    from Individuo i 
+    left join Profissional p on p.id = i.Profissional_Id 
+    left join Estabelecimento e on e.Id = i.Estabelecimento_Id 
+    left join Equipe eq on eq.id = i.CodigoEquipe
+    left join Ocupacao o on p.Ocupacao_Id = o.Id 
+    left join SituacaoDeRua sdr on sdr.Id  = i.Id
+    where 
+        i.deletado = 0
+        and i.MudouSe = 0
+        and i.DataDoObito is null
+        AND i.DesfechoDeCadastro = 0
     `
 }

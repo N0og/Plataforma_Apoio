@@ -69,7 +69,7 @@ export default class ReportController {
                     }
 
                     const serviceInstance = new serviceClass();
-                    const result = await serviceInstance.execute(dbClient, body_params, query_params);
+                    const result = await serviceInstance.execute(dbtype, dbClient, body_params, query_params);
 
                     MUNICIPIOS_EXCEL[IPSEAS!.dados.municipio].excel_builder.insert_columns(result)
 
@@ -103,7 +103,7 @@ export default class ReportController {
                         }
 
                         const serviceInstance = new serviceClass();
-                        const result = await serviceInstance.execute(dbClient, body_params, query_params);
+                        const result = await serviceInstance.execute(dbtype, dbClient, body_params, query_params);
 
                         MUNICIPIOS_EXCEL[ip.dados.municipio].excel_builder.insert_columns(result)
 

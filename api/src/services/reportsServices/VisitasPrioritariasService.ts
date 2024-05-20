@@ -5,19 +5,18 @@ import { ConnectDBs } from "../../database/init";
 
 export default class VisitasPrioritariasQuery {
 
-    async execute(dbClient:ConnectDBs, filtros_body: IVisitasPrioriFiltros, filtros_query: IVisitasPrioriFiltros) {
+    async execute(dbtype:string, dbClient:ConnectDBs, filtros_body: IVisitasPrioriFiltros, filtros_query: IVisitasPrioriFiltros) {
 
         // Declaração da query base para seleção dos dados
         let query_base = `
         SELECT
             p.Nome as "PROFISSIONAL",
-            p.CartaoSus as "CNS",
-            e.Nome as "ESTABELECIMENTO",
-            p.Equipe_Id as "INE",
-            p.Estabelecimento_Id as "CNES",
-            p.EquipamentoRecebido as "EQUIPAMENTO_RECEBIDO",
-            p.AcessoMobile as "ACESSO_MOBILE",
-`;
+            p.CartaoSus as "CARTÃO SUS",
+            e.Cnes as "CNES",
+            e.Nome as "UNIDADE",
+            p.Equipe_Id as "EQUIPE",
+            p.EquipamentoRecebido as "EQUIPAMENTO RECEBIDO",
+            p.AcessoMobile as "ACESSO MOBILE"`;
         // Contagem total de indivíduos base
         let query_total_individuos_base = `
         SELECT
@@ -879,9 +878,7 @@ export default class VisitasPrioritariasQuery {
         }
 
         query_base += `
-            ${query_dinamica}, 
-            p.MicroArea as "MICROAREA",
-            p.Cpf as "CPF_PROF"
+            ${query_dinamica}
         FROM Profissional p 
             LEFT JOIN Estabelecimento e ON (e.Id = p.Estabelecimento_Id) 
             LEFT JOIN RegionalEstabelecimento re ON (re.Estabelecimento_Id = p.Estabelecimento_Id) 

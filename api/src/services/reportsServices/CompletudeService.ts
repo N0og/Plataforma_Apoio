@@ -4,63 +4,122 @@ import DynamicParameters from "../../utils/reports/DynamicParameters";
 import { queryConvert } from "../../utils/bd/pg/pgPlaceHolders";
 import { ConnectDBs } from "../../database/init";
 import { SQL_COMPLETUDE } from "./SQL";
+import { SQL_COMPLETUDE_EAS } from "./SQL/SQLCompletude";
+import { DefaultTypesJSON } from "../../utils/bd/DefaultTypesJSON";
 
 export default class CompletudeQuery {
-    async execute(dbClient:ConnectDBs ,filtros: ICompletudeFilters) {
 
-        let query_filters = ""
-        let parametros_dinamicos = new DynamicParameters()
-        if (filtros.unidadeId) {
-            query_filters += `
-                AND tdus.nu_cnes = :unidadeId
-            `
-            parametros_dinamicos.Add(":unidadeId", filtros.unidadeId)
+    parametros_dinamicos: DynamicParameters = new DynamicParameters()
+    query_filters: string = ""
+    dbtype: string
+
+    async QuerySQL(dbClient: ConnectDBs) {
+
+        if (this.dbtype === 'psql') {
+            const SQL_BASE = new SQL_COMPLETUDE().SQL_BASE + this.query_filters
+            let result = await dbClient.getPostgDB().query(queryConvert(SQL_BASE, this.parametros_dinamicos.GetAll()))
+            return result.rows
+        }
+        else {
+            const SQL_BASE = new SQL_COMPLETUDE_EAS().SQL_BASE + this.query_filters
+            let result = await dbClient.getMariaDB().query(SQL_BASE, this.parametros_dinamicos.GetAll())
+            return DefaultTypesJSON(result[0])
         }
 
-        if (filtros.equipeId) {
-            query_filters += `
-                AND tde.nu_ine = :equipeId
-            `
-            parametros_dinamicos.Add(":equipeId", filtros.equipeId)
+    }
+
+
+    async execute(dbtype: string, dbClient: ConnectDBs, filtros: ICompletudeFilters) {
+
+        this.dbtype = dbtype
+
+
+        if (dbtype === 'psql'){
+            if (filtros.unidadeId) {
+                this.query_filters += `
+                    AND tdus.nu_cnes = :unidadeId
+                `
+                this.parametros_dinamicos.Add(":unidadeId", filtros.unidadeId)
+            }
+    
+            if (filtros.equipeId) {
+                this.query_filters += `
+                    AND tde.nu_ine = :equipeId
+                `
+                this.parametros_dinamicos.Add(":equipeId", filtros.equipeId)
+            }
+    
+            if (filtros.micro_area) {
+                this.query_filters += `
+                    AND tfci.nu_micro_area = :micro_area
+                `
+                this.parametros_dinamicos.Add(":micro_area", filtros.micro_area)
+            }
+    
+            if (filtros.profissionalId) {
+                this.query_filters += `
+                    AND tdp.nu_cns = :profissionalId
+                `
+                this.parametros_dinamicos.Add(":profissionalId", filtros.profissionalId)
+            }
+    
+            if (filtros.data_inicial != null && filtros.data_final != null) {
+                this.query_filters += `
+                    and tdtficha.dt_registro between :data_inicio and :data_final
+                `
+                this.parametros_dinamicos.Add('data_inicio', filtros.data_inicial);
+                this.parametros_dinamicos.Add('data_final', filtros.data_final);
+            }
         }
 
-        if (filtros.micro_area) {
-            query_filters += `
-                AND tfci.nu_micro_area = :micro_area
-            `
-            parametros_dinamicos.Add(":micro_area", filtros.micro_area)
+        else{
+            if (filtros.unidadeId) {
+                this.query_filters += `
+                    AND e.Cnes = :unidadeId
+                `
+                this.parametros_dinamicos.Add(":unidadeId", filtros.unidadeId)
+            }
+    
+            if (filtros.equipeId) {
+                this.query_filters += `
+                    AND eq.id = :equipeId
+                `
+                this.parametros_dinamicos.Add(":equipeId", filtros.equipeId)
+            }
+    
+            if (filtros.micro_area) {
+                this.query_filters += `
+                    AND i.MicroArea = :micro_area
+                `
+                this.parametros_dinamicos.Add(":micro_area", filtros.micro_area)
+            }
+    
+            if (filtros.profissionalId) {
+                this.query_filters += `
+                    AND p.CartaoSus = :profissionalId
+                `
+                this.parametros_dinamicos.Add(":profissionalId", filtros.profissionalId)
+            }
+    
+            if (filtros.data_inicial != null && filtros.data_final != null) {
+                this.query_filters += `
+                    and i.DataAlteracao between :data_inicio and :data_final
+                `
+                this.parametros_dinamicos.Add('data_inicio', filtros.data_inicial);
+                this.parametros_dinamicos.Add('data_final', filtros.data_final);
+            }
         }
+        
 
-        if (filtros.profissionalId) {
-            query_filters += `
-                AND tdp.nu_cns = :profissionalId
-            `
-            parametros_dinamicos.Add(":profissionalId", filtros.profissionalId)
-        }
-
-        if (filtros.data_inicial != null && filtros.data_final != null) {
-            query_filters += `
-                and tdtficha.dt_registro between :data_inicio and :data_final
-            `
-            parametros_dinamicos.Add('data_inicio', filtros.data_inicial);
-            parametros_dinamicos.Add('data_final', filtros.data_final);
-        }
-
-        const SQL = new SQL_COMPLETUDE()
-        let query_FCI = SQL.SQL_BASE +=  query_filters
-               
-        const resultATT_CPF = await dbClient.getPostgDB().query(queryConvert(query_FCI, parametros_dinamicos.GetAll()))
+        const resultATT_CPF = await this.QuerySQL(dbClient) as any[];
 
         if (resultATT_CPF instanceof Error) {
             return new Error('Falha na consulta.')
         }
 
-        const rowsATT_CPF: IATT_CPF[] = resultATT_CPF.rows
-
         let dataExport: IATT_CPF[] = []
 
-
-        rowsATT_CPF.forEach((row) => {
+        resultATT_CPF.forEach((row) => {
 
             const completude = checkFCI(row)
             dataExport.push(

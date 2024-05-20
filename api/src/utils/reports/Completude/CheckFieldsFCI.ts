@@ -54,7 +54,7 @@ export default function checkFCI(fci: IATT_CPF): CheckedFCI {
             faltantes += 1
             invalidacoes.push("Micro Area Ausente")
         }
-        if (!fci.ds_sexo) {
+        if (fci.ds_sexo == null) {
             faltantes += 1
             invalidacoes.push("Tipo Sexo Ausente")
         }
@@ -66,7 +66,7 @@ export default function checkFCI(fci: IATT_CPF): CheckedFCI {
         }
         if (!fci.st_responsavel_familiar) {
             campos += 2
-            if (!fci.doc_cid) {
+            if (!fci.doc_resp) {
                 faltantes += 1
                 invalidacoes.push("Documento Responsavel Familiar")
             }
@@ -143,11 +143,11 @@ export default function checkFCI(fci: IATT_CPF): CheckedFCI {
         }
 
 
-        // Checagem de ocupação 
+        /*// Checagem de ocupação 
         if (!fci.cbo_cidadao) {
             faltantes += 1
             invalidacoes.push("Ocupação Ausente")
-        }
+        }*/
 
 
         // Checagem de grau escolaridade e vínculo trabalhista.

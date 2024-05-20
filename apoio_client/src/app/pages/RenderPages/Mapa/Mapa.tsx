@@ -1,11 +1,11 @@
 //#region Imports
 import { useEffect, useState } from 'react';
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
+import { MapContainer, Marker, Popup, TileLayer, Tooltip, useMapEvent } from 'react-leaflet'
 import axios from 'axios';
 
 //Components
 import { FiltroSimples, FiltroDinamico } from '../../../components/Components';
-import { Icon } from 'leaflet';
+import L, { Icon } from 'leaflet';
 
 
 //Interfaces
@@ -22,40 +22,44 @@ export const Mapa = () => {
     const [MUNICIPIOFilters, setMUNICIPIOFilters] = useState<ISimpleFilterPartition[]>([]);
     const [UNIDADESFilters, setUNIDADESFilters] = useState<IDynamicFilterPartition>({});
     const [IEDFilters, setIEDFilters] = useState<IIEDResponse[]>([]);
+    const [Equipes, setEquipes] = useState<{ red: number, green: number, yellow: number }>();
 
     const greenIcon = new Icon({
-        iconUrl:"marker_green.png",
+        iconUrl: "marker_green.png",
         iconSize: [52, 52]
     })
 
     const redIcon = new Icon({
-        iconUrl:"marker_red.png",
+        iconUrl: "marker_red.png",
         iconSize: [52, 52]
     })
 
     const yellowIcon = new Icon({
-        iconUrl:"marker_yellow.png",
+        iconUrl: "marker_yellow.png",
         iconSize: [52, 52]
     })
 
-    const getIcon = (municipio:any) => {
+    const getIcon = (municipio: any) => {
         if (municipio.qtd_indi >= municipio.max) {
             return {
                 icon: redIcon,
-                message:<span><br/><span style={{fontWeight: "bold"}}>ATENÇÃO!</span><br/>Esta equipe está acima do limite máximo estipulado.</span>,
-                qtd_ind: <span style={{fontWeight: "bold", color:"red"}}>{municipio.qtd_indi}</span>
+                message: <span><br /><span style={{ fontWeight: "bold" }}>ATENÇÃO!</span><br />Esta equipe está acima do limite máximo estipulado.</span>,
+                qtd_ind: <span style={{ fontWeight: "bold", color: "red" }}>{municipio.qtd_indi}</span>,
+                status: "red"
             };
         } else if (municipio.qtd_indi > municipio.param) {
             return {
                 icon: greenIcon,
-                message:<span><br/><span style={{fontWeight: "bold"}}>ÓTIMO!</span><br/>Esta equipe está dentro dos parâmetros.</span>,
-                qtd_ind: <span style={{fontWeight: "bold", color:"black"}}>{municipio.qtd_indi}</span>
+                message: <span><br /><span style={{ fontWeight: "bold" }}>ÓTIMO!</span><br />Esta equipe está dentro dos parâmetros.</span>,
+                qtd_ind: <span style={{ fontWeight: "bold", color: "black" }}>{municipio.qtd_indi}</span>,
+                status: "green"
             };
         } else {
             return {
                 icon: yellowIcon,
-                message: <span><br/><span style={{fontWeight: "bold"}}>OBSERVAÇÃO!</span><br/>Recomendada a alocação mais individuos nesta equipe, caso seja possível.</span>,
-                qtd_ind: <span style={{fontWeight: "bold", color:"#54440f"}}>{municipio.qtd_indi}</span>
+                message: <span><br /><span style={{ fontWeight: "bold" }}>OBSERVAÇÃO!</span><br />Recomendada a alocação mais individuos nesta equipe, caso seja possível.</span>,
+                qtd_ind: <span style={{ fontWeight: "bold", color: "#54440f" }}>{municipio.qtd_indi}</span>,
+                status: "yellow"
             };
         }
     };
@@ -82,19 +86,38 @@ export const Mapa = () => {
         if (clients) {
             axios.get(url)
                 .then(response => {
+                    console.log(response.data)
                     setIEDFilters(response.data)
                 })
                 .catch(error => {
                     console.error('There was an error!', error);
                 });
         }
+        else{
+            setIEDFilters([])
+        }
 
     }, [MUNICIPIOFilters]);
 
+    useEffect(() => {
+
+        let equipes = { red: 0, yellow: 0, green: 0 }
+        IEDFilters.map((key) => {
+            key[Object.keys(key)[0]].map((municipio) => {
+                switch (getIcon(municipio).status) {
+                    case 'red': equipes.red += 1; break
+                    case 'green': equipes.green += 1; break
+                    case 'yellow': equipes.yellow += 1; break
+                }
+            })
+        })
+
+        setEquipes(equipes)
+    }, [IEDFilters]);
 
     return (
         <div className='container_map'>
-            
+
             <div className='page-title'>
                 <div className='back_button_container'>
                     <div className='back_button'>
@@ -103,7 +126,7 @@ export const Mapa = () => {
                     </div>
                 </div>
                 <h2>MAPA</h2>
-                <span>EQUIPES</span> <h2>-</h2> <span>RETERRITORIALIZAÇÃO</span>
+                <span>EQUIPES</span> <h2>-</h2> <span>TERRITORIALIZAÇÃO</span>
             </div>
             <div className="container_filters">
                 <div className='subcontainer_filters'>
@@ -112,7 +135,7 @@ export const Mapa = () => {
                     </div>
                 </div>
             </div>
-            
+
             <div className='LayerContainer'>
                 <MapContainer center={[-7.11532, -34.861]} zoom={13} >
                     <TileLayer
@@ -122,39 +145,56 @@ export const Mapa = () => {
 
                     {IEDFilters.map((key) =>
                         key[Object.keys(key)[0]].map((municipio, indx) => (
-                            <Marker 
-                            key={indx} 
-                            position={[parseFloat(municipio.latitude), parseFloat(municipio.longitude)]} 
-                            icon={getIcon(municipio).icon}
-                            title={municipio.ubs}>
+                            <Marker
+                                key={indx}
+                                position={[parseFloat(municipio.latitude), parseFloat(municipio.longitude)]}
+                                icon={getIcon(municipio).icon}
+                                title={municipio.ubs}>
+                                <Tooltip><span style={{ fontWeight: "bold" }}>UBS: {municipio.ubs}</span><br /><span>CADASTROS ATEND: {getIcon(municipio).qtd_ind}</span></Tooltip>
                                 <Popup
-                                keepInView={true}
+                                    keepInView={true}
                                 >
-                                    <span style={{fontWeight: "bold"}}>MUNICIPIO: {municipio.municipio}</span><br/><br/>
-                                    UBS: {municipio.ubs}<br/><br/>
+                                    <span style={{ fontWeight: "bold" }}>MUNICIPIO: {municipio.municipio}</span><br /><br />
+                                    UBS: {municipio.ubs}<br /><br />
                                     CNES + INE: {municipio.cnes} | {municipio.ine} | {municipio.tp_equipe}<br />
                                     PARÂMETRO: {municipio.param} pessoas<br />
                                     CADASTROS ATEND: {getIcon(municipio).qtd_ind} pessoas<br />
                                     MÁXIMO: {municipio.max} pessoas<br />
                                     {getIcon(municipio).message}
                                 </Popup>
+                                <div className="map-legend">
+                                    <h3>QUANTIDADE DE EQUIPES</h3>
+                                    <br />
+                                    <ul>
+                                        <li>
+                                            <img src='/marker_red.png' style={{width:'1vw', height:'1vw'}}/> <span>Excedente : {Equipes?.red}</span>
+                                        </li>
+                                        <li>
+                                            <img src='/marker_yellow.png' style={{width:'1vw', height:'1vw'}}/> <span>Disponível : {Equipes?.yellow}</span>
+                                        </li>
+                                        <li>
+                                            <img src='/marker_green.png' style={{width:'1vw', height:'1vw'}}/> <span>Regular : {Equipes?.green}</span>
+                                        </li>
+                                        {/* Adicione os itens da sua legenda aqui */}
+                                    </ul>
+                                </div>
                             </Marker>
                         ))
                     )}
                 </MapContainer>
                 <div className='container_legenda'>
                     <div className='item_legenda'>
-                        <img src='/marker_green.png' className='green'/>
+                        <img src='/marker_green.png' className='green' />
                         <span>Dentro dos parâmetros.</span>
                     </div>
 
                     <div className='item_legenda'>
-                        <img src='/marker_yellow.png' className='yellow'/>
+                        <img src='/marker_yellow.png' className='yellow' />
                         <span>Disponível para alocação de indivíduos.</span>
                     </div>
 
                     <div className='item_legenda'>
-                        <img src='/marker_red.png' className='red'/>
+                        <img src='/marker_red.png' className='red' />
                         <span>Exceço de indivíduos.</span>
                     </div>
                 </div>

@@ -3,7 +3,8 @@ export class SQL_ACESSOS_EAS{
         SELECT 
             p.uf,
             p.Cidade,
-            u.Nome as USUARIO,
+            u.Nome as USUARIO,   
+            u.Perfis as PERFIL,
             EXTRACT(year from a.DataHora) as ANO,
             sum(case when EXTRACT(month from a.DataHora) = 1 then 1 else 0 end) as "MES 1",
             sum(case when EXTRACT(month from a.DataHora) = 2 then 1 else 0 end) as "MES 2",
