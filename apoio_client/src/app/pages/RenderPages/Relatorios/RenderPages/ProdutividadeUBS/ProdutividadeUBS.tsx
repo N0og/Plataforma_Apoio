@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 
 //Interfaces
-import { IDynamicFilterPartition } from '../../../../../../interfaces/IFilters'
+import { IDynamicFilterPartition, ISimpleFilterPartition } from '../../../../../../interfaces/IFilters'
 
 //Components
-import { FiltroDinamico, FiltroData } from '../../../../../components/Components'
+import { FiltroDinamico, FiltroData, FiltroSimples } from '../../../../../components/Components'
 
 
 //Styles
@@ -15,27 +15,51 @@ import './ProdutividadeUBS.css'
 
 export const ProdutividadeUBS = () => {
     const [UBSFilters, setUBSFilters] = useState<IDynamicFilterPartition>({});
-    const [MUNICIPIOFilters, setMUNICIPIOFilters] = useState<IDynamicFilterPartition>({});
-    const [INSTALACAOFilters, setINSTALACAOFilters] = useState<IDynamicFilterPartition>({});
+    const [MUNICIPIOFilters, setMUNICIPIOFilters] = useState<ISimpleFilterPartition[]>([]);
+    const [INSTALACAOFilters, setINSTALACAOFilters] = useState<any>([]);
     const [INEFilters, setINEFilters] = useState<IDynamicFilterPartition>({});
     const [PROFFilters, setPROFFilters] = useState<IDynamicFilterPartition>({});
     const [CBOFilters, setCBOFilters] = useState<IDynamicFilterPartition>({});
     const [DATAFilters, setDATAFilters] = useState<string>("");
 
     useEffect(() => {
-        console.log(DATAFilters)
     }, [UBSFilters, DATAFilters])
 
     useEffect(() => {
         axios.get('http://localhost:9090/api/v1/filters/clients')
             .then(response => {
-                console.log(response.data)
                 setMUNICIPIOFilters(response.data)
             })
             .catch(error => {
                 console.error('There was an error!', error);
             });
     }, []);
+
+    useEffect(() => {
+        console.log(MUNICIPIOFilters)
+        axios({
+            method: 'get',
+            url: 'http://localhost:9090/api/v1/filters/unidades',
+            params: {
+                municipios: MUNICIPIOFilters.map((mun) => {
+                    if (Object.values(mun)[0]) {
+                        return Object.keys(mun)[0]
+                    }
+                })
+            },
+            transformRequest: [
+                (data) => {
+                    return JSON.stringify(data);
+                }
+            ]
+        })
+            .then(response => {
+                setINSTALACAOFilters(response.data)
+            })
+            .catch(error => {
+                console.error('There was an error!', error);
+            });
+    }, [MUNICIPIOFilters]);
 
     return (
         <div className="container_report">
@@ -46,22 +70,17 @@ export const ProdutividadeUBS = () => {
                         <i className="fa-solid fa-circle-chevron-left"></i>
                     </div>
                 </div>
-                <div className='icon_container'>
-                    <i className='fa-solid fa-hospital'></i>
+                <div className='municipio_container'>
+
                 </div>
                 <div className='title_container'>
-                    Produtividade UBS
+                    <h4>PRODUTIVIDADE UBS</h4>
                 </div>
-
-                <div className='municipio_container'>
-                    <FiltroDinamico name={"MUNICÍPIO"} filter={MUNICIPIOFilters} changeFilter={setMUNICIPIOFilters} />
-
-                    <FiltroDinamico name={"INSTALAÇÃO"} filter={INSTALACAOFilters} changeFilter={setINSTALACAOFilters} />
-                </div>
-
             </div>
             <div className="container_filters">
                 <div className='filters_organization'>
+                    <FiltroSimples name={"MUNICÍPIO"} filters={MUNICIPIOFilters} changeFilter={setMUNICIPIOFilters} />
+                    <FiltroDinamico name={"INSTALAÇÃO"} filter={INSTALACAOFilters} changeFilter={setINSTALACAOFilters} />
                     <FiltroDinamico name={"UBS"} filter={UBSFilters} changeFilter={setUBSFilters} />
                     <FiltroDinamico name={"INE"} filter={INEFilters} changeFilter={setINEFilters} />
                     <FiltroDinamico name={"PROFISSIONAL"} filter={PROFFilters} changeFilter={setPROFFilters} />

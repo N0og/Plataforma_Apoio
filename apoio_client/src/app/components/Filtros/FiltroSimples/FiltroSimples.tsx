@@ -9,17 +9,39 @@ export const FiltroSimples: React.FC<{ name: string, filters: ISimpleFilterParti
 
   const toggleFilter = (index: number, key: string) => {
 
-    changeFilter(prevFilters => prevFilters.map((filters, idx) => 
+    changeFilter(prevFilters => prevFilters.map((filters, idx) =>
       idx === index ? { ...filters, [key]: !filters[key] } : filters
     ));
-
 
     const isActive = !filters[index][key];
     setCounter(prevCounter => isActive ? prevCounter + 1 : prevCounter - 1);
   }
 
+  const toggleAllFilters = () => {
+    changeFilter(prevFilters => {
+        const allTrue = prevFilters.every(filter => Object.values(filter).every(value => value === true));
+        
+        if (allTrue){
+          
+          setCounter(0)
+        }
+        else{
+          
+          setCounter(filters.length)
+        }
+
+        return prevFilters.map(filter => {
+            const newFilter: {[key: string]: boolean} = {};
+            for (let key in filter) {
+                newFilter[key] = !allTrue;
+            }
+            return newFilter;
+        });
+    });
+};
+
   return (
-    <div className="filter-container">
+    <div className="s_filter-container">
       <div className="filterIcon">
         <i className="fa-solid fa-filter"></i>
       </div>
@@ -30,23 +52,33 @@ export const FiltroSimples: React.FC<{ name: string, filters: ISimpleFilterParti
       </button>
 
       <div className={isOpen ? "filters" : "filtersClosed"}>
+        <div className="filter-all" key={`filter-option-0000-0000`}>
+          <label >
+            <input
+              type="checkbox"
+              onChange={() => toggleAllFilters()}
+            />
+            <label className="custom-checkbox"></label>
+            <span className="span-container">SELECIONAR TUDO</span>
+          </label>
+        </div>
         {
-          Object.keys(filters).map((indice, index) =>
-            Object.keys(filters[index]).map((option, optionIndex) =>  (
-                <div className="filter-option" key={`filter-option-${index}-${optionIndex}`}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      id={`checkbox-${index}-${optionIndex}`}
-                      checked={filters[index][option]}
-                      onChange={() => toggleFilter(index, option)}
-                    />
-                    <label htmlFor={`checkbox-${index}-${optionIndex}`} className="custom-checkbox"></label>
-                    <span className="span-container">{option}</span>
-                  </label>
-                </div>
-              ))
-            )
+          Object.keys(filters).map((_, index) =>
+            Object.keys(filters[index]).map((option, optionIndex) => (
+              <div className="filter-option" key={`filter-option-${index}-${optionIndex}`}>
+                <label>
+                  <input
+                    type="checkbox"
+                    id={`checkbox-${index}-${optionIndex}`}
+                    checked={filters[index][option]}
+                    onChange={() => toggleFilter(index, option)}
+                  />
+                  <label htmlFor={`checkbox-${index}-${optionIndex}`} className="custom-checkbox"></label>
+                  <span className="span-container">{option}</span>
+                </label>
+              </div>
+            ))
+          )
         }
       </div>
     </div>

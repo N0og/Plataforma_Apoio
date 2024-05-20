@@ -35,8 +35,8 @@ export default class MapController {
                     }
                 }
                 else{
-                    
-                    return res.status(400).json({ error: 'Banco não localizado' })
+                    continue
+                    //return res.status(400).json({ error: 'Banco não localizado' })
                 }
 
 

@@ -34,6 +34,7 @@ router.post('/api/v1/db/update', new DBController().handleUpdateDb)
 //#region Filtros
 
 router.get('/api/v1/filters/clients', new FiltersController().handlerClientsFilter)
+router.get('/api/v1/filters/unidades', new FiltersController().handlerUnidadesFilter)
 
 //#endregion
 

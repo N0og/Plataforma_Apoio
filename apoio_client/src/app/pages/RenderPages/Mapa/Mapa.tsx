@@ -1,68 +1,28 @@
 //#region Imports
 import { useEffect, useState } from 'react';
-import { MapContainer, Marker, Popup, TileLayer, Tooltip, useMapEvent } from 'react-leaflet'
+import { MapContainer, Marker, Popup, TileLayer, Tooltip } from 'react-leaflet'
 import axios from 'axios';
 
 //Components
-import { FiltroSimples, FiltroDinamico } from '../../../components/Components';
-import L, { Icon } from 'leaflet';
+import { FiltroSimples } from '../../../components/Components';
 
 
 //Interfaces
-import { IDynamicFilterPartition, ISimpleFilterPartition } from '../../../../interfaces/IFilters';
+import { ISimpleFilterPartition } from '../../../../interfaces/IFilters';
 import { IIEDResponse } from '../../../../interfaces/IResponses';
 
 //Styles
 import './Mapa.css'
 import 'leaflet/dist/leaflet.css';
+import { getIcon } from './Utils/getIcon';
 //#endregion
 
 export const Mapa = () => {
 
     const [MUNICIPIOFilters, setMUNICIPIOFilters] = useState<ISimpleFilterPartition[]>([]);
-    const [UNIDADESFilters, setUNIDADESFilters] = useState<IDynamicFilterPartition>({});
     const [IEDFilters, setIEDFilters] = useState<IIEDResponse[]>([]);
     const [Equipes, setEquipes] = useState<{ red: number, green: number, yellow: number }>();
 
-    const greenIcon = new Icon({
-        iconUrl: "marker_green.png",
-        iconSize: [52, 52]
-    })
-
-    const redIcon = new Icon({
-        iconUrl: "marker_red.png",
-        iconSize: [52, 52]
-    })
-
-    const yellowIcon = new Icon({
-        iconUrl: "marker_yellow.png",
-        iconSize: [52, 52]
-    })
-
-    const getIcon = (municipio: any) => {
-        if (municipio.qtd_indi >= municipio.max) {
-            return {
-                icon: redIcon,
-                message: <span><br /><span style={{ fontWeight: "bold" }}>ATENÇÃO!</span><br />Esta equipe está acima do limite máximo estipulado.</span>,
-                qtd_ind: <span style={{ fontWeight: "bold", color: "red" }}>{municipio.qtd_indi}</span>,
-                status: "red"
-            };
-        } else if (municipio.qtd_indi > municipio.param) {
-            return {
-                icon: greenIcon,
-                message: <span><br /><span style={{ fontWeight: "bold" }}>ÓTIMO!</span><br />Esta equipe está dentro dos parâmetros.</span>,
-                qtd_ind: <span style={{ fontWeight: "bold", color: "black" }}>{municipio.qtd_indi}</span>,
-                status: "green"
-            };
-        } else {
-            return {
-                icon: yellowIcon,
-                message: <span><br /><span style={{ fontWeight: "bold" }}>OBSERVAÇÃO!</span><br />Recomendada a alocação mais individuos nesta equipe, caso seja possível.</span>,
-                qtd_ind: <span style={{ fontWeight: "bold", color: "#54440f" }}>{municipio.qtd_indi}</span>,
-                status: "yellow"
-            };
-        }
-    };
 
     useEffect(() => {
         axios.get('http://localhost:9090/api/v1/filters/clients')
@@ -75,18 +35,19 @@ export const Mapa = () => {
     }, []);
 
     useEffect(() => {
+        console.log(MUNICIPIOFilters)
         let clients = MUNICIPIOFilters.map((client) => {
-            if (client[Object.keys(client)[0]] == true) {
+            if (client[Object.keys(client)[0]] === true) {
                 return `&dbname=${Object.keys(client)[0].replace(/ /g, '%20')}`
             }
-        })
+        }).filter(Boolean);
 
         let url = `http://localhost:9090/api/v1/maps/ied?dbtype=mdb${clients.join('')}`
 
-        if (clients) {
+        if (clients.length > 0) {
+            console.log(url)
             axios.get(url)
                 .then(response => {
-                    console.log(response.data)
                     setIEDFilters(response.data)
                 })
                 .catch(error => {
@@ -114,6 +75,7 @@ export const Mapa = () => {
 
         setEquipes(equipes)
     }, [IEDFilters]);
+
 
     return (
         <div className='container_map'>
@@ -143,7 +105,7 @@ export const Mapa = () => {
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
 
-                    {IEDFilters.map((key) =>
+                    {IEDFilters.length > 0 && IEDFilters.map((key) =>
                         key[Object.keys(key)[0]].map((municipio, indx) => (
                             <Marker
                                 key={indx}

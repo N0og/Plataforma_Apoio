@@ -3,11 +3,11 @@ import './FiltroDinamico.css'
 import { IDynamicFilterPartition } from "../../../../interfaces/IFilters";
 
 
-export const FiltroDinamico:React.FC<{name:string, filter:IDynamicFilterPartition, changeFilter:React.Dispatch<SetStateAction<IDynamicFilterPartition>>}> = ({name, filter, changeFilter}) => {
+export const FiltroDinamico: React.FC<{ name: string, filter: any, changeFilter: React.Dispatch<SetStateAction<IDynamicFilterPartition>> }> = ({ name, filter, changeFilter }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [counter, setCounter] = useState<number>(0);
-  
-  const toggleFilter = (boxTitle:string, boxSubTitle:string, option:string) => {
+
+  const toggleFilter = (boxTitle: string, boxSubTitle: string, option: string) => {
     changeFilter(prevFilters => ({
       ...prevFilters,
       [boxTitle]: {
@@ -24,7 +24,7 @@ export const FiltroDinamico:React.FC<{name:string, filter:IDynamicFilterPartitio
   }
 
   return (
-    <div className="filter-container">
+    <div className="d_filter-container">
       <div className="filterIcon">
         <i className="fa-solid fa-filter"></i>
       </div>
@@ -33,44 +33,35 @@ export const FiltroDinamico:React.FC<{name:string, filter:IDynamicFilterPartitio
         {counter > 0 ? <div className="counter-filter">{counter}</div> : ""}
         {isOpen ? <i className="fa-solid fa-caret-up"></i> : <i className="fa-solid fa-caret-down"></i>}
       </button>
-      
-        <div className={isOpen?"filters":"filtersClosed"}>
-          {
-            Object.keys(filter).map((box_title, index) => (
-              <div className="box-container">
-                <div className="h1-container">
-                  <span>{box_title}</span>
-                </div>
-                {Object.keys(filter[box_title]).map((box_sub_title, index) => (
-                  <div>
-                    <div className="h2-container">
-                      <span>{box_sub_title}</span>
-                    </div>
-                    {Object.keys(filter[box_title][box_sub_title]).map((option, index) => (
-                      <div className="filter-option">
-                        <label>
-                          <input
-                            type="checkbox"
-                            id="checkbox "
-                            checked={filter[box_title][box_sub_title][option]}
-                            onChange={() => toggleFilter(box_title,box_sub_title,option)}
-                            
-                          />
-                          <label htmlFor="checkbox" className="custom-checkbox"></label>
-                          <span className="span-container">{option}</span>
-                        </label>
-                      </div>
-                    ))}
 
-                  </div>
-                ))
-                }
-
+      <div className={isOpen ? "filters" : "filtersClosed"}>
+        {
+          Object.keys(filter).map((municipio) => (
+            <div className="box-container">
+              <div className="h1-container">
+                <span>{Object.keys(filter[municipio])[0]}</span>
               </div>
-            ))
-          }
-        </div>
-      
+              {Object.keys(filter[municipio]).map((unidade)=>(
+                <div>  
+                  {filter[municipio][unidade].map((unidade_t:{id:number, unidade:string})=>(
+                    <div className="filter-option" key={`filter-option-0000-0000`}>
+                    <label>
+                      <input
+                        type="checkbox"
+                      />
+                      <label className="custom-checkbox"></label>
+                      <span className="span-container">{unidade_t.unidade}</span>
+                    </label>
+                  </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          ))
+
+        }
+      </div>
+
     </div>
   )
 }

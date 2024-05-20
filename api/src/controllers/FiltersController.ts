@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import clientsFilterService from "../services/filterServices/clientFilterService";
+import unidadesFilterService from "../services/filterServices/unidadesFilterService";
 
 export default class FiltersController {
     async executeHandler(req: Request, res: Response, serviceClass: any, body_params: any, query_params: any) {
@@ -30,5 +31,12 @@ export default class FiltersController {
         const query_params = req.query
 
         this.executeHandler(req, res, clientsFilterService, body_params, query_params)
+    }
+
+    handlerUnidadesFilter = async (req: Request, res: Response) => {
+        const body_params = req.body
+        const query_params = req.query
+
+        this.executeHandler(req, res, unidadesFilterService, body_params, query_params)
     }
 }
