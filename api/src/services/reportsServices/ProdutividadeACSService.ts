@@ -6,7 +6,7 @@ import { SQL_PROD_ACS_CONSOLIDADO, SQL_PROD_ACS_POR_DIA } from "./SQL";
 
 export class ProdutividadeACS_PorDiaQuery{
     // Produtividade ACS Visitas Por Dia.
-    async execute (dbClient:ConnectDBs, filtros_body: any, filtros_query: any){
+    async execute (dbtype:string, dbClient:ConnectDBs, filtros_body: any, filtros_query: any){
 
         const SQL = new SQL_PROD_ACS_POR_DIA()
 
@@ -94,7 +94,7 @@ export class ProdutividadeACS_PorDiaQuery{
 }
 
 export class ProdutividadeACS_ConsolidadoQuery{
-    async execute(dbClient:ConnectDBs, filtros_body:any, filtros_query:any){
+    async execute(dbtype:string, dbClient:ConnectDBs, filtros_body:any, filtros_query:any){
 
         const parametros_dinamicos = new DynamicParameters()
         let query_base_filtros = ""

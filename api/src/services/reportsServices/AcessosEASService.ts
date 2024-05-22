@@ -4,7 +4,7 @@ import DynamicParameters from "../../utils/reports/DynamicParameters";
 import { SQL_ACESSOS_EAS } from "./SQL/SQLAcessosEAS";
 
 export default class AcessosEASService{
-    async execute(dbClient:ConnectDBs, filtros_body:any, filtros_query:any){
+    async execute(dbtype:string, dbClient:ConnectDBs, filtros_body:any, filtros_query:any){
 
         const SQL = new SQL_ACESSOS_EAS()
 

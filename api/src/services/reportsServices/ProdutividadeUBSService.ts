@@ -5,7 +5,7 @@ import { ConnectDBs } from "../../database/init"
 import {SQL_PROD_UBS} from "./SQL"
 
 export default class ProdutividadeUBS_ConsolidadoQuery {
-    async execute(dbClient:ConnectDBs, filtros_body: IProdutividadeUBS) {
+    async execute(dbtype:string, dbClient:ConnectDBs, filtros_body: IProdutividadeUBS) {
         
         const parametros_dinamicos = new DynamicParameters()
         let query_base_filtros = ""

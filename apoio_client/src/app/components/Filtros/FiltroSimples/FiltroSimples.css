@@ -204,6 +204,7 @@
                 border-radius: 1vw;
                 background-color: var(--cor-min_grey);
                 position: relative;
+                transition: 0.2s;
             }
 
             .custom-checkbox::after {
@@ -211,20 +212,17 @@
                 position: absolute;
                 width: 100%;
                 height: 100%;
-
                 border-radius: 1vw;
                 background-color: var(--cor-rose);
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
                 opacity: 0;
-                /* Esconder quando não está marcado */
                 transition: opacity 0.3s;
             }
 
             input[type="checkbox"]:checked+.custom-checkbox::after {
                 opacity: 1;
-                /* Mostrar quando está marcado */
             }
 
             
@@ -235,7 +233,8 @@
 
     .filter-option:hover{
         .custom-checkbox{
-            background-color: var(--cor-rose);
+            background-color: var(--cor-rose-light);
+            cursor: pointer;
         }
     }
 
@@ -273,20 +272,17 @@
                 position: absolute;
                 width: 100%;
                 height: 100%;
-
                 border-radius: 1vw;
                 background-color: var(--cor-light);
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
                 opacity: 0;
-                /* Esconder quando não está marcado */
                 transition: opacity 0.3s;
             }
 
             input[type="checkbox"]:checked+.custom-checkbox::after {
                 opacity: 1;
-                /* Mostrar quando está marcado */
             }
 
             
@@ -297,7 +293,8 @@
 
     .filter-all:hover{
         .custom-checkbox{
-            background-color: var(--cor-light);
+            background-color: var(--cor-rose-light);
+            cursor: pointer;
         }
     }
 

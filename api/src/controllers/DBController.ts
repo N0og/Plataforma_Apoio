@@ -4,7 +4,7 @@ import UpdateDBService from "../services/dbServices/UpdateDBService";
 export default class DBController{
     async executeHandler(req:Request, res:Response, serviceClass:any, serviceParams:any){
         try {
-            
+    
             const serviceInstance = new serviceClass();
             const result = await serviceInstance.execute(serviceParams);
 

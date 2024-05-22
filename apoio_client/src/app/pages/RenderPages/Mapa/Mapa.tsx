@@ -17,11 +17,12 @@ import 'leaflet/dist/leaflet.css';
 import { getIcon } from './Utils/getIcon';
 //#endregion
 
-export const Mapa = () => {
+export const Mapa: React.FC<{ setCurrentPage: React.Dispatch<React.SetStateAction<string>> }> = ({ setCurrentPage }) => {
 
     const [MUNICIPIOFilters, setMUNICIPIOFilters] = useState<ISimpleFilterPartition[]>([]);
     const [IEDFilters, setIEDFilters] = useState<IIEDResponse[]>([]);
     const [Equipes, setEquipes] = useState<{ red: number, green: number, yellow: number }>();
+    const [loading_state, setLoading] = useState(false);
 
 
     useEffect(() => {
@@ -35,7 +36,6 @@ export const Mapa = () => {
     }, []);
 
     useEffect(() => {
-        console.log(MUNICIPIOFilters)
         let clients = MUNICIPIOFilters.map((client) => {
             if (client[Object.keys(client)[0]] === true) {
                 return `&dbname=${Object.keys(client)[0].replace(/ /g, '%20')}`
@@ -45,9 +45,10 @@ export const Mapa = () => {
         let url = `http://localhost:9090/api/v1/maps/ied?dbtype=mdb${clients.join('')}`
 
         if (clients.length > 0) {
-            console.log(url)
+            setLoading(true)
             axios.get(url)
                 .then(response => {
+                    setLoading(false)
                     setIEDFilters(response.data)
                 })
                 .catch(error => {
@@ -83,7 +84,7 @@ export const Mapa = () => {
             <div className='page-title'>
                 <div className='back_button_container'>
                     <div className='back_button'>
-                        <button></button>
+                        <button onClick={() => setCurrentPage('relatorios')}></button>
                         <i className="fa-solid fa-circle-chevron-left"></i>
                     </div>
                 </div>
@@ -94,6 +95,11 @@ export const Mapa = () => {
                 <div className='subcontainer_filters'>
                     <div className='municipio_filter'>
                         <FiltroSimples name={"MUNICÍPIO"} filters={MUNICIPIOFilters} changeFilter={setMUNICIPIOFilters} />
+                        {loading_state ? 
+                            <div className='loading_container'>
+                                <div className='loading_filter'></div>
+                                <span>Carregando...</span>
+                            </div> : ""}
                     </div>
                 </div>
             </div>

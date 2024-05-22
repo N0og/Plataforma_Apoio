@@ -2,25 +2,22 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 
-//Interfaces
-import { IDynamicFilterPartition, ISimpleFilterPartition } from '../../../../../../interfaces/IFilters'
-
 //Components
 import { FiltroDinamico, FiltroData, FiltroSimples } from '../../../../../components/Components'
-
 
 //Styles
 import './ProdutividadeUBS.css'
 //#endregion
 
-export const ProdutividadeUBS = () => {
-    const [UBSFilters, setUBSFilters] = useState<IDynamicFilterPartition>({});
-    const [MUNICIPIOFilters, setMUNICIPIOFilters] = useState<ISimpleFilterPartition[]>([]);
-    const [INSTALACAOFilters, setINSTALACAOFilters] = useState<any>([]);
-    const [INEFilters, setINEFilters] = useState<IDynamicFilterPartition>({});
-    const [PROFFilters, setPROFFilters] = useState<IDynamicFilterPartition>({});
-    const [CBOFilters, setCBOFilters] = useState<IDynamicFilterPartition>({});
+export const ProdutividadeUBS: React.FC<{ setCurrentPage: React.Dispatch<React.SetStateAction<string>> }> = ({ setCurrentPage }) => {
+    const [UBSFilters, setUBSFilters] = useState<any[]>([]);
+    const [MUNICIPIOFilters, setMUNICIPIOFilters] = useState<any[]>([]);
+    const [INSTALACAOFilters, setINSTALACAOFilters] = useState<any[]>([]);
+    const [INEFilters, setINEFilters] = useState<any[]>([]);
+    const [PROFFilters, setPROFFilters] = useState<any[]>([]);
+    const [CBOFilters, setCBOFilters] = useState<any[]>([]);
     const [DATAFilters, setDATAFilters] = useState<string>("");
+    const [loading_state, setLoading] = useState(false);
 
     useEffect(() => {
     }, [UBSFilters, DATAFilters])
@@ -36,29 +33,38 @@ export const ProdutividadeUBS = () => {
     }, []);
 
     useEffect(() => {
-        console.log(MUNICIPIOFilters)
-        axios({
-            method: 'get',
-            url: 'http://localhost:9090/api/v1/filters/unidades',
-            params: {
-                municipios: MUNICIPIOFilters.map((mun) => {
-                    if (Object.values(mun)[0]) {
-                        return Object.keys(mun)[0]
+
+        let mun = MUNICIPIOFilters.map((mun) => {
+            if (Object.values(mun)[0]) {
+                setLoading(true)
+                return Object.keys(mun)[0]
+            }
+        }).filter(Boolean);
+
+        if (mun.length > 0){
+            axios({
+                method: 'get',
+                url: 'http://localhost:9090/api/v1/filters/unidades',
+                params: {
+                    municipios: mun
+                },
+                transformRequest: [
+                    (data) => {
+                        return JSON.stringify(data);
                     }
-                })
-            },
-            transformRequest: [
-                (data) => {
-                    return JSON.stringify(data);
-                }
-            ]
-        })
-            .then(response => {
-                setINSTALACAOFilters(response.data)
+                ]
             })
-            .catch(error => {
-                console.error('There was an error!', error);
-            });
+                .then(response => {
+                    setLoading(false)
+                    setINSTALACAOFilters(response.data)
+                })
+                .catch(error => {
+                    console.error('There was an error!', error);
+                });
+        }
+        
+        setINSTALACAOFilters([])
+
     }, [MUNICIPIOFilters]);
 
     return (
@@ -66,12 +72,16 @@ export const ProdutividadeUBS = () => {
             <div className="container_title">
                 <div className='back_button_container'>
                     <div className='back_button'>
-                        <button></button>
+                        <button onClick={() => setCurrentPage('relatorios')}></button>
                         <i className="fa-solid fa-circle-chevron-left"></i>
                     </div>
+                    {loading_state ?
+                        <div className='loading_container'>
+                            <div className='loading_filter'></div>
+                            <span>Carregando...</span>
+                        </div> : ""}
                 </div>
                 <div className='municipio_container'>
-
                 </div>
                 <div className='title_container'>
                     <h4>PRODUTIVIDADE UBS</h4>

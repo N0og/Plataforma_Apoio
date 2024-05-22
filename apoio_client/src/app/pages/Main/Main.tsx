@@ -12,7 +12,6 @@ import {
 
 
 export const Main = () => {
-
     const [currentPage, setCurrentPage] = useState("relatorios");
     const renderPage = () => {
         switch (currentPage) {
@@ -25,9 +24,9 @@ export const Main = () => {
             case "ajuda":
                 return <Ajuda />;
             case "produtividadeubs":
-                return <ProdutividadeUBS />;
+                return <ProdutividadeUBS setCurrentPage={setCurrentPage} />;
             case "mapa":
-                return <Mapa />;
+                return <Mapa setCurrentPage={setCurrentPage}/>;
             default:
                 return <Dashboard />;
         }

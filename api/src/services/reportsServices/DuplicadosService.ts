@@ -2,7 +2,7 @@ import { ConnectDBs } from "../../database/init";
 import { SQL_DUP_PEC } from "./SQL";
 
 export default class DuplicadosPECQuery{
-    async execute(dbClient:ConnectDBs ,filtros_body:any){
+    async execute(dbtype:string, dbClient:ConnectDBs, filtros_body:any){
 
         const SQL = new SQL_DUP_PEC()
         

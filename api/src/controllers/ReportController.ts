@@ -129,14 +129,14 @@ export default class ReportController {
             for (let MunicipioExcel of Object.keys(MUNICIPIOS_EXCEL)) {
                 if ("download" in query_params && query_params["download"] === 'true') {
                     const worksheetBuffer:Buffer = await MUNICIPIOS_EXCEL[MunicipioExcel].excel_builder.save_worksheet();
-                    zip.file(`${tipo}-${MunicipioExcel}.xlsx`, worksheetBuffer);
+                    zip.file(`${MunicipioExcel}.xlsx`, worksheetBuffer);
                 }
             }
 
             if ("download" in query_params && query_params["download"] === 'true') {
                 const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
                 res.set('Content-Type', 'application/zip');
-                res.set('Content-Disposition', `attachment; filename="${tipo}-${new Date().toLocaleDateString('pt-BR')}.zip"`);
+                res.set('Content-Disposition', `attachment; filename="${tipo}.zip"`);
                 res.send(zipBuffer);
             }
 

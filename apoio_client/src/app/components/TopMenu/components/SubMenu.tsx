@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 export const SubMenu:React.FC<{loggedState:boolean}> = ({ loggedState }) => {
 
-    const [devopt, setDevopt] = useState(false)
+    const [devopt, _setDevopt] = useState(false)
     const [isHovered, setIsHovered] = useState(false);
 
     if(devopt){

@@ -16,7 +16,7 @@ router.get('/api/v1/reports/ProdutividadeACS/VisitasPorDia', new CheckClientMidd
 
 router.get('/api/v1/reports/ProdutividadeACS/Consolidado', new CheckClientMiddleware().execute ,new ReportController().handleProdutividadeACS_Consolidado)
 
-router.get('/api/v1/reports/ProdutividadeUBS/Consolidado', new CheckClientMiddleware().execute, new ReportController().handleProdutividadeUBS_Consolidado)
+router.get('/api/v1/reports/ProdutividadeUBS', new CheckClientMiddleware().execute, new ReportController().handleProdutividadeUBS_Consolidado)
 
 router.get('/api/v1/reports/Completude', new CheckClientMiddleware().execute, new ReportController().handleCompletude)
 

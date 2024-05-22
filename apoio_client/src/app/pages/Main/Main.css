@@ -2,7 +2,8 @@
 
 :root{
     --cor-light: #fff;
-    --cor-rose: #c45b59;
+    --cor-rose: #c67c7c;
+    --cor-rose-light: #d3a9a9;
     --cor-white-backgroud: rgb(248, 248, 248);
     --cor-shadow-min: rgb(217, 217, 217);
     --cor-shadow-mid: rgb(198, 186, 186);
@@ -43,10 +44,8 @@
     box-shadow: 0px 1px 15px 0px var(--cor-shadow-min);
     width: 100vw;
     height: 3vw;
-    
     animation: go-back 0.3s;
     z-index: 9999;
-    
     font-family: 'Roboto';
 }
 
@@ -77,6 +76,7 @@
     border-right: 1px solid var(--cor-min_grey);
     z-index: 9998;
     animation: go-back 0.5s;
+    font-family: 'Roboto';
 }
 
 
@@ -89,5 +89,7 @@
     width: 96%;
     margin-left: 4%;
     height: 100%;
+    z-index: 9997;
+    font-family: 'Roboto';
 }
 
