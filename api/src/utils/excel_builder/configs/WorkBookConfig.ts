@@ -36,7 +36,19 @@ export class WorksheetConfig implements WorksheetOption{
 }
 
 export class styles{
-    static cabecalho: Style = {
+
+    static top: Style = {
+        font:{
+            bold: true,
+            size: 36
+        },
+        alignment:{
+            horizontal: 'center',
+            vertical: 'center'
+        }
+    }
+
+    static header: Style = {
         fill:{
             type: "pattern",
             patternType: "solid",
@@ -53,7 +65,7 @@ export class styles{
         }
     }
 
-    static numeros: Style = {
+    static numbers: Style = {
         alignment:{
             horizontal: 'center',
             vertical: 'center'

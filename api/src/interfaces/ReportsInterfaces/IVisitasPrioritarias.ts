@@ -8,7 +8,7 @@ export interface IVisitasPrioriFiltros{
     micro_area?: number;
     cartao_sus?: string;
     compartilhada?: boolean;
-    desfecho?: string;
+    desfecho?: boolean;
     tipo_visita?: number;
     cadastro_atualizacao?: number;
     fora_area?: boolean;
@@ -18,26 +18,26 @@ export interface IVisitasPrioriFiltros{
     //#endregion
 
     //Filtros Condições de Saúde.
-    gestante?: boolean;
-    idoso?: boolean;
-    crianca?: boolean;
-    hipertenso?:boolean;
+    gestantes?: boolean;
+    idosos?: boolean;
+    criancas?: boolean;
+    hipertensos?:boolean;
     dpoc?:boolean;
     outras_doencas?:boolean;
     sintomas_respiratorio?:boolean;
     vulnerabilidade_social?:boolean;
-    usuario_alcool?:boolean;
-    puerpera?:boolean;
-    desnutricao?:boolean;
-    diabetes?:boolean;
+    alcoolatras?:boolean;
+    puerperas?:boolean;
+    desnutridos?:boolean;
+    diabeticos?:boolean;
     cancer?:boolean;
     hanseniase?:boolean;
-    tabagista?:boolean;
+    tabagistas?:boolean;
     bolsa_familia?:boolean;
     outras_drogas?:boolean;
     recem_nascido?:boolean;
     reabilitacao_deficiencia?:boolean;
-    asma?:boolean;
+    asmaticos?:boolean;
     outras_doencas_cronicas?:boolean;
     tuberculose?:boolean;
     domiciliados_acamados?:boolean;

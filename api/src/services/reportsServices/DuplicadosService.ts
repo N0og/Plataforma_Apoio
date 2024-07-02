@@ -6,10 +6,10 @@ export default class DuplicadosPECQuery{
 
         const SQL = new SQL_DUP_PEC()
         
-        const query_base = SQL.SQL_BASE
+        const SQL_BASE = SQL.getBase()
 
-        const result = await dbClient.getPostgDB().query(query_base)
+        const REPORT = await dbClient.getPostgDB().query(SQL_BASE)
     
-        return result.rows;
+        return REPORT.rows;
     }
 }

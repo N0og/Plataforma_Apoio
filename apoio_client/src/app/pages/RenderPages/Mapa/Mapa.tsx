@@ -130,22 +130,6 @@ export const Mapa: React.FC<{ setCurrentPage: React.Dispatch<React.SetStateActio
                                     MÁXIMO: {municipio.max} pessoas<br />
                                     {getIcon(municipio).message}
                                 </Popup>
-                                <div className="map-legend">
-                                    <h3>QUANTIDADE DE EQUIPES</h3>
-                                    <br />
-                                    <ul>
-                                        <li>
-                                            <img src='/marker_red.png' style={{width:'1vw', height:'1vw'}}/> <span>Excedente : {Equipes?.red}</span>
-                                        </li>
-                                        <li>
-                                            <img src='/marker_yellow.png' style={{width:'1vw', height:'1vw'}}/> <span>Disponível : {Equipes?.yellow}</span>
-                                        </li>
-                                        <li>
-                                            <img src='/marker_green.png' style={{width:'1vw', height:'1vw'}}/> <span>Regular : {Equipes?.green}</span>
-                                        </li>
-                                        {/* Adicione os itens da sua legenda aqui */}
-                                    </ul>
-                                </div>
                             </Marker>
                         ))
                     )}
@@ -153,17 +137,17 @@ export const Mapa: React.FC<{ setCurrentPage: React.Dispatch<React.SetStateActio
                 <div className='container_legenda'>
                     <div className='item_legenda'>
                         <img src='/marker_green.png' className='green' />
-                        <span>Dentro dos parâmetros.</span>
+                        <span>Dentro dos parâmetros: {Equipes?.green}</span>
                     </div>
 
                     <div className='item_legenda'>
                         <img src='/marker_yellow.png' className='yellow' />
-                        <span>Disponível para alocação de indivíduos.</span>
+                        <span>Disponível para alocação de indivíduos: {Equipes?.yellow}</span>
                     </div>
 
                     <div className='item_legenda'>
                         <img src='/marker_red.png' className='red' />
-                        <span>Exceço de indivíduos.</span>
+                        <span>Parâmetro excedido: {Equipes?.red}</span>
                     </div>
                 </div>
             </div>

@@ -7,13 +7,13 @@ export const Routers = () => {
         <BrowserRouter>
             <Routes>
                 <Route
-                    path="/main"
+                    path="/"
                     element={<Main />}
                 />
 
                 <Route
                     path='*'
-                    element={<Navigate to='/main' />}
+                    element={<Navigate to='/' />}
                 />
 
             </Routes>

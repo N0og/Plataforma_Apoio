@@ -1,4 +1,4 @@
-import { municipioRepository } from "../../database/repository/DBRepositorys";
+import { municipioRepository } from "../../database/repository/API_DB_Repositorys";
 
 interface test {
     [key: string]: { [key: string]: { [key: string]: boolean } };

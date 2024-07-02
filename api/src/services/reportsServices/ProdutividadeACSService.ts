@@ -1,150 +1,120 @@
 import { ConnectDBs } from "../../database/init";
+import IProdutividadeACS from "../../interfaces/ReportsInterfaces/IProdutividadeACS";
 import { DefaultTypesJSON } from "../../utils/bd/DefaultTypesJSON";
 import DynamicParameters from "../../utils/reports/DynamicParameters";
 import { SQL_PROD_ACS_CONSOLIDADO, SQL_PROD_ACS_POR_DIA } from "./SQL";
 
 
-export class ProdutividadeACS_PorDiaQuery{
+export class ProdutividadeACS_PorDiaQuery {
     // Produtividade ACS Visitas Por Dia.
-    async execute (dbtype:string, dbClient:ConnectDBs, filtros_body: any, filtros_query: any){
+    async execute(dbtype: string, dbClient: ConnectDBs, filtros_body: IProdutividadeACS, filtros_query: any) {
 
         const SQL = new SQL_PROD_ACS_POR_DIA()
+        const DYNAMIC_PARAMETERS = new DynamicParameters()
 
-        let query_base = SQL.SQL_BASE
-
-        const parametros_dinamicos = new DynamicParameters()
-        let query_dias_filtros = ""
+        let SQL_BASE = SQL.getBase()
+        let QUERY_FILTERS = ""
 
         //Filtros de consulta base.
         if (filtros_body.unidadeId && filtros_body.unidadeId > 0) {
-            query_dias_filtros += " AND  VisitaDomiciliar.Estabelecimento_Id = :estabelecimento_Id ";
-            parametros_dinamicos.Add("estabelecimento_Id", filtros_body.unidadeId);
+            QUERY_FILTERS += " AND  VisitaDomiciliar.Estabelecimento_Id = :estabelecimento_Id ";
+            DYNAMIC_PARAMETERS.Add("estabelecimento_Id", filtros_body.unidadeId);
         }
 
-        if (filtros_body.profissionalId) {
-            query_dias_filtros += " AND  VisitaDomiciliar.Profissional_Id = :profissionalId ";
-            parametros_dinamicos.Add("profissionalId", filtros_body.profissionalId)
+        if (filtros_body.profissionalId && filtros_body.profissionalId > 0 ) {
+            QUERY_FILTERS += " AND  VisitaDomiciliar.Profissional_Id = :profissionalId ";
+            DYNAMIC_PARAMETERS.Add("profissionalId", filtros_body.profissionalId)
         }
 
-        if (filtros_body.equipeId) {
-            query_dias_filtros += " AND  VisitaDomiciliar.CodigoEquipe = :codigoEquipe ";
-            parametros_dinamicos.Add("codigoEquipe", filtros_body.equipeId)
+        if (filtros_body.equipeId && filtros_body.equipeId > 0) {
+            QUERY_FILTERS += " AND  VisitaDomiciliar.CodigoEquipe = :codigoEquipe ";
+            DYNAMIC_PARAMETERS.Add("codigoEquipe", filtros_body.equipeId)
         }
 
-        if (filtros_body.micro_area) {
-            query_dias_filtros += " AND  VisitaDomiciliar.MicroArea = :microArea ";
-            parametros_dinamicos.Add("microArea", filtros_body.micro_area);
+        if (filtros_body.micro_area != null ) {
+            QUERY_FILTERS += " AND  VisitaDomiciliar.MicroArea = :microArea ";
+            DYNAMIC_PARAMETERS.Add("microArea", filtros_body.micro_area);
         }
 
-        if (filtros_body.cartao_sus) {
-            query_dias_filtros += " AND  VisitaDomiciliar.CnsDoIndividuo = :cartaoSus ";
-            parametros_dinamicos.Add("cartaoSus", filtros_body.cartao_sus);
-        }
-
-        if (filtros_body.compartilhada) {
-            query_dias_filtros += " AND  VisitaDomiciliar.VisitaCompartilhada = :visitaCompartilhada ";
-            parametros_dinamicos.Add("visitaCompartilhada", filtros_body.compartilhada)
-        }
-        if (filtros_body.desfecho) {
-            query_dias_filtros += " AND  VisitaDomiciliar.Desfecho = :desfecho ";
-            parametros_dinamicos.Add("desfecho", filtros_body.desfecho)
-        }
-        if (filtros_body.fora_area) {
-            query_dias_filtros += " AND  VisitaDomiciliar.ForaDeArea = :foraDeArea ";
-            parametros_dinamicos.Add("foraDeArea", filtros_body.fora_area)
-        }
-
-        if (filtros_body.tipo_visita) {
-            query_dias_filtros += " AND VisitaDomiciliar.TipoDeVisita = :tipoDeVisitaId";
-            parametros_dinamicos.Add("tipoDeVisitaId", filtros_body.tipo_visita)
-        }
-
-        if (filtros_body.cadastro_atualizacao == 1) {
-            query_dias_filtros += " AND VisitaDomiciliar.MotivosDaVisita REGEXP 'CADASTRO_ATUALIZACAO|(^|,)(1)(,|$)' ";
-        }
-
-        if (filtros_body.cadastro_atualizacao == 0) {
-            query_dias_filtros += " AND VisitaDomiciliar.MotivosDaVisita NOT REGEXP 'CADASTRO_ATUALIZACAO|(^|,)(1)(,|$)' ";
+        if (filtros_body.cns_individuo != null) {
+            QUERY_FILTERS += " AND  VisitaDomiciliar.CnsDoIndividuo = :cartaoSus ";
+            DYNAMIC_PARAMETERS.Add("cartaoSus", filtros_body.cns_individuo);
         }
 
         if (filtros_body.data_inicial != null && filtros_body.data_final != null) {
-            query_dias_filtros += " AND  DATE(VisitaDomiciliar.DataCadastro) BETWEEN DATE(:dataInicial) AND DATE(:dataFinal)";
-            parametros_dinamicos.Add("dataInicial", filtros_body.data_inicial);
-            parametros_dinamicos.Add("dataFinal", filtros_body.data_final);
+            QUERY_FILTERS += " AND  DATE(VisitaDomiciliar.DataCadastro) BETWEEN DATE(:dataInicial) AND DATE(:dataFinal)";
+            DYNAMIC_PARAMETERS.Add("dataInicial", filtros_body.data_inicial);
+            DYNAMIC_PARAMETERS.Add("dataFinal", filtros_body.data_final);
         }
-        if (filtros_body.RegionalId) {
-            query_dias_filtros += " AND RegionalEstabelecimento.Regional_Id = :regionalId ";
-            parametros_dinamicos.Add("regionalId", filtros_body.RegionalId);
+        if (filtros_body.regionalId && filtros_body.regionalId > 0) {
+            QUERY_FILTERS += " AND RegionalEstabelecimento.Regional_Id = :regionalId ";
+            DYNAMIC_PARAMETERS.Add("regionalId", filtros_body.regionalId);
         }
         //Fim de Filtros de consulta base.
 
-        query_base += `
-            ${SQL.SQL_END}
-            ${query_dias_filtros}
+        SQL_BASE += `
+            ${SQL.getFrom()}
+            ${QUERY_FILTERS}
             GROUP BY
                 Dia,
                 Profissional.Nome 
             ORDER BY
                 Dia
             `
-    
-        const relatorio = await dbClient.getMariaDB().query(query_base, parametros_dinamicos.GetAll())
-        return DefaultTypesJSON(relatorio[0])
+
+        const REPORT = await dbClient.getMariaDB().query(SQL_BASE, DYNAMIC_PARAMETERS.GetAll())
+        return DefaultTypesJSON(REPORT[0])
     }
 }
 
-export class ProdutividadeACS_ConsolidadoQuery{
-    async execute(dbtype:string, dbClient:ConnectDBs, filtros_body:any, filtros_query:any){
+export class ProdutividadeACS_ConsolidadoQuery {
+    async execute(dbtype: string, dbClient: ConnectDBs, filtros_body: IProdutividadeACS, filtros_query: any) {
 
-        const parametros_dinamicos = new DynamicParameters()
-        let query_base_filtros = ""
-
-        if (!filtros_body.data_inicial || !filtros_body.data_final){
-            return new Error("Filtro de período obrigatório")
-        }
-
-        
-
-        parametros_dinamicos.Add("DataInicial", filtros_body.data_inicial)
-        parametros_dinamicos.Add("DataFinal", filtros_body.data_final)
-
-        if (filtros_body.distritoId){
-            query_base_filtros += `
-                and r.Id = :DistritoId
-            `
-            parametros_dinamicos.Add("DistritoId", filtros_body.distritoId)
-        }
-
-        if (filtros_body.unidadeId){
-            query_base_filtros += `
-                and est.Cnes  = :unidadeId
-            `
-            parametros_dinamicos.Add("unidadeId", filtros_body.unidadeId)
-        }
-
-        if (filtros_body.profissionalId){
-            query_base_filtros += `
-                and p.Id = :profissionalId
-            `
-            parametros_dinamicos.Add("profissionalId", filtros_body.profissionalId)
-        }
-
-        if (filtros_body.micro_area){
-            query_base_filtros += `
-                and p.MicroArea = :micro_area
-            `
-            parametros_dinamicos.Add("micro_area", filtros_body.micro_area)
-        }
+        const DYNAMIC_PARAMETERS = new DynamicParameters()
 
         const SQL = new SQL_PROD_ACS_CONSOLIDADO()
 
-        let query_base = SQL.SQL_BASE 
-        
-        query_base+=query_base_filtros
+        let SQL_BASE = SQL.getBase()
 
-    const relatorio = await dbClient.getMariaDB().query(query_base, parametros_dinamicos.GetAll())
+        if (!filtros_body.data_inicial || !filtros_body.data_final) {
+            return new Error("Filtro de período obrigatório")
+        }
 
-    return DefaultTypesJSON(relatorio[0])
+
+        DYNAMIC_PARAMETERS.Add("DataInicial", filtros_body.data_inicial)
+        DYNAMIC_PARAMETERS.Add("DataFinal", filtros_body.data_final)
+
+        if (filtros_body.regionalId && filtros_body.regionalId > 0) {
+            SQL_BASE += `
+                and r.Id = :DistritoId
+            `
+            DYNAMIC_PARAMETERS.Add("DistritoId", filtros_body.distritoId)
+        }
+
+        if (filtros_body.unidadeId && filtros_body.unidadeId > 0) {
+            SQL_BASE += `
+                and est.Cnes  = :unidadeId
+            `
+            DYNAMIC_PARAMETERS.Add("unidadeId", filtros_body.unidadeId)
+        }
+
+        if (filtros_body.profissionalId && filtros_body.profissionalId > 0) {
+            SQL_BASE += `
+                and p.Id = :profissionalId
+            `
+            DYNAMIC_PARAMETERS.Add("profissionalId", filtros_body.profissionalId)
+        }
+
+        if (filtros_body.micro_area != null) {
+            SQL_BASE += `
+                and p.MicroArea = :micro_area
+            `
+            DYNAMIC_PARAMETERS.Add("micro_area", filtros_body.micro_area)
+        }
+
+        const REPORT = await dbClient.getMariaDB().query(SQL_BASE, DYNAMIC_PARAMETERS.GetAll())
+
+        return DefaultTypesJSON(REPORT[0])
     }
 }
 

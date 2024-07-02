@@ -1,30 +1,34 @@
 import { ConnectDBs } from "../../database/init";
+import { IAcessosEAS } from "../../interfaces/ReportsInterfaces/IAcessosEAS";
 import { DefaultTypesJSON } from "../../utils/bd/DefaultTypesJSON";
 import DynamicParameters from "../../utils/reports/DynamicParameters";
 import { SQL_ACESSOS_EAS } from "./SQL/SQLAcessosEAS";
 
 export default class AcessosEASService{
-    async execute(dbtype:string, dbClient:ConnectDBs, filtros_body:any, filtros_query:any){
+    async execute(dbtype:string, dbClient:ConnectDBs, filtros_body:IAcessosEAS, filtros_query:any){
 
-        const SQL = new SQL_ACESSOS_EAS()
+        const SQL = new SQL_ACESSOS_EAS();
+        const DYNAMIC_PARAMETERS = new DynamicParameters()
 
-        let query_base = SQL.SQL_BASE
+        let SQL_BASE = SQL.getBase();
+        let QUERY_FILTERS = ""
 
-        const parametros_dinamicos = new DynamicParameters()
-        let query_base_filtros = ""
-
-        if (!filtros_body.data_inicial || !filtros_body.data_final){
+        if (filtros_body.data_inicial == null || !filtros_body.data_final == null){
             return new Error("Filtro de período obrigatório")
         }
 
-        query_base_filtros += "AND  DATE(DataHora) BETWEEN DATE(:dataInicial) AND DATE(:dataFinal)";
-        parametros_dinamicos.Add("dataInicial", filtros_body.data_inicial)
-        parametros_dinamicos.Add("dataFinal", filtros_body.data_final)
+        QUERY_FILTERS += "AND  DATE(DataHora) BETWEEN DATE(:dataInicial) AND DATE(:dataFinal)";
+        DYNAMIC_PARAMETERS.Add("dataInicial", filtros_body.data_inicial)
+        DYNAMIC_PARAMETERS.Add("dataFinal", filtros_body.data_final)
 
-        query_base += `${query_base_filtros}${SQL.SQL_END}`
+        SQL_BASE += 
+            `
+            ${QUERY_FILTERS}
+            ${SQL.getFrom()}
+            `
 
-        const result = await dbClient.getMariaDB().query(query_base, parametros_dinamicos.GetAll())
+        const REPORT = await dbClient.getMariaDB().query(SQL_BASE, DYNAMIC_PARAMETERS.GetAll())
 
-        return DefaultTypesJSON(result[0])
+        return DefaultTypesJSON(REPORT[0])
     }
 }

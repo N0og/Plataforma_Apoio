@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import clientsFilterService from "../services/filterServices/clientFilterService";
-import unidadesFilterService from "../services/filterServices/unidadesFilterService";
+import instalacaoFilterService from "../services/filterServices/instalacaoFilterService";
+import unidadeFilterService from "../services/filterServices/unidadeFilterService";
+import equipeFilterService from "../services/filterServices/equipeFilterService";
 
 export default class FiltersController {
     async executeHandler(req: Request, res: Response, serviceClass: any, body_params: any, query_params: any) {
@@ -33,10 +35,24 @@ export default class FiltersController {
         this.executeHandler(req, res, clientsFilterService, body_params, query_params)
     }
 
+    handlerInstalacoesFilter = async (req: Request, res: Response) => {
+        const body_params = req.body
+        const query_params = req.query
+
+        this.executeHandler(req, res, instalacaoFilterService, body_params, query_params)
+    }
+
     handlerUnidadesFilter = async (req: Request, res: Response) => {
         const body_params = req.body
         const query_params = req.query
 
-        this.executeHandler(req, res, unidadesFilterService, body_params, query_params)
+        this.executeHandler(req, res, unidadeFilterService, body_params, query_params)
+    }
+
+    handlerEquipesFilter = async (req: Request, res: Response) => {
+        const body_params = req.body
+        const query_params = req.query
+
+        this.executeHandler(req, res, equipeFilterService, body_params, query_params)
     }
 }

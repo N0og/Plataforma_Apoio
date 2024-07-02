@@ -1,29 +1,29 @@
-import { ICompletudeFilters, IATT_CPF } from "../../interfaces/ICompletude";
+import { ICompletudeFilters, IATT_CPF } from "../../interfaces/ReportsInterfaces/ICompletude";
 import checkFCI from "../../utils/reports/Completude/CheckFieldsFCI";
 import DynamicParameters from "../../utils/reports/DynamicParameters";
 import { queryConvert } from "../../utils/bd/pg/pgPlaceHolders";
 import { ConnectDBs } from "../../database/init";
-import { SQL_COMPLETUDE } from "./SQL";
-import { SQL_COMPLETUDE_EAS } from "./SQL/SQLCompletude";
+import { SQL_COMPLETUDE_ESUS } from "./SQL";
+import { SQL_COMPLETUDE_EAS } from "./SQL";
 import { DefaultTypesJSON } from "../../utils/bd/DefaultTypesJSON";
 
 export default class CompletudeQuery {
 
-    parametros_dinamicos: DynamicParameters = new DynamicParameters()
-    query_filters: string = ""
-    dbtype: string
+    DYNAMIC_PARAMETERS: DynamicParameters = new DynamicParameters()
+    QUERY_FILTERS: string = ""
+    DBTYPE: string
 
     async QuerySQL(dbClient: ConnectDBs) {
 
-        if (this.dbtype === 'psql') {
-            const SQL_BASE = new SQL_COMPLETUDE().SQL_BASE + this.query_filters
-            let result = await dbClient.getPostgDB().query(queryConvert(SQL_BASE, this.parametros_dinamicos.GetAll()))
-            return result.rows
+        if (this.DBTYPE === 'psql') {
+            const SQL_BASE = new SQL_COMPLETUDE_ESUS().getBase() + this.QUERY_FILTERS
+            const REPORT = await dbClient.getPostgDB().query(queryConvert(SQL_BASE, this.DYNAMIC_PARAMETERS.GetAll()))
+            return REPORT.rows
         }
         else {
-            const SQL_BASE = new SQL_COMPLETUDE_EAS().SQL_BASE + this.query_filters
-            let result = await dbClient.getMariaDB().query(SQL_BASE, this.parametros_dinamicos.GetAll())
-            return DefaultTypesJSON(result[0])
+            const SQL_BASE = new SQL_COMPLETUDE_EAS().getBase() + this.QUERY_FILTERS
+            const REPORT = await dbClient.getMariaDB().query(SQL_BASE, this.DYNAMIC_PARAMETERS.GetAll())
+            return DefaultTypesJSON(REPORT[0])
         }
 
     }
@@ -31,97 +31,102 @@ export default class CompletudeQuery {
 
     async execute(dbtype: string, dbClient: ConnectDBs, filtros: ICompletudeFilters) {
 
-        this.dbtype = dbtype
+        this.DBTYPE = dbtype
 
 
-        if (dbtype === 'psql'){
-            if (filtros.unidadeId) {
-                this.query_filters += `
-                    AND tdus.nu_cnes = :unidadeId
+        if (this.DBTYPE === 'psql') {
+            if (filtros.cnes != null) {
+                this.QUERY_FILTERS += `
+                    AND tdus.nu_cnes = :cnes
                 `
-                this.parametros_dinamicos.Add(":unidadeId", filtros.unidadeId)
+                this.DYNAMIC_PARAMETERS.Add(":cnes", filtros.cnes)
             }
-    
-            if (filtros.equipeId) {
-                this.query_filters += `
-                    AND tde.nu_ine = :equipeId
+
+            if (filtros.ine != null) {
+                this.QUERY_FILTERS += `
+                    AND tde.nu_ine = :ine
                 `
-                this.parametros_dinamicos.Add(":equipeId", filtros.equipeId)
+                this.DYNAMIC_PARAMETERS.Add(":ine", filtros.ine)
             }
-    
-            if (filtros.micro_area) {
-                this.query_filters += `
+
+            if (filtros.micro_area != null) {
+                this.QUERY_FILTERS += `
                     AND tfci.nu_micro_area = :micro_area
                 `
-                this.parametros_dinamicos.Add(":micro_area", filtros.micro_area)
+                this.DYNAMIC_PARAMETERS.Add(":micro_area", filtros.micro_area)
             }
-    
-            if (filtros.profissionalId) {
-                this.query_filters += `
+
+            if (filtros.profissionalId && filtros.profissionalId > 0) {
+                this.QUERY_FILTERS += `
                     AND tdp.nu_cns = :profissionalId
                 `
-                this.parametros_dinamicos.Add(":profissionalId", filtros.profissionalId)
+                this.DYNAMIC_PARAMETERS.Add(":profissionalId", filtros.profissionalId)
             }
-    
+
             if (filtros.data_inicial != null && filtros.data_final != null) {
-                this.query_filters += `
+                this.QUERY_FILTERS += `
                     and tdtficha.dt_registro between :data_inicio and :data_final
                 `
-                this.parametros_dinamicos.Add('data_inicio', filtros.data_inicial);
-                this.parametros_dinamicos.Add('data_final', filtros.data_final);
+                this.DYNAMIC_PARAMETERS.Add('data_inicio', filtros.data_inicial);
+                this.DYNAMIC_PARAMETERS.Add('data_final', filtros.data_final);
             }
         }
 
-        else{
-            if (filtros.unidadeId) {
-                this.query_filters += `
-                    AND e.Cnes = :unidadeId
+        else {
+            if (filtros.cnes != null) {
+                this.QUERY_FILTERS +=
+                    `
+                    AND e.Cnes = :cnes
                 `
-                this.parametros_dinamicos.Add(":unidadeId", filtros.unidadeId)
+                this.DYNAMIC_PARAMETERS.Add(":cnes", filtros.cnes)
             }
-    
-            if (filtros.equipeId) {
-                this.query_filters += `
-                    AND eq.id = :equipeId
+
+            if (filtros.ine != null) {
+                this.QUERY_FILTERS +=
+                    `
+                    AND eq.id = :ine
                 `
-                this.parametros_dinamicos.Add(":equipeId", filtros.equipeId)
+                this.DYNAMIC_PARAMETERS.Add(":ine", filtros.ine)
             }
-    
-            if (filtros.micro_area) {
-                this.query_filters += `
+
+            if (filtros.micro_area != null) {
+                this.QUERY_FILTERS +=
+                    `
                     AND i.MicroArea = :micro_area
                 `
-                this.parametros_dinamicos.Add(":micro_area", filtros.micro_area)
+                this.DYNAMIC_PARAMETERS.Add(":micro_area", filtros.micro_area)
             }
-    
-            if (filtros.profissionalId) {
-                this.query_filters += `
+
+            if (filtros.profissionalId && filtros.profissionalId > 0) {
+                this.QUERY_FILTERS +=
+                    `
                     AND p.CartaoSus = :profissionalId
                 `
-                this.parametros_dinamicos.Add(":profissionalId", filtros.profissionalId)
+                this.DYNAMIC_PARAMETERS.Add(":profissionalId", filtros.profissionalId)
             }
-    
+
             if (filtros.data_inicial != null && filtros.data_final != null) {
-                this.query_filters += `
+                this.QUERY_FILTERS +=
+                    `
                     and i.DataAlteracao between :data_inicio and :data_final
                 `
-                this.parametros_dinamicos.Add('data_inicio', filtros.data_inicial);
-                this.parametros_dinamicos.Add('data_final', filtros.data_final);
+                this.DYNAMIC_PARAMETERS.Add('data_inicio', filtros.data_inicial);
+                this.DYNAMIC_PARAMETERS.Add('data_final', filtros.data_final);
             }
         }
-        
 
-        const resultATT_CPF = await this.QuerySQL(dbClient) as any[];
 
-        if (resultATT_CPF instanceof Error) {
+        const RESULT_QUERY_ATT_CPF = await this.QuerySQL(dbClient) as any[];
+
+        if (RESULT_QUERY_ATT_CPF instanceof Error) {
             return new Error('Falha na consulta.')
         }
 
         let dataExport: IATT_CPF[] = []
 
-        resultATT_CPF.forEach((row) => {
+        RESULT_QUERY_ATT_CPF.forEach((row) => {
 
-            const completude = checkFCI(row)
+            const COMPLETUDE = checkFCI(row)
             dataExport.push(
                 {
                     "CIDADÃO": row.CIDADÃO,
@@ -131,6 +136,7 @@ export default class CompletudeQuery {
                     "STATUS DOCUMENTO": row["STATUS DOCUMENTO"],
                     "TEMPO SEM ATUALIZAR": row["TEMPO SEM ATUALIZAR"],
                     "MESES SEM ATUALIZAR": row["MESES SEM ATUALIZAR"],
+                    "DISTRITO": row["DISTRITO"],
                     "MICRO ÁREA": row["MICRO ÁREA"],
                     "PROFISSIONAL CADASTRANTE": row["PROFISSIONAL CADASTRANTE"],
                     "CBO PROFISSIONAL": row["CBO PROFISSIONAL"],
@@ -141,8 +147,8 @@ export default class CompletudeQuery {
                     "INE": row.INE,
                     "TIPO DE EQUIPE": row["TIPO DE EQUIPE"],
                     "STATUS DE RECUSA": row["STATUS DE RECUSA"],
-                    "COMPLETUDE": `${completude['status']}%`,
-                    "ERROS": completude['erros'].join(', ')
+                    "COMPLETUDE": `${COMPLETUDE['status']}%`,
+                    "ERROS": COMPLETUDE['erros'].join(', ')
                 }
             )
 

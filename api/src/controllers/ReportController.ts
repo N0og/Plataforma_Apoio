@@ -1,147 +1,72 @@
-import { Request, Response } from "express";
-import VisitasPrioritariasQuery from "../services/reportsServices/VisitasPrioritariasService";
+import { Response } from "express";
+
+import { ConnectDBs } from "../database/init";
+import { ConnEASRepository, ConneSUSRepository } from "../database/repository/API_DB_Repositorys";
+import ExcelBuilder from "../utils/excel_builder/ExcelBuilder"
+
+import { IReportControllerBDError, IReportControllerRequest } from "../interfaces/ControllersInterfaces/IReportController";
+
 import { ProdutividadeACS_PorDiaQuery, ProdutividadeACS_ConsolidadoQuery } from "../services/reportsServices/ProdutividadeACSService";
 import ProdutividadeUBS_ConsolidadoQuery from "../services/reportsServices/ProdutividadeUBSService";
-import ExcelBuilder from "../utils/excel_builder/ExcelBuilder"
-import CompletudeQuery from "../services/reportsServices/CompletudeService";
+import VisitasPrioritariasQuery from "../services/reportsServices/VisitasPrioritariasService";
 import DuplicadosPECQuery from "../services/reportsServices/DuplicadosService";
-import { ConnEASRepository, ConneSUSRepository, municipioRepository } from "../database/repository/DBRepositorys";
-import { ConnectDBs } from "../database/init";
-import JSZip from "jszip";
+import CompletudeQuery from "../services/reportsServices/CompletudeService";
 import AcessosEASService from "../services/reportsServices/AcessosEASService";
 
+import { IEXCEL_SHEETS } from "../interfaces/IExcel";
+
+import JSZip from "jszip";
+import VisitasPrioritariasOrganizer from "../utils/excel_builder/Organizers/VisitasPrioritariasOrganizer";
 
 export default class ReportController {
-    async executeHandler(req: Request, res: Response, serviceClass: any, body_params: any, query_params: any, tipo: string) {
+
+    DB_CLIENT: ConnectDBs
+    SHEETS: IEXCEL_SHEETS 
+    BD_ERROS: IReportControllerBDError[]
+    
+
+    private async executeHandler(req: IReportControllerRequest, res: Response, serviceClass: any, type: string) {
 
         try {
 
-            const dbClient = new ConnectDBs();
+            this.DB_CLIENT = new ConnectDBs();
+            this.SHEETS = {};
+            this.BD_ERROS = [];
 
-            let dbname = Array.isArray(req.query.dbname) ? req.query.dbname : Array(req.query.dbname)
+            const DB_TYPE = req.dbtype;
+            const DB_NAMES = req.dbname;
+            const DOWNLOAD = req.download;
+            const ORGANIZE = req.organize;
 
-            if (typeof dbname[0] == "undefined"){
+            console.log(`PEDIDO IP: ${req.ip} - INÍCIO DE EXTRAÇÃO.`)
+            for (const connection of DB_NAMES!) {
+                await this.processConnection(connection, DB_TYPE!, serviceClass, req, res);
+                console.log(`PEDIDO IP: ${req.ip} - EXTRAÇÃO: ${connection}.`)
+            }
 
-                if (query_params.download){
-                    let mun = await municipioRepository.find()
-                    const clients = mun.map(client=>{
-                        return client.no_municipio
-                    })
-                    dbname = clients
+            console.log(`PEDIDO IP: ${req.ip} - EXTRAÇÃO REALIZADA.`)
+            if (DOWNLOAD) {
+                console.log(`PEDIDO IP: ${req.ip} - ENVIO PARA DOWNLOAD - SISTEMATIZANDO...`)
+                await this.generateAndSendZip(type, res, ORGANIZE!);
+            }
+
+            else {
+                console.log(`PEDIDO IP: ${req.ip} - ENVIO VIA JSON - SISTEMATIZANDO...`)
+                let response_json = {}
+                if (Object.keys(this.SHEETS).length === 0) {
+                    res.status(404).json(this.BD_ERROS)
                 }
                 else{
-                    console.error("Falha na solicitação")
-                    return res.status(400).json({ error: 'Falha na solicitação' })
-                }
-            }
-            
-            const { dbtype } = query_params
-
-            console.log(`\nSOLICITAÇÃO ATENDIDA PARA: ${dbname.join('|')} DE: ${req.ip}\n`) //LOGGER
-
-            const MUNICIPIOS_EXCEL: { [key: string]: { excel_builder: ExcelBuilder, result: any[] } } = {}
-
-            for (const municipio in dbname) {
-
-
-                let mun = dbname[municipio]
-
-                const IPSESUS = await ConneSUSRepository.createQueryBuilder("jsonIP")
-                    .where("jsonIP.dados @> :dados", { dados: JSON.stringify({ municipio: mun }) })
-                    .getMany()
-
-                const IPSEAS = await ConnEASRepository.createQueryBuilder("jsonIP")
-                    .where("jsonIP.dados @> :dados", { dados: JSON.stringify({ municipio: mun }) })
-                    .getOne()
-
-                let bd_error: { [key: string]: { address: string, error: string } }[] = []
-            
-
-                if (IPSEAS && dbtype === 'mdb') {
-                    if (!(IPSEAS!.dados.municipio in MUNICIPIOS_EXCEL)) {
-                        MUNICIPIOS_EXCEL[IPSEAS!.dados.municipio] = { excel_builder: new ExcelBuilder(), result: [] }
+                    for (let MUNICIPIO of Object.keys(this.SHEETS)) {
+                        response_json[MUNICIPIO] = this.SHEETS[MUNICIPIO].result
                     }
-
-                    let bd_changed = await dbClient.changeDB(dbtype, { database: IPSEAS!.dados.db_name_eas! })
-
-                    if (bd_changed instanceof Error) {
-                        return res.status(400).json({ error: bd_changed.message })
-                    }
-
-                    const serviceInstance = new serviceClass();
-                    const result = await serviceInstance.execute(dbtype, dbClient, body_params, query_params);
-
-                    MUNICIPIOS_EXCEL[IPSEAS!.dados.municipio].excel_builder.insert_columns(result)
-
-                    MUNICIPIOS_EXCEL[IPSEAS!.dados.municipio].excel_builder.insert(result)
-
-                    MUNICIPIOS_EXCEL[IPSEAS!.dados.municipio].result.concat(result)
-
+                    res.status(200).json(response_json)
                 }
-
-                else if (IPSESUS && dbtype === 'psql') {
-
-                    for (let ip of IPSESUS) {
-
-                        if (!(ip.dados.municipio in MUNICIPIOS_EXCEL)) {
-                            MUNICIPIOS_EXCEL[ip.dados.municipio] = { excel_builder: new ExcelBuilder(), result: [] }
-                        }
-
-                        let bd_changed = await dbClient.changeDB(dbtype, {
-                            host: ip.dados.ip_esus!,
-                            port: ip.dados.port_esus!,
-                            user: ip.dados.db_user_esus!,
-                            password: ip.dados.db_password_esus!
-                        })
-
-                        if (bd_changed instanceof Error) {
-                            const _instalacao = ip.dados.instalacao_esus!
-                            const _ip = ip.dados.ip_esus!
-                            const erro = { instalacao: { address: _ip, error: bd_changed.message } }
-                            bd_error.push(erro)
-                            continue
-                        }
-
-                        const serviceInstance = new serviceClass();
-                        const result = await serviceInstance.execute(dbtype, dbClient, body_params, query_params);
-
-                        MUNICIPIOS_EXCEL[ip.dados.municipio].excel_builder.insert_columns(result)
-
-                        MUNICIPIOS_EXCEL[ip.dados.municipio].excel_builder.insert(result)
-
-                        MUNICIPIOS_EXCEL[ip.dados.municipio].result.concat(result)
-
-                    }
-                }
-
-                else {
-                    continue
-                }
-
-                if (bd_error.length == IPSESUS.length) {
-                    return res.status(503).json({ error: `BD's indisponíveis: ${dbname}` })
-                }
-            }
-
-            console.log(`\nSOLICITAÇÃO RESPONDIDA PARA: ${req.ip} DE: ${dbname.join('|')}\n`)
-
-            const zip = new JSZip();
-            for (let MunicipioExcel of Object.keys(MUNICIPIOS_EXCEL)) {
-                if ("download" in query_params && query_params["download"] === 'true') {
-                    const worksheetBuffer:Buffer = await MUNICIPIOS_EXCEL[MunicipioExcel].excel_builder.save_worksheet();
-                    zip.file(`${MunicipioExcel}.xlsx`, worksheetBuffer);
-                }
-            }
-
-            if ("download" in query_params && query_params["download"] === 'true') {
-                const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
-                res.set('Content-Type', 'application/zip');
-                res.set('Content-Disposition', `attachment; filename="${tipo}.zip"`);
-                res.send(zipBuffer);
+                
             }
 
         } catch (error) {
-            console.error(error)
+            console.error(error);
             return res.status(500).json({
                 message: "Erro Interno do Servidor.",
                 error: error
@@ -149,46 +74,150 @@ export default class ReportController {
         }
     }
 
-    handleVisitaGrupoPrioritario = async (req: Request, res: Response) => {
-        const body_params = req.body
-        const query_params = req.query
-        this.executeHandler(req, res, VisitasPrioritariasQuery, body_params, query_params, `VisitasPrioritariasACS${new Date().toLocaleDateString('pt-BR')}`)
+    private async changeDB(DB_TYPE: string, config: any) {
+        return await this.DB_CLIENT.changeDB(DB_TYPE, config);
     }
 
-    handleProdutividadeACS_PorDia = async (req: Request, res: Response) => {
-        const body_params = req.body
-        const query_params = req.query
-        this.executeHandler(req, res, ProdutividadeACS_PorDiaQuery, body_params, query_params, `VisitasPorDiaACS${new Date().toLocaleDateString('pt-BR')}`)
+    private async getConnections(repository: any, municipio: string) {
+        return await repository.createQueryBuilder("jsonIP")
+            .where("jsonIP.dados @> :dados", { dados: JSON.stringify({ municipio }) })
+            .getMany();
     }
 
-    handleProdutividadeACS_Consolidado = async (req: Request, res: Response) => {
-        const body_params = req.body
-        const query_params = req.query
-        this.executeHandler(req, res, ProdutividadeACS_ConsolidadoQuery, body_params, query_params, `ProdutividadeACS${new Date().toLocaleDateString('pt-BR')}`)
+    private async processConnection(connection_name: any, DB_TYPE: string, serviceClass: any, req: IReportControllerRequest, res: Response) {
+
+        const IPSESUS = DB_TYPE === 'psql' ? await this.getConnections(ConneSUSRepository, connection_name) : null;
+        const IPSEAS = DB_TYPE === 'mdb' ? await this.getConnections(ConnEASRepository, connection_name) : null;
+
+        if (IPSEAS && IPSEAS.length > 0) {
+            return await this.handleIPSEAS(IPSEAS[0], DB_TYPE, serviceClass, req, res);
+        } 
+        else if (IPSESUS && IPSESUS.length > 0) {
+            return await this.handleIPSESUS(IPSESUS, DB_TYPE, serviceClass, req, res);
+        } 
+        else {
+            this.BD_ERROS.push({ connection_name: { address:connection_name, error:`Conexões não identificadas: ${connection_name}`}});
+        }
     }
 
-    handleProdutividadeUBS_Consolidado = async (req: Request, res: Response) => {
-        const body_params = req.body
-        const query_params = req.query
-        this.executeHandler(req, res, ProdutividadeUBS_ConsolidadoQuery, body_params, query_params, `ProdutividadeUBS${new Date().toLocaleDateString('pt-BR')}`)
+    private async handleIPSEAS(IPSEAS: any, DB_TYPE: string, serviceClass: any, req: IReportControllerRequest, res: Response) {
+        const municipio = IPSEAS.dados.municipio;
+        if (!(municipio in this.SHEETS)) {
+            this.SHEETS[municipio] = { excel_builder: undefined, result: [] };
+        }
+
+        if (await this.changeDB(DB_TYPE, { database: IPSEAS.dados.db_name_eas }) instanceof Error) {
+            res.status(503).json({ error: "Falha na conexão de banco" });
+        }
+
+        const result = await this.executeService(serviceClass, DB_TYPE, req);
+
+        this.SHEETS[municipio].result = this.SHEETS[municipio].result.concat(result);
     }
 
-    handleCompletude = async (req: Request, res: Response) => {
-        const body_params = req.body
-        const query_params = req.query
-        this.executeHandler(req, res, CompletudeQuery, body_params, query_params, `Completude${new Date().toLocaleDateString('pt-BR')}`)
+    private async handleIPSESUS(IPSESUS: any[], DB_TYPE: string, serviceClass: any, req: IReportControllerRequest, res: Response) {
+        
+
+        for (let ip of IPSESUS) {
+            const municipio = ip.dados.municipio;
+            if (!(municipio in this.SHEETS)) {
+                this.SHEETS[municipio] = { excel_builder: undefined, result: [] };
+            }
+
+            console.log(`${municipio} - Connectando: ${ip.dados.instalacao_esus}... `)
+            if (await this.changeDB(DB_TYPE, {
+                host: ip.dados.ip_esus,
+                port: ip.dados.port_esus,
+                database: ip.dados.db_name_esus,
+                user: ip.dados.db_user_esus,
+                password: ip.dados.db_password_esus
+            }) instanceof Error) {
+                console.error(`${municipio} - Falha na conexão: ${ip.dados.instalacao_esus}... `)
+                this.BD_ERROS.push({ [ip.dados.instalacao_esus]: { address: ip.dados.ip_esus, error: "Falha na conexão de banco" } });
+                continue;
+            }
+
+            console.log(`${municipio} - Conectado!: ${ip.dados.instalacao_esus}... `)
+            const result = await this.executeService(serviceClass, DB_TYPE, req);
+            this.SHEETS[municipio].result = this.SHEETS[municipio].result.concat(result);
+        }
+
+        /*if (IPSESUS.length === this.BD_ERROS.length) {
+            res.status(503).json({ error: `BD's indisponíveis` });
+        }*/
     }
 
-    handleDuplicadosPEC = async (req: Request, res: Response) => {
-        const body_params = req.body
-        const query_params = req.query
-        this.executeHandler(req, res, DuplicadosPECQuery, body_params, query_params, `DuplicadosPEC${new Date().toLocaleDateString('pt-BR')}`)
+    async executeService(serviceClass: any, DB_TYPE: string, req: IReportControllerRequest) {
+        const serviceInstance = new serviceClass();
+        return await serviceInstance.execute(DB_TYPE, this.DB_CLIENT, req.body, req.query);
     }
 
-    handleAcessosRetaguarda = async (req: Request, res: Response) => {
-        const body_params = req.body
-        const query_params = req.query
-        this.executeHandler(req, res, AcessosEASService, body_params, query_params, `AcessosEAS${new Date().toLocaleDateString('pt-BR')}`)
+    async generateAndSendZip(type: string, res: Response, organize: Boolean) {
+
+        if (organize) {
+
+            for (const SHEET of Object.keys(this.SHEETS)) {
+                switch (type) {
+                    case 'VisitasPrioritariasACS':
+                        this.SHEETS[SHEET].excel_builder = new VisitasPrioritariasOrganizer()
+                        this.SHEETS[SHEET].excel_builder.insert_columns(this.SHEETS[SHEET].result);
+                        this.SHEETS[SHEET].excel_builder.insert_header()
+                        this.SHEETS[SHEET].excel_builder.insert(this.SHEETS[SHEET].result);
+                        break;
+                }
+            }
+        }
+        else {
+            for (const SHEET of Object.keys(this.SHEETS)) {
+                this.SHEETS[SHEET].excel_builder = new ExcelBuilder()
+                this.SHEETS[SHEET].excel_builder.insert_columns(this.SHEETS[SHEET].result);
+                this.SHEETS[SHEET].excel_builder.insert(this.SHEETS[SHEET].result);
+            }
+        }
+
+        const zip = new JSZip();
+        for (let SHEET of Object.keys(this.SHEETS)) {
+            const worksheetBuffer: Buffer = await this.SHEETS[SHEET].excel_builder.save_worksheet();
+            zip.file(`${SHEET}.xlsx`, worksheetBuffer);
+        }
+
+        const zipBuffer = zip.generateNodeStream({ type: "nodebuffer" , streamFiles: true});
+
+        zipBuffer.on('end', () => {
+            res.end();
+        });
+
+        res.set('Content-Type', 'application/zip');
+        res.set('Content-Disposition', `attachment; filename="${type}${new Date().toLocaleDateString('pt-BR')}.zip"`);
+        zipBuffer.pipe(res)
     }
 
+
+    handleVisitaGrupoPrioritario = async (req: IReportControllerRequest, res: Response) => {
+        this.executeHandler(req, res, VisitasPrioritariasQuery, `VisitasPrioritariasACS`)
+    }
+
+    handleProdutividadeACS_PorDia = async (req: IReportControllerRequest, res: Response) => {
+        this.executeHandler(req, res, ProdutividadeACS_PorDiaQuery, `VisitasPorDiaACS`)
+    }
+
+    handleProdutividadeACS_Consolidado = async (req: IReportControllerRequest, res: Response) => {
+        this.executeHandler(req, res, ProdutividadeACS_ConsolidadoQuery, `ProdutividadeACS`)
+    }
+
+    handleProdutividadeUBS_Consolidado = async (req: IReportControllerRequest, res: Response) => {
+        this.executeHandler(req, res, ProdutividadeUBS_ConsolidadoQuery, `ProdutividadeUBS`)
+    }
+
+    handleCompletude = async (req: IReportControllerRequest, res: Response) => {
+        this.executeHandler(req, res, CompletudeQuery, `Completude`)
+    }
+
+    handleDuplicadosPEC = async (req: IReportControllerRequest, res: Response) => {
+        this.executeHandler(req, res, DuplicadosPECQuery, `DuplicadosPEC`)
+    }
+
+    handleAcessosRetaguarda = async (req: IReportControllerRequest, res: Response) => {
+        this.executeHandler(req, res, AcessosEASService, `AcessosEAS`)
+    }
 }

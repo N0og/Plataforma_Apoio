@@ -19,7 +19,7 @@ export default class ExcelBuilder {
         this.columns = Object.keys(json[0]);
 
         this.columns.forEach((column: string, col_index: number) => {
-            this.consolidado.cell(1, col_index + 1).string(column).style(styles.cabecalho)
+            this.consolidado.cell(1, col_index + 1).string(column).style(styles.header)
         })
     }
 
@@ -33,15 +33,15 @@ export default class ExcelBuilder {
                 }
 
                 else if (typeof value === "number") {
-                    this.consolidado.cell(row_index + 2, col_index + 1).number(value).style(styles.numeros)
+                    this.consolidado.cell(row_index + 2, col_index + 1).number(value).style(styles.numbers)
                 }
 
                 else if (typeof value === "boolean") {
-                    this.consolidado.cell(row_index + 2, col_index + 1).bool(value).style(styles.numeros)
+                    this.consolidado.cell(row_index + 2, col_index + 1).bool(value).style(styles.numbers)
                 }
 
                 else if (isDate(value)) {
-                    this.consolidado.cell(row_index + 2, col_index + 1).date(value).style(styles.numeros)
+                    this.consolidado.cell(row_index + 2, col_index + 1).date(value).style(styles.numbers)
                 }
 
             })
@@ -54,5 +54,4 @@ export default class ExcelBuilder {
     async save_worksheet() {
         return await this.planilha.writeToBuffer()
     }
-
 }

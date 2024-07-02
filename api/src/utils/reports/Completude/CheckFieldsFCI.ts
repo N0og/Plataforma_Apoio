@@ -1,4 +1,4 @@
-import { CheckedFCI, IATT_CPF } from "../../../interfaces/ICompletude";
+import { CheckedFCI, IATT_CPF } from "../../../interfaces/ReportsInterfaces/ICompletude";
 import checkBirthday from "../CheckBirthday";
 
 

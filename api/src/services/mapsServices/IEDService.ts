@@ -1,12 +1,6 @@
-import { API_DB_DataSource, ConnectDBs } from "../../database/init"
-import { municipioRepository } from "../../database/repository/DBRepositorys"
-import { DefaultTypesJSON } from "../../utils/bd/DefaultTypesJSON"
-import axios, { AxiosResponse } from "axios"
-
-interface cnesResponse {
-    latitude_estabelecimento_decimo_grau: number,
-    longitude_estabelecimento_decimo_grau: number
-}
+import { ConnectDBs } from "../../database/init"
+import { municipioRepository } from "../../database/repository/API_DB_Repositorys"
+import axios from "axios"
 
 export interface IIEDResponse {
     [key: string]: {
@@ -29,7 +23,6 @@ export default class IEDService {
             equipe.id ine,
             case 
                 when equipe.TipoEquipe = 70 then 'ESF'
-                when equipe.TipoEquipe = 71 then 'ESB'
                 when equipe.TipoEquipe = 76 then 'EAP'
                 else equipe.TipoEquipe 
             end as tp_equipe
@@ -49,7 +42,7 @@ export default class IEDService {
         from Equipe equipe
             inner join Estabelecimento est on est.Id = equipe.Estabelecimento_Id 
         WHERE 
-            (equipe.TipoEquipe = 70 or equipe.TipoEquipe = 76)
+            (equipe.TipoEquipe = 70 or equipe.TipoEquipe = 76 )
        `
         const relatorio = await dbClient.getMariaDB().query(query_base)
 
@@ -57,7 +50,7 @@ export default class IEDService {
         if (relatorio && Array.isArray(relatorio[0])) {
             const promises = relatorio[0].map(async (element, ind) => {
                 const response = await axios.get(`https://apidadosabertos.saude.gov.br/cnes/estabelecimentos/${element.cnes}`)
-                   
+
                 relatorio[0][ind].latitude = response.data.latitude_estabelecimento_decimo_grau;
                 relatorio[0][ind].longitude = response.data.longitude_estabelecimento_decimo_grau;
 

@@ -120,6 +120,7 @@ export interface IATT_CPF {
     "STATUS DOCUMENTO"?: string,
     "TEMPO SEM ATUALIZAR"?: string,
     "MESES SEM ATUALIZAR"?: string,
+    "DISTRITO"?: string,
     "MICRO ÁREA"?: string,
     "PROFISSIONAL CADASTRANTE"?: string,
     "CBO PROFISSIONAL"?: string,
@@ -134,11 +135,10 @@ export interface IATT_CPF {
     "ERROS": string 
 }
 
-
 export interface ICompletudeFilters{
     distritoId?: number;
-    unidadeId?: number;
-    equipeId?: number;
+    cnes?: string;
+    ine?: string;
     profissionalId?: number;
     micro_area?: string;
     data_inicial: Date;

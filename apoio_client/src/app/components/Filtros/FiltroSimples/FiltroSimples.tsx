@@ -1,10 +1,11 @@
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useRef, useState } from "react";
 import './FiltroSimples.css'
 
 
 export const FiltroSimples: React.FC<{ name: string, filters: any[], changeFilter: React.Dispatch<SetStateAction<any[]>> }> = ({ name, filters, changeFilter }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [counter, setCounter] = useState<number>(0);
+  const filterContainerRef = useRef<HTMLDivElement>(null);
 
   const toggleFilter = (index: number, key: string) => {
 
@@ -18,29 +19,42 @@ export const FiltroSimples: React.FC<{ name: string, filters: any[], changeFilte
 
   const toggleAllFilters = () => {
     changeFilter(prevFilters => {
-        const allTrue = prevFilters.every(filter => Object.values(filter).every(value => value === true));
-        
-        if (allTrue){
-          
-          setCounter(0)
-        }
-        else{
-          
-          setCounter(filters.length)
-        }
+      const allTrue = prevFilters.every(filter => Object.values(filter).every(value => value === true));
 
-        return prevFilters.map(filter => {
-            const newFilter: {[key: string]: boolean} = {};
-            for (let key in filter) {
-                newFilter[key] = !allTrue;
-            }
-            return newFilter;
-        });
+      if (allTrue) {
+
+        setCounter(0)
+      }
+      else {
+
+        setCounter(filters.length)
+      }
+
+      return prevFilters.map(filter => {
+        const newFilter: { [key: string]: boolean } = {};
+        for (let key in filter) {
+          newFilter[key] = !allTrue;
+        }
+        return newFilter;
+      });
     });
-};
+  };
+
+  const handleClickOutside = (event:any) => {
+    if (filterContainerRef.current && !filterContainerRef.current.contains(event.target)) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
-    <div className="s_filter-container">
+    <div className="s_filter-container" ref={filterContainerRef}>
       <div className="filterIcon">
         <i className="fa-solid fa-filter"></i>
       </div>

@@ -1,5 +1,6 @@
-export class SQL_COMPLETUDE{
-    SQL_BASE: string = `
+export class SQL_COMPLETUDE_ESUS{
+    private SQL_BASE: string = 
+    `
         select 
             tcci.co_seq_cds_cad_individual as cds_id,
             tdp.nu_cns as cns_prof,
@@ -237,10 +238,14 @@ export class SQL_COMPLETUDE{
             and tfci.co_dim_tipo_saida_cadastro = 3
             and tfc.co_fat_cidadao_raiz = tfc.co_seq_fat_cidadao
     `
+    getBase(){
+        return this.SQL_BASE
+    }
 }
 
 export class SQL_COMPLETUDE_EAS{
-    SQL_BASE: string = `
+    private SQL_BASE: string = 
+    `
     SELECT
     i.Id as cds_id,
     p.CartaoSus as cns_prof,
@@ -388,14 +393,20 @@ export class SQL_COMPLETUDE_EAS{
         WHEN TIMESTAMPDIFF(MONTH, i.DataAlteracao, NOW()) <= 24 THEN '13 A 24 MESES'
         ELSE 'MAIS DE 2 ANOS'
     END AS "TEMPO SEM ATUALIZAR",
+    CASE 
+        WHEN TIMESTAMPDIFF(MONTH, i.DataAlteracao, NOW()) = 1 THEN CONCAT(TIMESTAMPDIFF(MONTH, i.DataAlteracao, NOW()), ' MÊS')
+        ELSE CONCAT(TIMESTAMPDIFF(MONTH, i.DataAlteracao, NOW()), ' MESES')
+    END AS "MESES SEM ATUALIZAR",
     case 
         when i.ForaDeArea = 1 then 'FA'
         when i.MicroArea is not null then i.MicroArea
     end as "MICRO ÁREA",
+    r.id as "DISTRITO",
+    r.Descricao as "DISTRITO DESCRIÇÃO",
     p.Nome as "PROFISSIONAL CADASTRANTE",
     o.Codigo  as "CBO PROFISSIONAL",
-    o.Descricao as "DESCRICAO CBO",
-    e.Nome as "Estabelecimento",
+    o.Descricao as "DESCRIÇÃO CBO",
+    e.Nome as "UNIDADE DE SAÚDE",
     e.Cnes as "CNES",
     eq.Nome as "NOME EQUIPE",
     eq.id as "INE",
@@ -411,10 +422,15 @@ export class SQL_COMPLETUDE_EAS{
     left join Equipe eq on eq.id = i.CodigoEquipe
     left join Ocupacao o on p.Ocupacao_Id = o.Id 
     left join SituacaoDeRua sdr on sdr.Id  = i.Id
+    LEFT JOIN RegionalEstabelecimento re ON re.Estabelecimento_Id = p.Estabelecimento_Id
+    LEFT JOIN Regional r ON r.Id = re.Regional_Id
     where 
         i.deletado = 0
         and i.MudouSe = 0
         and i.DataDoObito is null
         AND i.DesfechoDeCadastro = 0
     `
+    getBase(){
+        return this.SQL_BASE
+    }
 }

@@ -6,6 +6,7 @@ type jsonConneSUS = {
     instalacao_esus: string | null,
     ip_esus: string | null,
     port_esus: number | null,
+    db_name_esus: string | null,
     db_user_esus: string | null,
     db_password_esus: string | null
     id_instalacao_esus: number | null

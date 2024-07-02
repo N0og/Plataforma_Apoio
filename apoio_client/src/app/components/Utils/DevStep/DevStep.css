@@ -7,8 +7,8 @@
     height: 100%;
     i{    
         position:relative;
-        font-size: 8vw;
-        color: #cdabab;
+        font-size: 7vw;
+        color: var(--cor-rose);
         
     }
     .msg_container{
@@ -17,13 +17,12 @@
         justify-content: center;
         align-items: center;
         gap: 1vw;
-        text-shadow: 0px 0.1vw 0.3vw rgb(198, 186, 186);
+        text-shadow: 0px 0.1vw 0.3vw var(--cor-shadow-mid);
         span{
             padding: 1.8vw;
             border-radius: 1vi;
-            box-shadow: 0px 0.3vw 0.1vw 0px rgb(198, 186, 186);
-            font-size: 3vw;
-            font-family: 'Arial';
+            box-shadow: 0px 0.3vw 0.1vw 0px var(--cor-shadow-mid);
+            font-size: 2vw;
         }
 
     }

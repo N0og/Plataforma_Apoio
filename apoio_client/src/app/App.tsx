@@ -3,7 +3,7 @@ import { Routers } from './Routes'
 function App() {
 
   return (
-    <Routers />
+    <Routers/>
   )
 }
 

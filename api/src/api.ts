@@ -4,6 +4,7 @@ import express from 'express'
 import { router } from './routes'
 import { API_DB_DataSource } from './database/init'
 import cors from 'cors'
+import JSONLoader from './utils/bd/JSONLoader'
 DotEnvConfig()
 
 const api = express()
@@ -11,7 +12,12 @@ const api = express()
 api.use(express.json())
 
 api.use(cors({
-    origin: '*'
+    origin: (origin, callback) => {
+
+        const alloweds = new JSONLoader().loadWhitelist().getWhitelist().includes(origin)
+
+        callback(null, alloweds)
+    }
 }))
 
 api.use(router)

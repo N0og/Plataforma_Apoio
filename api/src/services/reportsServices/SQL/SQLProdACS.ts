@@ -1,6 +1,7 @@
 export class SQL_PROD_ACS_CONSOLIDADO{
 
-    SQL_BASE:string = `
+    private SQL_BASE:string = 
+    `
         SELECT
             p.Id,
             p.Nome NomeProfissional,
@@ -456,12 +457,16 @@ export class SQL_PROD_ACS_CONSOLIDADO{
             AND p.Ocupacao_Id = 1349 
             AND p.AcessoMobile = TRUE 
             AND p.Ativo = TRUE
-     `
+    `
+
+    getBase(){
+        return this.SQL_BASE
+    }
 }
 
 export class SQL_PROD_ACS_POR_DIA{
 
-    SQL_BASE:string = `
+    private SQL_BASE:string = `
         SELECT DISTINCT
             COUNT( VisitaDomiciliar.Id ) AS 'TotalVisitaDia',
             DAY ( VisitaDomiciliar.DataCadastro ) AS Dia,
@@ -472,7 +477,7 @@ export class SQL_PROD_ACS_POR_DIA{
             VisitaDomiciliar.Profissional_Id AS 'Profissional_Id' 
     `
 
-    SQL_END: string = `
+    private SQL_END: string = `
         FROM
             VisitaDomiciliar
             LEFT JOIN RegionalEstabelecimento ON ( RegionalEstabelecimento.Estabelecimento_Id = VisitaDomiciliar.Estabelecimento_Id )
@@ -488,4 +493,12 @@ export class SQL_PROD_ACS_POR_DIA{
             AND VisitaDomiciliar.Treinamento = 0 
             AND ( VisitaDomiciliar.MicroArea != Profissional.MicroAreaTemporaria OR Profissional.MicroAreaTemporaria IS NULL ) 
     `
+
+    getBase(){
+        return this.SQL_BASE
+    }
+
+    getFrom(){
+        return this.SQL_END
+    }
 }

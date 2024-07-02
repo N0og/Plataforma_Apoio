@@ -7,32 +7,68 @@ import { FiltroDinamico, FiltroData, FiltroSimples } from '../../../../../compon
 
 //Styles
 import './ProdutividadeUBS.css'
+import { Filters } from './hooks/useFilters';
 //#endregion
 
+interface ProdutividadeUBSProps {
+    setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const fetchData = async (url: string, params: object = {}) => {
+    try {
+        const response = await axios.get(url, { params });
+        return response.data;
+    } catch (error) {
+        console.error('There was an error!', error);
+        return null;
+    }
+};
+
 export const ProdutividadeUBS: React.FC<{ setCurrentPage: React.Dispatch<React.SetStateAction<string>> }> = ({ setCurrentPage }) => {
-    const [UBSFilters, setUBSFilters] = useState<any[]>([]);
+
+    
+
+   
+
     const [MUNICIPIOFilters, setMUNICIPIOFilters] = useState<any[]>([]);
     const [INSTALACAOFilters, setINSTALACAOFilters] = useState<any[]>([]);
+    const [UBSFilters, setUBSFilters] = useState<any[]>([]);
     const [INEFilters, setINEFilters] = useState<any[]>([]);
     const [PROFFilters, setPROFFilters] = useState<any[]>([]);
     const [CBOFilters, setCBOFilters] = useState<any[]>([]);
     const [DATAFilters, setDATAFilters] = useState<string>("");
     const [loading_state, setLoading] = useState(false);
+    
+    const FILTERS = new Filters(setLoading)
 
+    //Não faz nada
     useEffect(() => {
     }, [UBSFilters, DATAFilters])
 
+
+    //Coleta Clientes
+    useEffect(()=>{
+        FILTERS.getClients(setMUNICIPIOFilters);
+    },[])
+
+    //Coleta as instalações
     useEffect(() => {
-        axios.get('http://localhost:9090/api/v1/filters/clients')
-            .then(response => {
-                setMUNICIPIOFilters(response.data)
-            })
-            .catch(error => {
-                console.error('There was an error!', error);
-            });
-    }, []);
+        FILTERS.getInstalacoes(MUNICIPIOFilters, setINSTALACAOFilters)
+    }, [MUNICIPIOFilters]);
+
 
     useEffect(() => {
+        FILTERS.getUBS(INSTALACAOFilters, setUBSFilters)
+    }, [INSTALACAOFilters]);
+
+
+    useEffect(() => {
+
+        FILTERS.getEquipes(UBSFilters, setINEFilters)
+
+    }, [UBSFilters]);
+
+    const Extract = () =>{
 
         let mun = MUNICIPIOFilters.map((mun) => {
             if (Object.values(mun)[0]) {
@@ -41,31 +77,35 @@ export const ProdutividadeUBS: React.FC<{ setCurrentPage: React.Dispatch<React.S
             }
         }).filter(Boolean);
 
-        if (mun.length > 0){
-            axios({
-                method: 'get',
-                url: 'http://localhost:9090/api/v1/filters/unidades',
-                params: {
-                    municipios: mun
-                },
-                transformRequest: [
-                    (data) => {
-                        return JSON.stringify(data);
-                    }
-                ]
-            })
-                .then(response => {
-                    setLoading(false)
-                    setINSTALACAOFilters(response.data)
-                })
-                .catch(error => {
-                    console.error('There was an error!', error);
-                });
-        }
-        
-        setINSTALACAOFilters([])
+        let inst = INSTALACAOFilters.map((inst)=>{
+            
+        })
 
-    }, [MUNICIPIOFilters]);
+        axios({
+            method: 'get',
+            url: 'http://localhost:9090/api/v1/reports/ProdutividadeUBST',
+            params: {
+                dbtype:'psql',
+                municipios: MUNICIPIOFilters,
+                instalacoes: INSTALACAOFilters,
+                unidades: INSTALACAOFilters,
+                equipes: INEFilters,
+                download:true
+            },
+            transformRequest: [
+                (data) => {
+                    return JSON.stringify(data);
+                }
+            ]
+        })
+            .then(response => {
+                setLoading(false)
+                setINEFilters(response.data)
+            })
+            .catch(error => {
+                console.error('There was an error!', error);
+            });
+    }
 
     return (
         <div className="container_report">
@@ -93,15 +133,19 @@ export const ProdutividadeUBS: React.FC<{ setCurrentPage: React.Dispatch<React.S
                     <FiltroDinamico name={"INSTALAÇÃO"} filter={INSTALACAOFilters} changeFilter={setINSTALACAOFilters} />
                     <FiltroDinamico name={"UBS"} filter={UBSFilters} changeFilter={setUBSFilters} />
                     <FiltroDinamico name={"INE"} filter={INEFilters} changeFilter={setINEFilters} />
-                    <FiltroDinamico name={"PROFISSIONAL"} filter={PROFFilters} changeFilter={setPROFFilters} />
-                    <FiltroDinamico name={"CBO"} filter={CBOFilters} changeFilter={setCBOFilters} />
                     <FiltroData changeFilter={setDATAFilters} />
                 </div>
             </div>
             <div className="container_view">
+                <div className='extract_btn'>
+                    <button
+                    onClick={()=>{Extract()}}
+                    >EXTRAIR</button>
+                </div>
+            </div>
+            <div className="container_buttons">
 
             </div>
-            <div className="container_buttons"></div>
         </div>
     )
 }

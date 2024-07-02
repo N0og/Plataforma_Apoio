@@ -1,6 +1,6 @@
 export class SQL_DUP_PEC{
     
-    SQL_BASE: string = `
+    private SQL_BASE: string = `
         select distinct 
             tc.no_cidadao as "NOME",
             tc.nu_cpf as "CPF",
@@ -72,4 +72,9 @@ export class SQL_DUP_PEC{
         order by
             tc.no_cidadao asc
     `
+
+    getBase() {
+        return this.SQL_BASE
+    }
+    
 }

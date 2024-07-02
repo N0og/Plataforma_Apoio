@@ -1,5 +1,6 @@
 export class SQL_ACESSOS_EAS{
-    SQL_BASE:string = `
+    private SQL_BASE: string =
+    `
         SELECT 
             p.uf,
             p.Cidade,
@@ -26,8 +27,17 @@ export class SQL_ACESSOS_EAS{
             1=1
     `
 
-    SQL_END:string = `
+    private SQL_END: string = 
+    `
         group by u.nome
         order by ANO desc
     `
+
+    getBase(){
+        return this.SQL_BASE;
+    }
+
+    getFrom(){
+        return this.SQL_END;
+    }
 }

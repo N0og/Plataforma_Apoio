@@ -22,7 +22,6 @@ export class ConfigPostgresDatabase implements PGConfig, DatabaseConfig {
     database: string = "esus";
     password: string;
     port: number;
-    connectionTimeoutMillis = 5000;
 
     changeConfig(config: Partial<DatabaseConfig>) {
         if (

@@ -5,7 +5,7 @@ import "./TopMenu.css"
 
 export const TopMenu = ()=>{
 
-    const [loggedState, _setLoged] = useState(true)
+    const [loggedState, _setLoged] = useState(false)
 
     useEffect(()=>{
         //Verifica a autenticação aqui.

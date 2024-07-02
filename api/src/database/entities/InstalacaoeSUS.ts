@@ -1,5 +1,7 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Municipio } from "./Municipios";
+import { Unidade } from "./Unidades";
+import { json } from "stream/consumers";
 
 @Entity('tb_instalacoes_esus')
 export class Instalacao_eSUS {
@@ -30,9 +32,18 @@ export class Instalacao_eSUS {
     @Column({nullable: true})
     password_pec: string
 
+    @Column({type:"date", nullable:true})
+    date_process:Date
+
+    @Column({nullable: true})
+    sucess_process: string
+
     @ManyToOne(() => Municipio, (municipio) => municipio.instalacoes)
     @JoinColumn({name:"municipio_id"})
     municipio: Municipio
+
+    @OneToMany(()=>Unidade, (unidade)=> unidade.instalacao)
+    unidades: Unidade[]
 
 
 }
