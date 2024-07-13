@@ -4,20 +4,26 @@ import { MapContainer, Marker, Popup, TileLayer, Tooltip } from 'react-leaflet'
 import axios from 'axios';
 
 //Components
-import { FiltroSimples } from '../../../components/Components';
+import { FiltroSimples } from '../../components';
 
 
 //Interfaces
-import { ISimpleFilterPartition } from '../../../../interfaces/IFilters';
-import { IIEDResponse } from '../../../../interfaces/IResponses';
+import { ISimpleFilterPartition } from '../../interfaces/IFilters';
+import { IIEDResponse } from '../../interfaces/IResponses';
 
 //Styles
 import './Mapa.css'
 import 'leaflet/dist/leaflet.css';
 import { getIcon } from './Utils/getIcon';
+import { Pages } from '../../constants';
+import { DefaultProps } from '../../types';
 //#endregion
 
-export const Mapa: React.FC<{ setCurrentPage: React.Dispatch<React.SetStateAction<string>> }> = ({ setCurrentPage }) => {
+
+
+
+
+export const Mapa: React.FC<DefaultProps> = ({ setCurrentPage }) => {
 
     const [MUNICIPIOFilters, setMUNICIPIOFilters] = useState<ISimpleFilterPartition[]>([]);
     const [IEDFilters, setIEDFilters] = useState<IIEDResponse[]>([]);
@@ -84,7 +90,7 @@ export const Mapa: React.FC<{ setCurrentPage: React.Dispatch<React.SetStateActio
             <div className='page-title'>
                 <div className='back_button_container'>
                     <div className='back_button'>
-                        <button onClick={() => setCurrentPage('relatorios')}></button>
+                        <button onClick={() => setCurrentPage(Pages.Relatorios)}></button>
                         <i className="fa-solid fa-circle-chevron-left"></i>
                     </div>
                 </div>

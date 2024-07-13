@@ -1,0 +1,7 @@
+#API
+api/.env
+api/node_modules
+
+
+#FRONT
+apoio_client/node_modules

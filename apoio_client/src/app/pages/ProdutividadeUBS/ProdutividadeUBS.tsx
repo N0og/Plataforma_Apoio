@@ -3,11 +3,12 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 
 //Components
-import { FiltroDinamico, FiltroData, FiltroSimples } from '../../../../../components/Components'
+import { FiltroDinamico, FiltroData, FiltroSimples } from '../../components'
 
 //Styles
 import './ProdutividadeUBS.css'
-import { Filters } from './hooks/useFilters';
+import { DefaultProps } from '../../types';
+import { Pages } from '../../constants';
 //#endregion
 
 interface ProdutividadeUBSProps {
@@ -24,11 +25,7 @@ const fetchData = async (url: string, params: object = {}) => {
     }
 };
 
-export const ProdutividadeUBS: React.FC<{ setCurrentPage: React.Dispatch<React.SetStateAction<string>> }> = ({ setCurrentPage }) => {
-
-    
-
-   
+export const ProdutividadeUBS: React.FC<DefaultProps> = ({ setCurrentPage }) => {
 
     const [MUNICIPIOFilters, setMUNICIPIOFilters] = useState<any[]>([]);
     const [INSTALACAOFilters, setINSTALACAOFilters] = useState<any[]>([]);
@@ -39,34 +36,8 @@ export const ProdutividadeUBS: React.FC<{ setCurrentPage: React.Dispatch<React.S
     const [DATAFilters, setDATAFilters] = useState<string>("");
     const [loading_state, setLoading] = useState(false);
     
-    const FILTERS = new Filters(setLoading)
-
-    //Não faz nada
-    useEffect(() => {
-    }, [UBSFilters, DATAFilters])
 
 
-    //Coleta Clientes
-    useEffect(()=>{
-        FILTERS.getClients(setMUNICIPIOFilters);
-    },[])
-
-    //Coleta as instalações
-    useEffect(() => {
-        FILTERS.getInstalacoes(MUNICIPIOFilters, setINSTALACAOFilters)
-    }, [MUNICIPIOFilters]);
-
-
-    useEffect(() => {
-        FILTERS.getUBS(INSTALACAOFilters, setUBSFilters)
-    }, [INSTALACAOFilters]);
-
-
-    useEffect(() => {
-
-        FILTERS.getEquipes(UBSFilters, setINEFilters)
-
-    }, [UBSFilters]);
 
     const Extract = () =>{
 
@@ -112,7 +83,7 @@ export const ProdutividadeUBS: React.FC<{ setCurrentPage: React.Dispatch<React.S
             <div className="container_title">
                 <div className='back_button_container'>
                     <div className='back_button'>
-                        <button onClick={() => setCurrentPage('relatorios')}></button>
+                        <button onClick={() => setCurrentPage(Pages.Relatorios)}></button>
                         <i className="fa-solid fa-circle-chevron-left"></i>
                     </div>
                     {loading_state ?

@@ -1,7 +1,7 @@
+import { Pages } from '../../constants/PageEnums';
 import './SideBar.css'
 
-export const SideBar:React.FC<{setCurrentPage:React.Dispatch<React.SetStateAction<string>>}> = ({setCurrentPage}) => {
-
+export const SideBar:React.FC<{setCurrentPage:React.Dispatch<React.SetStateAction<Pages>>}> = ({setCurrentPage}) => {
 
     return (
         <div className="side_bar_container">
@@ -9,35 +9,35 @@ export const SideBar:React.FC<{setCurrentPage:React.Dispatch<React.SetStateActio
                     <div className="side_bar_item">
                         <div className='item_icon'><i className="fa-solid fa-chart-simple"></i></div>
                         <div className='item'>
-                            <button onClick={()=>{setCurrentPage("dashboard")}}></button>
+                            <button onClick={()=>{setCurrentPage(Pages.Dashboard)}}></button>
                             <span>Dashboard</span>
                         </div>
                     </div>
                     <div className="side_bar_item">
                         <div className='item_icon'><i className="fa-solid fa-file-contract"></i></div>
                         <div className='item'>
-                            <button onClick={()=>{setCurrentPage("relatorios")}}></button>
+                            <button onClick={()=>{setCurrentPage(Pages.Relatorios)}}></button>
                             <span>Relatórios</span>
                         </div>
                     </div>
                     <div className="side_bar_item">
                         <div className='item_icon'><i className="fa-solid fa-map-location-dot"></i></div>
                         <div className='item'>
-                            <button onClick={()=>{setCurrentPage("mapa")}}></button>
+                            <button onClick={()=>{setCurrentPage(Pages.Mapa)}}></button>
                             <span>Mapa</span>
                         </div>
                     </div>
                     <div className="side_bar_item">
                         <div className='item_icon'><i className="fa-solid fa-clock-rotate-left"></i></div>
                         <div className='item'>
-                            <button onClick={()=>{setCurrentPage("historico")}}></button>
+                            <button onClick={()=>{setCurrentPage(Pages.Historico)}}></button>
                             <span>Histórico</span>
                         </div>
                     </div>
                     <div className="side_bar_item">
                         <div className='item_icon'><i className="fa-solid fa-question"></i></div>
                         <div className='item'>
-                            <button onClick={()=>{setCurrentPage("ajuda")}}></button>
+                            <button onClick={()=>{setCurrentPage(Pages.Ajuda)}}></button>
                             <span>Ajuda</span>
                         </div>
                     </div>
