@@ -1,0 +1,19 @@
+.loading_container{
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    left: 4vw;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5vw;
+    font-size: 1vw;
+    .loading_filter {
+        margin-left: 0.8vw;
+        border: 0.3vw solid #f3f3f3;
+        border-top: 0.3vw solid var(--cor-rose);
+        border-radius: 50%;
+        width: 1vw;
+        height: 1vw;
+        animation: spin 1s linear infinite;
+    }
+}

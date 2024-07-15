@@ -1,13 +1,15 @@
 import { Request } from "express"
 import { ParsedQs } from "qs";
+import { IResultConnection } from "./IResultConnection";
 
 export interface IReportControllerRequest extends Request{
     dbtype?: 'psql' | "mdb" 
-    dbname?: string[] | ParsedQs[]
+    order?: string[] | ParsedQs[]
     download?: boolean;
     organize?: boolean;
 }
 
-export interface IReportControllerBDError{
-    [key: string]: { address: string, error: string }
+export interface IOrderError{
+    order:string,
+    result: IResultConnection
 }

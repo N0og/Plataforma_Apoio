@@ -10,14 +10,14 @@ export default class MapController {
         try {
             const dbClient = new ConnectDBs();
 
-            const dbname = Array.isArray(req.query.dbname) ? req.query.dbname : Array(req.query.dbname)
+            const order = Array.isArray(req.query.order) ? req.query.order : Array(req.query.order)
             const { dbtype } = query_params
 
             let resultTotal: { [key: string]: any }[] = []
 
-            for (const municipio in dbname) {
+            for (const municipio in order) {
 
-                let mun = dbname[municipio]
+                let mun = order[municipio]
 
                 body_params.municipio = mun
 

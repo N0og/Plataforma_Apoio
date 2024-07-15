@@ -1,5 +1,5 @@
 
-export enum Pages {
+export enum PagesEnum {
     Dashboard = 'dashboard',
     Relatorios = 'relatorios',
     Historico = 'historico',

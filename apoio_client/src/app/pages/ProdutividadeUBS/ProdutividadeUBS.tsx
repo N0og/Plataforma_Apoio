@@ -1,81 +1,77 @@
 //#region Imports
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 
 //Components
-import { FiltroDinamico, FiltroData, FiltroSimples } from '../../components'
+import { FiltroData, FiltroSimples, renderAlertMessage } from '../../components'
 
 //Styles
 import './ProdutividadeUBS.css'
 import { DefaultProps } from '../../types';
-import { Pages } from '../../constants';
+import { PagesEnum } from '../../constants';
+import { useGetData, useStateController, useDownload } from '../../hooks';
 //#endregion
 
-interface ProdutividadeUBSProps {
-    setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
-}
-
-const fetchData = async (url: string, params: object = {}) => {
-    try {
-        const response = await axios.get(url, { params });
-        return response.data;
-    } catch (error) {
-        console.error('There was an error!', error);
-        return null;
-    }
-};
 
 export const ProdutividadeUBS: React.FC<DefaultProps> = ({ setCurrentPage }) => {
 
     const [MUNICIPIOFilters, setMUNICIPIOFilters] = useState<any[]>([]);
-    const [INSTALACAOFilters, setINSTALACAOFilters] = useState<any[]>([]);
-    const [UBSFilters, setUBSFilters] = useState<any[]>([]);
-    const [INEFilters, setINEFilters] = useState<any[]>([]);
-    const [PROFFilters, setPROFFilters] = useState<any[]>([]);
-    const [CBOFilters, setCBOFilters] = useState<any[]>([]);
-    const [DATAFilters, setDATAFilters] = useState<string>("");
-    const [loading_state, setLoading] = useState(false);
-    
+    const [OrderURL, setOrderParam] = useState<string>("");
+    const [DATAFilters, setDATAFilters] = useState<Array<string>>([]);
+    const { control_states, toggleState } = useStateController()
 
+    useEffect(() => {
+        useGetData(
+            "http://26.197.116.207:9090/api/v1/filters/clients",
+            {},
+            toggleState
+        ).then((response => {
+            if (response) setMUNICIPIOFilters(response)
+        }))
 
+    }, [])
 
-    const Extract = () =>{
-
-        let mun = MUNICIPIOFilters.map((mun) => {
-            if (Object.values(mun)[0]) {
-                setLoading(true)
-                return Object.keys(mun)[0]
-            }
-        }).filter(Boolean);
-
-        let inst = INSTALACAOFilters.map((inst)=>{
-            
+    useEffect(() => {
+        setOrderParam(`http://26.197.116.207:9090/api/v1/reports/ProdutividadeUBS?dbtype=psql&download=true${MUNICIPIOFilters.filter(item => {
+            return Object.values(item)[0] == true
         })
-
-        axios({
-            method: 'get',
-            url: 'http://localhost:9090/api/v1/reports/ProdutividadeUBST',
-            params: {
-                dbtype:'psql',
-                municipios: MUNICIPIOFilters,
-                instalacoes: INSTALACAOFilters,
-                unidades: INSTALACAOFilters,
-                equipes: INEFilters,
-                download:true
-            },
-            transformRequest: [
-                (data) => {
-                    return JSON.stringify(data);
-                }
-            ]
-        })
-            .then(response => {
-                setLoading(false)
-                setINEFilters(response.data)
+            .map(item => {
+                return `&order=${Object.keys(item)[0].replace(/ /g, "%20")}`
             })
-            .catch(error => {
-                console.error('There was an error!', error);
-            });
+            .join('')}`)
+
+    }, [MUNICIPIOFilters])
+
+
+    const extract = () => {
+        //toggleState('data_state', false)
+        //toggleState('municipio_state', false)
+
+        console.log(DATAFilters)
+        
+        const mun = MUNICIPIOFilters.filter(item => {
+            return Object.values(item)[0] == true
+        })
+        console.log(mun)
+
+        if (mun.length == 0){
+            toggleState('municipio_state', true)
+        }
+
+        else if (DATAFilters.length > 0) {
+            useDownload(
+                OrderURL,
+                {
+                    data_inicial: DATAFilters[0],
+                    data_final: DATAFilters[1]
+                },
+                toggleState
+            )
+        }
+        else {
+            console.log('aqui')
+            toggleState('data_state', true)
+        }
+
     }
 
     return (
@@ -83,34 +79,26 @@ export const ProdutividadeUBS: React.FC<DefaultProps> = ({ setCurrentPage }) => 
             <div className="container_title">
                 <div className='back_button_container'>
                     <div className='back_button'>
-                        <button onClick={() => setCurrentPage(Pages.Relatorios)}></button>
+                        <button onClick={() => setCurrentPage(PagesEnum.Relatorios)}></button>
                         <i className="fa-solid fa-circle-chevron-left"></i>
                     </div>
-                    {loading_state ?
-                        <div className='loading_container'>
-                            <div className='loading_filter'></div>
-                            <span>Carregando...</span>
-                        </div> : ""}
                 </div>
-                <div className='municipio_container'>
-                </div>
+                {renderAlertMessage(control_states)}
                 <div className='title_container'>
                     <h4>PRODUTIVIDADE UBS</h4>
                 </div>
             </div>
             <div className="container_filters">
                 <div className='filters_organization'>
+                    <FiltroSimples name={"Fonte: eSUS"} filters={MUNICIPIOFilters} changeFilter={setMUNICIPIOFilters} deactivated={true} />
                     <FiltroSimples name={"MUNICÍPIO"} filters={MUNICIPIOFilters} changeFilter={setMUNICIPIOFilters} />
-                    <FiltroDinamico name={"INSTALAÇÃO"} filter={INSTALACAOFilters} changeFilter={setINSTALACAOFilters} />
-                    <FiltroDinamico name={"UBS"} filter={UBSFilters} changeFilter={setUBSFilters} />
-                    <FiltroDinamico name={"INE"} filter={INEFilters} changeFilter={setINEFilters} />
                     <FiltroData changeFilter={setDATAFilters} />
                 </div>
             </div>
             <div className="container_view">
                 <div className='extract_btn'>
                     <button
-                    onClick={()=>{Extract()}}
+                        onClick={() => { extract() }}
                     >EXTRAIR</button>
                 </div>
             </div>

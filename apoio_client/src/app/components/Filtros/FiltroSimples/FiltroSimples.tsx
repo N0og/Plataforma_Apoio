@@ -2,7 +2,7 @@ import { SetStateAction, useEffect, useRef, useState } from "react";
 import './FiltroSimples.css'
 
 
-export const FiltroSimples: React.FC<{ name: string, filters: any[], changeFilter: React.Dispatch<SetStateAction<any[]>> }> = ({ name, filters, changeFilter }) => {
+export const FiltroSimples: React.FC<{ name: string, filters: any[], changeFilter: React.Dispatch<SetStateAction<any[]>>, deactivated?: boolean }> = ({ name, filters, changeFilter, deactivated }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [counter, setCounter] = useState<number>(0);
   const filterContainerRef = useRef<HTMLDivElement>(null);
@@ -40,7 +40,7 @@ export const FiltroSimples: React.FC<{ name: string, filters: any[], changeFilte
     });
   };
 
-  const handleClickOutside = (event:any) => {
+  const handleClickOutside = (event: any) => {
     if (filterContainerRef.current && !filterContainerRef.current.contains(event.target)) {
       setIsOpen(false);
     }
@@ -63,37 +63,40 @@ export const FiltroSimples: React.FC<{ name: string, filters: any[], changeFilte
         {counter > 0 ? <div className="counter-filter">{counter}</div> : ""}
         {isOpen ? <i className="fa-solid fa-caret-up"></i> : <i className="fa-solid fa-caret-down"></i>}
       </button>
+      {!deactivated ? (
+    
+          <div className={isOpen ? "filters" : "filtersClosed"}>
+            <div className="filter-all" key={`filter-option-0000-0000`}>
+              <label >
+                <input
+                  type="checkbox"
+                  onChange={() => toggleAllFilters()}
+                />
+                <label className="custom-checkbox"></label>
+                <span className="span-container">SELECIONAR TUDO</span>
+              </label>
+            </div>
+            {
+              Object.keys(filters).map((_, index) =>
+                Object.keys(filters[index]).map((option, optionIndex) => (
+                  <div className="filter-option" key={`filter-option-${index}-${optionIndex}`}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        id={`checkbox-${index}-${optionIndex}`}
+                        checked={filters[index][option]}
+                        onChange={() => toggleFilter(index, option)}
+                      />
+                      <label htmlFor={`checkbox-${index}-${optionIndex}`} className="custom-checkbox"></label>
+                      <span className="span-container">{option}</span>
+                    </label>
+                  </div>
+                ))
+              )
+            }
+          </div>
+      ) : null}
 
-      <div className={isOpen ? "filters" : "filtersClosed"}>
-        <div className="filter-all" key={`filter-option-0000-0000`}>
-          <label >
-            <input
-              type="checkbox"
-              onChange={() => toggleAllFilters()}
-            />
-            <label className="custom-checkbox"></label>
-            <span className="span-container">SELECIONAR TUDO</span>
-          </label>
-        </div>
-        {
-          Object.keys(filters).map((_, index) =>
-            Object.keys(filters[index]).map((option, optionIndex) => (
-              <div className="filter-option" key={`filter-option-${index}-${optionIndex}`}>
-                <label>
-                  <input
-                    type="checkbox"
-                    id={`checkbox-${index}-${optionIndex}`}
-                    checked={filters[index][option]}
-                    onChange={() => toggleFilter(index, option)}
-                  />
-                  <label htmlFor={`checkbox-${index}-${optionIndex}`} className="custom-checkbox"></label>
-                  <span className="span-container">{option}</span>
-                </label>
-              </div>
-            ))
-          )
-        }
-      </div>
     </div>
   )
 }

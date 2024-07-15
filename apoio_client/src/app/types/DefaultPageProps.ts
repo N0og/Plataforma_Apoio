@@ -1,5 +1,5 @@
-import { Pages } from "../constants/PageEnums"
+import { PagesEnum } from "../constants/PageEnums"
 
 export type DefaultProps ={
-    setCurrentPage: React.Dispatch<React.SetStateAction<Pages>> 
+    setCurrentPage: React.Dispatch<React.SetStateAction<PagesEnum>> 
 }

@@ -1,12 +1,12 @@
 import './Main.css'
 import { useState, Suspense } from "react"
 import { TopMenu, SideBar } from "../components"
-import { Pages } from '../constants/PageEnums'
+import { PagesEnum } from '../constants/PageEnums'
 import { setPage } from '../components'
 
 
 export const Main = () => {
-    const [currentPage, setCurrentPage] = useState<Pages>(Pages.Relatorios);
+    const [currentPage, setCurrentPage] = useState<PagesEnum>(PagesEnum.Relatorios);
 
     return (
         <div className="body_page">

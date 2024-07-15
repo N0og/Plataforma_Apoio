@@ -4,7 +4,7 @@ import { ConnectDBs } from "../database/init";
 import { ConnEASRepository, ConneSUSRepository } from "../database/repository/API_DB_Repositorys";
 import ExcelBuilder from "../utils/excel_builder/ExcelBuilder"
 
-import { IReportControllerBDError, IReportControllerRequest } from "../interfaces/ControllersInterfaces/IReportController";
+import { IOrderError, IReportControllerRequest } from "../interfaces/ControllersInterfaces/IReportController";
 
 import { ProdutividadeACS_PorDiaQuery, ProdutividadeACS_ConsolidadoQuery } from "../services/reportsServices/ProdutividadeACSService";
 import ProdutividadeUBS_ConsolidadoQuery from "../services/reportsServices/ProdutividadeUBSService";
@@ -12,57 +12,96 @@ import VisitasPrioritariasQuery from "../services/reportsServices/VisitasPriorit
 import DuplicadosPECQuery from "../services/reportsServices/DuplicadosService";
 import CompletudeQuery from "../services/reportsServices/CompletudeService";
 import AcessosEASService from "../services/reportsServices/AcessosEASService";
+import { handleIPSEAS, handleIPSESUS } from "./handlers";
 
-import { IEXCEL_SHEETS } from "../interfaces/IExcel";
+import { IOrder } from "../interfaces/IOrder";
 
 import JSZip from "jszip";
-import VisitasPrioritariasOrganizer from "../utils/excel_builder/Organizers/VisitasPrioritariasOrganizer";
+import { IResultConnection } from "../interfaces/ControllersInterfaces/IResultConnection";
 
 export default class ReportController {
 
     DB_CLIENT: ConnectDBs
-    SHEETS: IEXCEL_SHEETS 
-    BD_ERROS: IReportControllerBDError[]
-    
+    ORDERS_PROCESS: IOrder
+    ORDERS_ERRORS: IOrderError[]
+
 
     private async executeHandler(req: IReportControllerRequest, res: Response, serviceClass: any, type: string) {
 
         try {
 
             this.DB_CLIENT = new ConnectDBs();
-            this.SHEETS = {};
-            this.BD_ERROS = [];
+            this.ORDERS_PROCESS = {};
+            this.ORDERS_ERRORS = [];
 
+            const SERVICE_INSTANCE = new serviceClass();
             const DB_TYPE = req.dbtype;
-            const DB_NAMES = req.dbname;
+            const ORDERS = req.order;
             const DOWNLOAD = req.download;
-            const ORGANIZE = req.organize;
 
             console.log(`PEDIDO IP: ${req.ip} - INÍCIO DE EXTRAÇÃO.`)
-            for (const connection of DB_NAMES!) {
-                await this.processConnection(connection, DB_TYPE!, serviceClass, req, res);
-                console.log(`PEDIDO IP: ${req.ip} - EXTRAÇÃO: ${connection}.`)
+            for (const db_name of ORDERS!) {
+
+                let result: IResultConnection = await this.processConnection(db_name, DB_TYPE!, SERVICE_INSTANCE, req);
+
+                if (!result.extracted) {
+                    this.ORDERS_ERRORS.push({ order: db_name.toString(), result: result })
+                }
+                if (!(db_name.toString() in this.ORDERS_PROCESS)) {
+                    this.ORDERS_PROCESS[db_name.toString()] = { sheet: undefined, json: result.result };
+                }
+                console.log(`PEDIDO IP: ${req.ip} - EXTRAÍDO: ${db_name}.`)
+
+
             }
 
-            console.log(`PEDIDO IP: ${req.ip} - EXTRAÇÃO REALIZADA.`)
+            if (ORDERS?.length == this.ORDERS_ERRORS.length) {
+                return res.status(503).json(
+                    {
+                        msg: 'Houve uma falha na coleta de dados.',
+                        orders: this.ORDERS_ERRORS
+                    })
+            }
+
+            console.log(`PEDIDO IP: ${req.ip} - EXTRAÇÕES REALIZADA.`)
             if (DOWNLOAD) {
                 console.log(`PEDIDO IP: ${req.ip} - ENVIO PARA DOWNLOAD - SISTEMATIZANDO...`)
-                await this.generateAndSendZip(type, res, ORGANIZE!);
+                const ZIP = await this.generateZip();
+
+                if (!ZIP) {
+                    return res.status(204).json(
+                        {
+                            msg: "Sem conteúdo para esta solicitação",
+                            orders: this.ORDERS_PROCESS
+                        })
+                }
+
+                const ZIP_BUFFER = ZIP.generateNodeStream({ type: "nodebuffer", streamFiles: true });
+
+                ZIP_BUFFER.on('end', () => {
+                    res.end();
+                });
+
+                res.set('Content-Type', 'application/zip');
+                res.set('Content-Disposition', `attachment; filename="${type}${new Date().toLocaleDateString('pt-BR')}.zip"`);
+                res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
+                ZIP_BUFFER.pipe(res)
             }
 
             else {
                 console.log(`PEDIDO IP: ${req.ip} - ENVIO VIA JSON - SISTEMATIZANDO...`)
+
                 let response_json = {}
-                if (Object.keys(this.SHEETS).length === 0) {
-                    res.status(404).json(this.BD_ERROS)
+                if (Object.keys(this.ORDERS_PROCESS).length === 0) {
+                    res.status(404).json(this.ORDERS_ERRORS)
                 }
-                else{
-                    for (let MUNICIPIO of Object.keys(this.SHEETS)) {
-                        response_json[MUNICIPIO] = this.SHEETS[MUNICIPIO].result
+                else {
+                    for (let MUNICIPIO of Object.keys(this.ORDERS_PROCESS)) {
+                        response_json[MUNICIPIO] = this.ORDERS_PROCESS[MUNICIPIO].json
                     }
                     res.status(200).json(response_json)
                 }
-                
+
             }
 
         } catch (error) {
@@ -74,122 +113,54 @@ export default class ReportController {
         }
     }
 
-    private async changeDB(DB_TYPE: string, config: any) {
-        return await this.DB_CLIENT.changeDB(DB_TYPE, config);
-    }
-
     private async getConnections(repository: any, municipio: string) {
         return await repository.createQueryBuilder("jsonIP")
             .where("jsonIP.dados @> :dados", { dados: JSON.stringify({ municipio }) })
             .getMany();
     }
 
-    private async processConnection(connection_name: any, DB_TYPE: string, serviceClass: any, req: IReportControllerRequest, res: Response) {
+    private async processConnection(connection_name: any, DB_TYPE: string, SERVICE_INSTANCE: any, req: IReportControllerRequest): Promise<IResultConnection> {
 
         const IPSESUS = DB_TYPE === 'psql' ? await this.getConnections(ConneSUSRepository, connection_name) : null;
         const IPSEAS = DB_TYPE === 'mdb' ? await this.getConnections(ConnEASRepository, connection_name) : null;
 
         if (IPSEAS && IPSEAS.length > 0) {
-            return await this.handleIPSEAS(IPSEAS[0], DB_TYPE, serviceClass, req, res);
-        } 
+            return await handleIPSEAS(this.DB_CLIENT, IPSEAS[0], DB_TYPE, SERVICE_INSTANCE, req);
+        }
         else if (IPSESUS && IPSESUS.length > 0) {
-            return await this.handleIPSESUS(IPSESUS, DB_TYPE, serviceClass, req, res);
-        } 
-        else {
-            this.BD_ERROS.push({ connection_name: { address:connection_name, error:`Conexões não identificadas: ${connection_name}`}});
-        }
-    }
-
-    private async handleIPSEAS(IPSEAS: any, DB_TYPE: string, serviceClass: any, req: IReportControllerRequest, res: Response) {
-        const municipio = IPSEAS.dados.municipio;
-        if (!(municipio in this.SHEETS)) {
-            this.SHEETS[municipio] = { excel_builder: undefined, result: [] };
-        }
-
-        if (await this.changeDB(DB_TYPE, { database: IPSEAS.dados.db_name_eas }) instanceof Error) {
-            res.status(503).json({ error: "Falha na conexão de banco" });
-        }
-
-        const result = await this.executeService(serviceClass, DB_TYPE, req);
-
-        this.SHEETS[municipio].result = this.SHEETS[municipio].result.concat(result);
-    }
-
-    private async handleIPSESUS(IPSESUS: any[], DB_TYPE: string, serviceClass: any, req: IReportControllerRequest, res: Response) {
-        
-
-        for (let ip of IPSESUS) {
-            const municipio = ip.dados.municipio;
-            if (!(municipio in this.SHEETS)) {
-                this.SHEETS[municipio] = { excel_builder: undefined, result: [] };
-            }
-
-            console.log(`${municipio} - Connectando: ${ip.dados.instalacao_esus}... `)
-            if (await this.changeDB(DB_TYPE, {
-                host: ip.dados.ip_esus,
-                port: ip.dados.port_esus,
-                database: ip.dados.db_name_esus,
-                user: ip.dados.db_user_esus,
-                password: ip.dados.db_password_esus
-            }) instanceof Error) {
-                console.error(`${municipio} - Falha na conexão: ${ip.dados.instalacao_esus}... `)
-                this.BD_ERROS.push({ [ip.dados.instalacao_esus]: { address: ip.dados.ip_esus, error: "Falha na conexão de banco" } });
-                continue;
-            }
-
-            console.log(`${municipio} - Conectado!: ${ip.dados.instalacao_esus}... `)
-            const result = await this.executeService(serviceClass, DB_TYPE, req);
-            this.SHEETS[municipio].result = this.SHEETS[municipio].result.concat(result);
-        }
-
-        /*if (IPSESUS.length === this.BD_ERROS.length) {
-            res.status(503).json({ error: `BD's indisponíveis` });
-        }*/
-    }
-
-    async executeService(serviceClass: any, DB_TYPE: string, req: IReportControllerRequest) {
-        const serviceInstance = new serviceClass();
-        return await serviceInstance.execute(DB_TYPE, this.DB_CLIENT, req.body, req.query);
-    }
-
-    async generateAndSendZip(type: string, res: Response, organize: Boolean) {
-
-        if (organize) {
-
-            for (const SHEET of Object.keys(this.SHEETS)) {
-                switch (type) {
-                    case 'VisitasPrioritariasACS':
-                        this.SHEETS[SHEET].excel_builder = new VisitasPrioritariasOrganizer()
-                        this.SHEETS[SHEET].excel_builder.insert_columns(this.SHEETS[SHEET].result);
-                        this.SHEETS[SHEET].excel_builder.insert_header()
-                        this.SHEETS[SHEET].excel_builder.insert(this.SHEETS[SHEET].result);
-                        break;
-                }
-            }
+            return await handleIPSESUS(this.DB_CLIENT, IPSESUS, DB_TYPE, SERVICE_INSTANCE, req);
         }
         else {
-            for (const SHEET of Object.keys(this.SHEETS)) {
-                this.SHEETS[SHEET].excel_builder = new ExcelBuilder()
-                this.SHEETS[SHEET].excel_builder.insert_columns(this.SHEETS[SHEET].result);
-                this.SHEETS[SHEET].excel_builder.insert(this.SHEETS[SHEET].result);
+            return {
+                expected: 0,
+                successful: 0,
+                errors: [],
+                msg: "Conexões não encontradas.",
+                extracted: false,
+                result: []
             }
         }
+    }
 
+
+    async generateZip() {
         const zip = new JSZip();
-        for (let SHEET of Object.keys(this.SHEETS)) {
-            const worksheetBuffer: Buffer = await this.SHEETS[SHEET].excel_builder.save_worksheet();
+
+        for (const SHEET of Object.keys(this.ORDERS_PROCESS)) {
+            if (this.ORDERS_PROCESS[SHEET].json.length === 0) return null
+
+            this.ORDERS_PROCESS[SHEET].sheet = new ExcelBuilder()
+            this.ORDERS_PROCESS[SHEET].sheet.insert_columns(this.ORDERS_PROCESS[SHEET].json);
+            this.ORDERS_PROCESS[SHEET].sheet.insert(this.ORDERS_PROCESS[SHEET].json);
+        }
+
+
+        for (let SHEET of Object.keys(this.ORDERS_PROCESS)) {
+            const worksheetBuffer: Buffer = await this.ORDERS_PROCESS[SHEET].sheet.save_worksheet();
             zip.file(`${SHEET}.xlsx`, worksheetBuffer);
         }
 
-        const zipBuffer = zip.generateNodeStream({ type: "nodebuffer" , streamFiles: true});
-
-        zipBuffer.on('end', () => {
-            res.end();
-        });
-
-        res.set('Content-Type', 'application/zip');
-        res.set('Content-Disposition', `attachment; filename="${type}${new Date().toLocaleDateString('pt-BR')}.zip"`);
-        zipBuffer.pipe(res)
+        return zip
     }
 
 

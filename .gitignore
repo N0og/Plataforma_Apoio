@@ -1,6 +1,9 @@
 #API
 api/.env
 api/node_modules
+api/src/config/json/whitelist.json
+api/src/config/json/esus.json
+api/src/config/json/eas.json
 
 
 #FRONT

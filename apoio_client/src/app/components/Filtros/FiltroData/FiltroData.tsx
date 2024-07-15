@@ -1,19 +1,30 @@
 import React, { SetStateAction, useEffect, useState } from 'react';
 import './FiltroData.css';
-import DatePicker from 'react-datepicker';
+import DatePicker, {registerLocale} from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { pt } from 'date-fns/locale/pt';
+
+registerLocale('pt', pt)
 
 export const FiltroData: React.FC<{
-  changeFilter: React.Dispatch<SetStateAction<string>>
-}> = ({changeFilter}) => {
-  const [startDate, setStartDate] = useState<Date | null>(new Date());
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  changeFilter: React.Dispatch<SetStateAction<Array<string>>>
+  }> = ({changeFilter}) => {
+  const [startDate, setStartDate] = useState<Date | null>(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
+  const [endDate, setEndDate] = useState<Date | null>(new Date());
 
   useEffect(()=>{
+    if (startDate! > endDate!){
+      setStartDate
+    }
     if (startDate && endDate){
-      changeFilter(startDate.toJSON().split('T')[0]+' '+endDate.toJSON().split('T')[0])
+      changeFilter([startDate.toJSON().split('T')[0], endDate.toJSON().split('T')[0]])
     }
   }, [startDate, endDate])
+
+  const changeData = (date:Date|null) => {
+    if (endDate && endDate > date!) setStartDate(date)
+    
+  }
 
   return (
     <div className="filterData-container">
@@ -23,10 +34,11 @@ export const FiltroData: React.FC<{
       <div className="datePicker-container">
         <DatePicker
           selected={startDate}
-          onChange={date => setStartDate(date)}
+          onChange={date => changeData(date)}
           selectsStart
           startDate={startDate}
           endDate={endDate}
+          locale="pt"
           placeholderText="Data Início"
           className="inicioSelect"
           dateFormat={'dd/MM/yyyy'}
@@ -38,6 +50,7 @@ export const FiltroData: React.FC<{
           startDate={startDate}
           endDate={endDate}
           minDate={startDate}
+          locale="pt"
           placeholderText="Data Final"
           className="fimSelect"
           dateFormat={'dd/MM/yyyy'}

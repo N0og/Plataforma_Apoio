@@ -1,3 +1,4 @@
+import { ExecuteSQL } from "../../database/execute";
 import { ConnectDBs } from "../../database/init";
 import IProdutividadeACS from "../../interfaces/ReportsInterfaces/IProdutividadeACS";
 import { DefaultTypesJSON } from "../../utils/bd/DefaultTypesJSON";
@@ -7,7 +8,7 @@ import { SQL_PROD_ACS_CONSOLIDADO, SQL_PROD_ACS_POR_DIA } from "./SQL";
 
 export class ProdutividadeACS_PorDiaQuery {
     // Produtividade ACS Visitas Por Dia.
-    async execute(dbtype: string, dbClient: ConnectDBs, filtros_body: IProdutividadeACS, filtros_query: any) {
+    async execute(dbtype: string, dbClient: ConnectDBs, filtros_params: IProdutividadeACS) {
 
         const SQL = new SQL_PROD_ACS_POR_DIA()
         const DYNAMIC_PARAMETERS = new DynamicParameters()
@@ -16,39 +17,39 @@ export class ProdutividadeACS_PorDiaQuery {
         let QUERY_FILTERS = ""
 
         //Filtros de consulta base.
-        if (filtros_body.unidadeId && filtros_body.unidadeId > 0) {
+        if (filtros_params.unidadeId && filtros_params.unidadeId > 0) {
             QUERY_FILTERS += " AND  VisitaDomiciliar.Estabelecimento_Id = :estabelecimento_Id ";
-            DYNAMIC_PARAMETERS.Add("estabelecimento_Id", filtros_body.unidadeId);
+            DYNAMIC_PARAMETERS.Add("estabelecimento_Id", filtros_params.unidadeId);
         }
 
-        if (filtros_body.profissionalId && filtros_body.profissionalId > 0 ) {
+        if (filtros_params.profissionalId && filtros_params.profissionalId > 0 ) {
             QUERY_FILTERS += " AND  VisitaDomiciliar.Profissional_Id = :profissionalId ";
-            DYNAMIC_PARAMETERS.Add("profissionalId", filtros_body.profissionalId)
+            DYNAMIC_PARAMETERS.Add("profissionalId", filtros_params.profissionalId)
         }
 
-        if (filtros_body.equipeId && filtros_body.equipeId > 0) {
+        if (filtros_params.equipeId && filtros_params.equipeId > 0) {
             QUERY_FILTERS += " AND  VisitaDomiciliar.CodigoEquipe = :codigoEquipe ";
-            DYNAMIC_PARAMETERS.Add("codigoEquipe", filtros_body.equipeId)
+            DYNAMIC_PARAMETERS.Add("codigoEquipe", filtros_params.equipeId)
         }
 
-        if (filtros_body.micro_area != null ) {
+        if (filtros_params.micro_area != null ) {
             QUERY_FILTERS += " AND  VisitaDomiciliar.MicroArea = :microArea ";
-            DYNAMIC_PARAMETERS.Add("microArea", filtros_body.micro_area);
+            DYNAMIC_PARAMETERS.Add("microArea", filtros_params.micro_area);
         }
 
-        if (filtros_body.cns_individuo != null) {
+        if (filtros_params.cns_individuo != null) {
             QUERY_FILTERS += " AND  VisitaDomiciliar.CnsDoIndividuo = :cartaoSus ";
-            DYNAMIC_PARAMETERS.Add("cartaoSus", filtros_body.cns_individuo);
+            DYNAMIC_PARAMETERS.Add("cartaoSus", filtros_params.cns_individuo);
         }
 
-        if (filtros_body.data_inicial != null && filtros_body.data_final != null) {
+        if (filtros_params.data_inicial != null && filtros_params.data_final != null) {
             QUERY_FILTERS += " AND  DATE(VisitaDomiciliar.DataCadastro) BETWEEN DATE(:dataInicial) AND DATE(:dataFinal)";
-            DYNAMIC_PARAMETERS.Add("dataInicial", filtros_body.data_inicial);
-            DYNAMIC_PARAMETERS.Add("dataFinal", filtros_body.data_final);
+            DYNAMIC_PARAMETERS.Add("dataInicial", filtros_params.data_inicial);
+            DYNAMIC_PARAMETERS.Add("dataFinal", filtros_params.data_final);
         }
-        if (filtros_body.regionalId && filtros_body.regionalId > 0) {
+        if (filtros_params.regionalId && filtros_params.regionalId > 0) {
             QUERY_FILTERS += " AND RegionalEstabelecimento.Regional_Id = :regionalId ";
-            DYNAMIC_PARAMETERS.Add("regionalId", filtros_body.regionalId);
+            DYNAMIC_PARAMETERS.Add("regionalId", filtros_params.regionalId);
         }
         //Fim de Filtros de consulta base.
 
@@ -112,9 +113,11 @@ export class ProdutividadeACS_ConsolidadoQuery {
             DYNAMIC_PARAMETERS.Add("micro_area", filtros_body.micro_area)
         }
 
-        const REPORT = await dbClient.getMariaDB().query(SQL_BASE, DYNAMIC_PARAMETERS.GetAll())
+        const REPORT = await ExecuteSQL(dbtype, SQL_BASE, DYNAMIC_PARAMETERS, dbClient)
 
-        return DefaultTypesJSON(REPORT[0])
+        if (!REPORT) return new Error('Falha na extração')
+
+        return REPORT;
     }
 }
 

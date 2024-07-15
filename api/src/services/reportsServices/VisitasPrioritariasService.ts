@@ -3,10 +3,11 @@ import DynamicParameters from "../../utils/reports/DynamicParameters";
 import { IVisitasPrioriFiltros } from "../../interfaces/ReportsInterfaces/IVisitasPrioritarias";
 import { ConnectDBs } from "../../database/init";
 import { SQL_VISITAS_PRIORITARIAS } from "./SQL";
+import { ExecuteSQL } from "../../database/execute";
 
 export default class VisitasPrioritariasQuery {
 
-    async execute(dbtype: string, dbClient: ConnectDBs, filtros_body: IVisitasPrioriFiltros, filtros_query: IVisitasPrioriFiltros) {
+    async execute(dbtype: string, dbClient: ConnectDBs, filtros_params: IVisitasPrioriFiltros) {
 
         const SQL = new SQL_VISITAS_PRIORITARIAS()
 
@@ -19,68 +20,68 @@ export default class VisitasPrioritariasQuery {
         let QUERY_FILTERS = "";
 
         //Filtros de consulta base.
-        if (filtros_body.unidadeId && filtros_body.unidadeId > 0) {
+        if (filtros_params.unidadeId && filtros_params.unidadeId > 0) {
             DYNAMIC_QUERY_FILTERS += " AND  VisitaDomiciliar.Estabelecimento_Id = :estabelecimento_Id ";
             QUERY_FILTERS += " AND p.Estabelecimento_Id = :estabelecimento_Id ";
-            DYNAMIC_PARAMETERS.Add("estabelecimento_Id", filtros_body.unidadeId);
+            DYNAMIC_PARAMETERS.Add("estabelecimento_Id", filtros_params.unidadeId);
         }
 
-        if (filtros_body.profissionalId && filtros_body.profissionalId > 0) {
+        if (filtros_params.profissionalId && filtros_params.profissionalId > 0) {
             DYNAMIC_QUERY_FILTERS += " AND  VisitaDomiciliar.Profissional_Id = :profissionalId ";
             QUERY_FILTERS += " AND p.Id = :profissionalId";
-            DYNAMIC_PARAMETERS.Add("profissionalId", filtros_body.profissionalId)
+            DYNAMIC_PARAMETERS.Add("profissionalId", filtros_params.profissionalId)
         }
 
-        if (filtros_body.equipeId && filtros_body.equipeId > 0) {
+        if (filtros_params.equipeId && filtros_params.equipeId > 0) {
             DYNAMIC_QUERY_FILTERS += " AND  VisitaDomiciliar.CodigoEquipe = :codigoEquipe ";
             QUERY_FILTERS += " AND p.Equipe_Id = :codigoEquipe ";
-            DYNAMIC_PARAMETERS.Add("codigoEquipe", filtros_body.equipeId)
+            DYNAMIC_PARAMETERS.Add("codigoEquipe", filtros_params.equipeId)
         }
 
-        if (filtros_body.micro_area && filtros_body != null) {
+        if (filtros_params.micro_area && filtros_params != null) {
             DYNAMIC_QUERY_FILTERS += " AND  VisitaDomiciliar.MicroArea = :microArea ";
-            DYNAMIC_PARAMETERS.Add("microArea", filtros_body.micro_area);
+            DYNAMIC_PARAMETERS.Add("microArea", filtros_params.micro_area);
         }
 
-        if (filtros_body.cartao_sus && filtros_body.cartao_sus != null) {
+        if (filtros_params.cartao_sus && filtros_params.cartao_sus != null) {
             DYNAMIC_QUERY_FILTERS += " AND  VisitaDomiciliar.CnsDoIndividuo = :cartaoSus ";
-            DYNAMIC_PARAMETERS.Add("cartaoSus", filtros_body.cartao_sus);
+            DYNAMIC_PARAMETERS.Add("cartaoSus", filtros_params.cartao_sus);
         }
 
-        if (filtros_body.compartilhada === true) {
+        if (filtros_params.compartilhada === true) {
             DYNAMIC_QUERY_FILTERS += " AND  VisitaDomiciliar.VisitaCompartilhada = :visitaCompartilhada ";
-            DYNAMIC_PARAMETERS.Add("visitaCompartilhada", filtros_body.compartilhada)
+            DYNAMIC_PARAMETERS.Add("visitaCompartilhada", filtros_params.compartilhada)
         }
-        if (filtros_body.desfecho === true) {
+        if (filtros_params.desfecho === true) {
             DYNAMIC_QUERY_FILTERS += " AND  VisitaDomiciliar.Desfecho = :desfecho ";
-            DYNAMIC_PARAMETERS.Add("desfecho", filtros_body.desfecho)
+            DYNAMIC_PARAMETERS.Add("desfecho", filtros_params.desfecho)
         }
-        if (filtros_body.fora_area === true) {
+        if (filtros_params.fora_area === true) {
             DYNAMIC_QUERY_FILTERS += " AND  VisitaDomiciliar.ForaDeArea = :foraDeArea ";
-            DYNAMIC_PARAMETERS.Add("foraDeArea", filtros_body.fora_area)
+            DYNAMIC_PARAMETERS.Add("foraDeArea", filtros_params.fora_area)
         }
 
-        if (filtros_body.tipo_visita && filtros_body.tipo_visita > 0) {
+        if (filtros_params.tipo_visita && filtros_params.tipo_visita > 0) {
             DYNAMIC_QUERY_FILTERS += " AND VisitaDomiciliar.TipoDeVisita = :tipoDeVisitaId";
-            DYNAMIC_PARAMETERS.Add("tipoDeVisitaId", filtros_body.tipo_visita)
+            DYNAMIC_PARAMETERS.Add("tipoDeVisitaId", filtros_params.tipo_visita)
         }
 
-        if (filtros_body.cadastro_atualizacao == 1) {
+        if (filtros_params.cadastro_atualizacao == 1) {
             DYNAMIC_QUERY_FILTERS += " AND VisitaDomiciliar.MotivosDaVisita REGEXP 'CADASTRO_ATUALIZACAO|(^|,)(1)(,|$)' ";
         }
 
-        else if (filtros_body.cadastro_atualizacao == 0) {
+        else if (filtros_params.cadastro_atualizacao == 0) {
             DYNAMIC_QUERY_FILTERS += " AND VisitaDomiciliar.MotivosDaVisita NOT REGEXP 'CADASTRO_ATUALIZACAO|(^|,)(1)(,|$)' ";
         }
 
-        if (filtros_body.data_inicial != null && filtros_body.data_final != null) {
+        if (filtros_params.data_inicial != null && filtros_params.data_final != null) {
             DYNAMIC_QUERY_FILTERS += " AND  DATE(VisitaDomiciliar.DataCadastro) BETWEEN DATE(:dataInicial) AND DATE(:dataFinal)";
-            DYNAMIC_PARAMETERS.Add("dataInicial", filtros_body.data_inicial);
-            DYNAMIC_PARAMETERS.Add("dataFinal", filtros_body.data_final);
+            DYNAMIC_PARAMETERS.Add("dataInicial", filtros_params.data_inicial);
+            DYNAMIC_PARAMETERS.Add("dataFinal", filtros_params.data_final);
         }
-        if (filtros_body.distritoId && filtros_body.distritoId > 0) {
+        if (filtros_params.distritoId && filtros_params.distritoId > 0) {
             QUERY_FILTERS += " AND re.Regional_Id = :distritoId ";
-            DYNAMIC_PARAMETERS.Add("distritoId", filtros_body.distritoId);
+            DYNAMIC_PARAMETERS.Add("distritoId", filtros_params.distritoId);
         }
         //Fim de Filtros de consulta base.
 
@@ -113,8 +114,8 @@ export default class VisitasPrioritariasQuery {
             egresso_internacao: 'SQL_DYNAMIC_EGRESSOS_INTERNACAO'
         };
         
-        for (const filter in filtros_body) {
-            if (filtros_body[filter] && DYNAMIC_FILTER_MAP[filter]) {
+        for (const filter in filtros_params) {
+            if (filtros_params[filter] && DYNAMIC_FILTER_MAP[filter]) {
                 DYNAMIC_QUERY += SQL[DYNAMIC_FILTER_MAP[filter]](DYNAMIC_QUERY_FILTERS);
             }
         }
@@ -126,9 +127,11 @@ export default class VisitasPrioritariasQuery {
             ${QUERY_FILTERS}
         `; 
 
-        const REPORT = await dbClient.getMariaDB().query(SQL_BASE, DYNAMIC_PARAMETERS.GetAll())
+        const REPORT = await ExecuteSQL(dbtype, SQL_BASE, DYNAMIC_PARAMETERS, dbClient)
 
-        return DefaultTypesJSON(REPORT[0])
+        if (!REPORT) return new Error('Falha na extração')
+
+        return REPORT;
 
 
     }

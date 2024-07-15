@@ -6,22 +6,22 @@ import {
     ProdutividadeUBS,
     Mapa
 } from "../../pages";
-import { Pages } from '../../constants/PageEnums';
+import { PagesEnum } from '../../constants/PageEnums';
 import React from "react";
 
 type RenderPagesProps = {
-    currentPage: Pages,
-    setCurrentPage: React.Dispatch<React.SetStateAction<Pages>>
+    currentPage: PagesEnum,
+    setCurrentPage: React.Dispatch<React.SetStateAction<PagesEnum>>
 }
 
 export const renderPage = ({ currentPage, setCurrentPage }: RenderPagesProps) => {
-    const pages: { [key in Pages]: React.ElementType } = {
-        [Pages.Dashboard]: Dashboard,
-        [Pages.Relatorios]: Relatorios,
-        [Pages.Historico]: Historico,
-        [Pages.Ajuda]: Ajuda,
-        [Pages.ProdutividadeUBS]: ProdutividadeUBS,
-        [Pages.Mapa]: Mapa,
+    const pages: { [key in PagesEnum]: React.ElementType } = {
+        [PagesEnum.Dashboard]: Dashboard,
+        [PagesEnum.Relatorios]: Relatorios,
+        [PagesEnum.Historico]: Historico,
+        [PagesEnum.Ajuda]: Ajuda,
+        [PagesEnum.ProdutividadeUBS]: ProdutividadeUBS,
+        [PagesEnum.Mapa]: Mapa,
     };
 
     const PageComponent = pages[currentPage];

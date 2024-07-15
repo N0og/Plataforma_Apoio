@@ -13,11 +13,11 @@ api.use(express.json())
 
 api.use(cors({
     origin: (origin, callback) => {
-
         const alloweds = new JSONLoader().loadWhitelist().getWhitelist().includes(origin)
-
         callback(null, alloweds)
-    }
+    },
+    allowedHeaders: 'Content-Type, Authorization',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
 }))
 
 api.use(router)

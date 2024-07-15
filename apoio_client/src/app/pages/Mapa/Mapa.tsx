@@ -1,10 +1,9 @@
 //#region Imports
 import { useEffect, useState } from 'react';
 import { MapContainer, Marker, Popup, TileLayer, Tooltip } from 'react-leaflet'
-import axios from 'axios';
 
 //Components
-import { FiltroSimples } from '../../components';
+import { FiltroSimples, renderAlertMessage } from '../../components';
 
 
 //Interfaces
@@ -15,11 +14,10 @@ import { IIEDResponse } from '../../interfaces/IResponses';
 import './Mapa.css'
 import 'leaflet/dist/leaflet.css';
 import { getIcon } from './Utils/getIcon';
-import { Pages } from '../../constants';
+import { PagesEnum } from '../../constants';
 import { DefaultProps } from '../../types';
+import { useGetData, useStateController } from '../../hooks';
 //#endregion
-
-
 
 
 
@@ -28,40 +26,37 @@ export const Mapa: React.FC<DefaultProps> = ({ setCurrentPage }) => {
     const [MUNICIPIOFilters, setMUNICIPIOFilters] = useState<ISimpleFilterPartition[]>([]);
     const [IEDFilters, setIEDFilters] = useState<IIEDResponse[]>([]);
     const [Equipes, setEquipes] = useState<{ red: number, green: number, yellow: number }>();
-    const [loading_state, setLoading] = useState(false);
+    const { control_states, toggleState } = useStateController()
 
 
     useEffect(() => {
-        axios.get('http://localhost:9090/api/v1/filters/clients')
-            .then(response => {
-                setMUNICIPIOFilters(response.data)
-            })
-            .catch(error => {
-                console.error('There was an error!', error);
-            });
-    }, []);
+        useGetData(
+            "http://26.197.116.207:9090/api/v1/filters/clients",
+            {},
+            toggleState
+        ).then((response => {
+            if (response) setMUNICIPIOFilters(response)
+        }))
+    }, [])
 
     useEffect(() => {
         let clients = MUNICIPIOFilters.map((client) => {
             if (client[Object.keys(client)[0]] === true) {
-                return `&dbname=${Object.keys(client)[0].replace(/ /g, '%20')}`
+                return `&order=${Object.keys(client)[0].replace(/ /g, '%20')}`
             }
         }).filter(Boolean);
 
-        let url = `http://localhost:9090/api/v1/maps/ied?dbtype=mdb${clients.join('')}`
-
         if (clients.length > 0) {
-            setLoading(true)
-            axios.get(url)
-                .then(response => {
-                    setLoading(false)
-                    setIEDFilters(response.data)
-                })
-                .catch(error => {
-                    console.error('There was an error!', error);
-                });
+            toggleState('loading_state', true)
+            useGetData(
+                `http://26.197.116.207:9090/api/v1/maps/ied?dbtype=mdb${clients.join('')}`,
+                {},
+                toggleState
+            ).then((response)=>{
+                if (response) setIEDFilters(response)
+            })
         }
-        else{
+        else {
             setIEDFilters([])
         }
 
@@ -90,7 +85,7 @@ export const Mapa: React.FC<DefaultProps> = ({ setCurrentPage }) => {
             <div className='page-title'>
                 <div className='back_button_container'>
                     <div className='back_button'>
-                        <button onClick={() => setCurrentPage(Pages.Relatorios)}></button>
+                        <button onClick={() => setCurrentPage(PagesEnum.Relatorios)}></button>
                         <i className="fa-solid fa-circle-chevron-left"></i>
                     </div>
                 </div>
@@ -101,11 +96,7 @@ export const Mapa: React.FC<DefaultProps> = ({ setCurrentPage }) => {
                 <div className='subcontainer_filters'>
                     <div className='municipio_filter'>
                         <FiltroSimples name={"MUNICÍPIO"} filters={MUNICIPIOFilters} changeFilter={setMUNICIPIOFilters} />
-                        {loading_state ? 
-                            <div className='loading_container'>
-                                <div className='loading_filter'></div>
-                                <span>Carregando...</span>
-                            </div> : ""}
+                        {renderAlertMessage(control_states)}
                     </div>
                 </div>
             </div>

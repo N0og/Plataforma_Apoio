@@ -1,1 +1,2 @@
-export { Pages } from "./PageEnums";
+export { PagesEnum } from "./PageEnums";
+export { AlertsEnum } from "./AlertsEnums"

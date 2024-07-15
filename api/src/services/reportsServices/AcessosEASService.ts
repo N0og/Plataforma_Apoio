@@ -1,11 +1,12 @@
+import { ExecuteSQL } from "../../database/execute";
 import { ConnectDBs } from "../../database/init";
 import { IAcessosEAS } from "../../interfaces/ReportsInterfaces/IAcessosEAS";
 import { DefaultTypesJSON } from "../../utils/bd/DefaultTypesJSON";
 import DynamicParameters from "../../utils/reports/DynamicParameters";
-import { SQL_ACESSOS_EAS } from "./SQL/SQLAcessosEAS";
+import { SQL_ACESSOS_EAS } from "./SQL";
 
 export default class AcessosEASService{
-    async execute(dbtype:string, dbClient:ConnectDBs, filtros_body:IAcessosEAS, filtros_query:any){
+    async execute(dbtype:string, dbClient:ConnectDBs, filtros_params:IAcessosEAS){
 
         const SQL = new SQL_ACESSOS_EAS();
         const DYNAMIC_PARAMETERS = new DynamicParameters()
@@ -13,13 +14,13 @@ export default class AcessosEASService{
         let SQL_BASE = SQL.getBase();
         let QUERY_FILTERS = ""
 
-        if (filtros_body.data_inicial == null || !filtros_body.data_final == null){
+        if (filtros_params.data_inicial == null || !filtros_params.data_final == null){
             return new Error("Filtro de período obrigatório")
         }
 
         QUERY_FILTERS += "AND  DATE(DataHora) BETWEEN DATE(:dataInicial) AND DATE(:dataFinal)";
-        DYNAMIC_PARAMETERS.Add("dataInicial", filtros_body.data_inicial)
-        DYNAMIC_PARAMETERS.Add("dataFinal", filtros_body.data_final)
+        DYNAMIC_PARAMETERS.Add("dataInicial", filtros_params.data_inicial)
+        DYNAMIC_PARAMETERS.Add("dataFinal", filtros_params.data_final)
 
         SQL_BASE += 
             `
@@ -27,8 +28,10 @@ export default class AcessosEASService{
             ${SQL.getFrom()}
             `
 
-        const REPORT = await dbClient.getMariaDB().query(SQL_BASE, DYNAMIC_PARAMETERS.GetAll())
+            const REPORT = await ExecuteSQL(dbtype, SQL_BASE, DYNAMIC_PARAMETERS, dbClient)
 
-        return DefaultTypesJSON(REPORT[0])
+            if (!REPORT) return new Error('Falha na extração')
+    
+            return REPORT;
     }
 }

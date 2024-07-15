@@ -8,12 +8,16 @@ export default class CheckDBTypeMiddleware {
 
     execute = async (req: IReportControllerRequest, res: Response, next: NextFunction) => {
 
-        if (req.query.dbtype === 'mdb'){
+        if (['dbtype', 'download','order'].filter(prop => !req.query.hasOwnProperty(prop)).length > 0){
+            return res.status(400).json({ error: 'Solicitação Incorreta: Sintaxe de solicitação malformada'})
+        }
+
+        if (req.query.dbtype?.toString().toLocaleLowerCase() === 'mdb'){
             this.ConnRepository = ConnEASRepository;
             req.dbtype = "mdb"
             
         }
-        else if(req.query.dbtype === 'psql'){
+        else if(req.query.dbtype?.toString().toLocaleLowerCase() === 'psql'){
             this.ConnRepository = ConneSUSRepository;
             req.dbtype = "psql"
         }
@@ -22,43 +26,34 @@ export default class CheckDBTypeMiddleware {
             return res.status(400).json({error:'Driver DB não compatível.'})
         }
 
-        if (!this.ConnRepository) {
-            return res.status(500).json({ error: 'Repositório de conexão não definido.' });
-        }
+        if (typeof req.query.download === 'undefined') req.download = false
 
-        if (typeof req.query.download === 'undefined'){
-            req.download = false
-            
-        }
+        if (req.query.order === "") return res.status(400).json({ error: 'Nenhum pedido requisitado.'})
+
         else req.download = Boolean(req.query.download) ? req.query.download === "true" : false
 
-        if (!req.query.dbname){
+        if (req.query.order!.toString().toLocaleLowerCase() == 'all'){
             if (req.download){
                 let _municipios = await municipioRepository.find()
 
                 if (!_municipios){
                     console.error("Falha na solicitação")
-                    return res.status(400).json({ error: 'Nenhum cliente encontrado.' })
+                    return res.status(404).json({ error: 'Nenhum cliente encontrado.' })
                 }
                 const _CONNECTIONS = _municipios.map(client=>{
                     return client.no_municipio
                 })
-                req.dbname = _CONNECTIONS
+                req.order = _CONNECTIONS
             }
             else{
                 console.error("Falha na solicitação")
                 return res.status(400).json({ error: 'Falha na solicitação' })
             }
         }
-        else{
-            req.dbname = Array.isArray(req.query.dbname) ? req.query.dbname : Array(req.query.dbname) as string[]
-        }
-        
 
-        if (typeof req.query.organize === 'undefined'){
-            req.organize = false
+        else{
+            req.order = Array.isArray(req.query.order) ? req.query.order : Array(req.query.order) as string[]
         }
-        else req.organize = Boolean(req.query.organize) ? req.query.organize === 'true': false
 
         next()
     }

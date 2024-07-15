@@ -5,7 +5,10 @@
     align-items: center;
     justify-content: center;
     border-radius: 2vw;
-    background-color: rgb(255, 255, 255);
+    background-color: var(--cor-min_grey);
+    box-shadow: 0 1px 0.1px 0px var(--cor-shadow-mid);
+    outline: none;
+    user-select: none;
     width: 20%;
     height: 2.0vw;
     font-family: Arial, sans-serif;
@@ -41,7 +44,22 @@
     }
   }
   
-  
+
+  /* styles.css */
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected,
+.react-datepicker__day--in-selecting-range,
+.react-datepicker__day:hover{
+  background-color: var(--cor-rose) !important;
+  color: white !important; 
+}
+
+.react-datepicker__day--in-range{
+  background-color: var(--cor-rose-light) !important; 
+  color: white !important; 
+}
+
+
  
   
   
