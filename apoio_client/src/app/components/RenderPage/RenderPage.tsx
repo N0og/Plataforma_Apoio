@@ -4,7 +4,9 @@ import {
     Relatorios,
     Ajuda,
     ProdutividadeUBS,
-    Mapa
+    Mapa,
+    Duplicados,
+    VisitasPrioritarias
 } from "../../pages";
 import { PagesEnum } from '../../constants/PageEnums';
 import React from "react";
@@ -22,6 +24,8 @@ export const renderPage = ({ currentPage, setCurrentPage }: RenderPagesProps) =>
         [PagesEnum.Ajuda]: Ajuda,
         [PagesEnum.ProdutividadeUBS]: ProdutividadeUBS,
         [PagesEnum.Mapa]: Mapa,
+        [PagesEnum.Duplicados]: Duplicados,
+        [PagesEnum.VisitasPrioritarias]: VisitasPrioritarias
     };
 
     const PageComponent = pages[currentPage];

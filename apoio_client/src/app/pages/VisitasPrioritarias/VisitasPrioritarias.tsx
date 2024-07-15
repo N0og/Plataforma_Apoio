@@ -5,24 +5,53 @@ import { useEffect, useState } from 'react'
 import { FiltroData, FiltroSimples, renderAlertMessage } from '../../components'
 
 //Styles
-import './ProdutividadeUBS.css'
+import './VisitasPrioritarias.css'
 import { DefaultProps } from '../../types';
 import { PagesEnum } from '../../constants';
 import { useGetClients, useStateController, useDownload } from '../../hooks';
+
 //#endregion
 
+const DEFAULT_VALUES = [
+    { "gestantes": false },
+    { "idosos": false },
+    { "criancas": false },
+    { "hipertensos": false },
+    { "diabeticos": false },
+    { "domiciliados_acamados": false },
+    { "dpoc": false },
+    { "outras_doencas": false },
+    { "sintomas_respiratorio": false },
+    { "vulnerabilidade_social": false },
+    { "alcoolatras": false },
+    { "puerperas": false },
+    { "desnutridos": false },
+    { "cancer": false },
+    { "hanseniase": false },
+    { "tabagistas": false },
+    { "bolsa_familia": false },
+    { "outras_drogas": false },
+    { "recem_nascido": false },
+    { "reabilitacao_deficiencia": false },
+    { "asmaticos": false },
+    { "outras_doencas_cronicas": false },
+    { "tuberculose": false },
+    { "saude_mental": false },
+    { "diarreira": false },
+    { "egresso_internacao": false }
+]
 
-export const ProdutividadeUBS: React.FC<DefaultProps> = ({ setCurrentPage }) => {
 
+export const VisitasPrioritarias: React.FC<DefaultProps> = ({ setCurrentPage }) => {
     const { control_states, toggleState, toggleAllFalse } = useStateController()
     const { clientsFilter, setClientFilter } = useGetClients(toggleState);
-
+    const [condicoesFilter, setCondicoesFilter] = useState<any[]>(DEFAULT_VALUES)
     const [OrderURL, setOrderParam] = useState<string>("");
     const [dataFilters, setDataFilters] = useState<Array<string>>([]);
     const [AlertMessage, setAlertMessage] = useState<JSX.Element | null>(null)
 
     useEffect(() => {
-        setOrderParam(`http://26.197.116.207:9090/api/v1/reports/ProdutividadeUBS?dbtype=psql&download=true${clientsFilter.filter(item => {
+        setOrderParam(`http://26.197.116.207:9090/api/v1/reports/VisitasPrioritarias?dbtype=mdb&download=true${clientsFilter.filter(item => {
             return Object.values(item)[0] == true
         }).map(item => { return `&order=${Object.keys(item)[0].replace(/ /g, "%20")}` }).join('')}`)
     }, [clientsFilter])
@@ -32,23 +61,24 @@ export const ProdutividadeUBS: React.FC<DefaultProps> = ({ setCurrentPage }) => 
     }, [control_states])
 
     const extract = () => {
-
         toggleAllFalse()
-
         const mun = clientsFilter.filter(item => {
             return Object.values(item)[0] == true
         })
-
-        if (mun.length == 0) {
+        const cond: Object = condicoesFilter.filter(item => {
+            return Object.values(item)[0] == true
+        }).reduce((ob1, ob2) => { return ({ ...ob1, ...ob2 }) }, {})
+        if (Object.keys(cond).length === 0) toggleState('condicoes_state', true)
+        else if (mun.length == 0) {
             toggleState('municipio_state', true)
         }
-
         else if (dataFilters.length > 0) {
             useDownload(
                 OrderURL,
                 {
                     data_inicial: dataFilters[0],
-                    data_final: dataFilters[1]
+                    data_final: dataFilters[1],
+                    ...cond
                 },
                 toggleState
             )
@@ -69,12 +99,13 @@ export const ProdutividadeUBS: React.FC<DefaultProps> = ({ setCurrentPage }) => 
                     {AlertMessage}
                 </div>
                 <div className='title_container'>
-                    <h4>PRODUTIVIDADE UBS</h4>
+                    <h4>VISITAS PRIORITÁRIAS</h4>
                 </div>
             </div>
             <div className="container_filters">
                 <div className='filters_organization'>
-                    <FiltroSimples name={"Fonte: eSUS"} filters={clientsFilter} changeFilter={setClientFilter} deactivated={true} />
+                    <FiltroSimples name={"Fonte: EAS"} filters={clientsFilter} changeFilter={setClientFilter} deactivated={true} />
+                    <FiltroSimples name={"CONDIÇÕES"} filters={condicoesFilter} changeFilter={setCondicoesFilter} />
                     <FiltroSimples name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} />
                     <FiltroData changeFilter={setDataFilters} />
                 </div>

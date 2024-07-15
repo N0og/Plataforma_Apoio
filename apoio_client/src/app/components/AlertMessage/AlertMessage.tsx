@@ -47,7 +47,15 @@ export const renderAlertMessage = (controllers: IControllersStateType) => {
     }
 
     if (controllers.municipio_state) {
-        showNotification(AlertsEnum.MunFilter, 1000)
+        showNotification(AlertsEnum.MunicipioFilter, 1000)
+    }
+
+    if (controllers.driver_state) {
+        showNotification(AlertsEnum.DriverFilter, 1000)
+    }
+
+    if (controllers.condicoes_state) {
+        showNotification(AlertsEnum.CondicoesFilter, 1000)
     }
 
     return null
