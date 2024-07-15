@@ -1,8 +1,8 @@
 import './Main.css'
-import { useState, Suspense } from "react"
+import { useState } from "react"
 import { TopMenu, SideBar } from "../components"
 import { PagesEnum } from '../constants/PageEnums'
-import { setPage } from '../components'
+import { renderPage } from '../components'
 
 
 export const Main = () => {
@@ -13,10 +13,8 @@ export const Main = () => {
             <TopMenu />
             <div className="container_bottom">
                 <SideBar setCurrentPage={setCurrentPage} />
-                <div className="content_container">
-                    <Suspense fallback={<div>Loading...</div>}>
-                        {setPage({currentPage, setCurrentPage})}
-                    </Suspense>
+                <div className="content_container"> 
+                    {renderPage({currentPage, setCurrentPage})}
                 </div>
             </div>
         </div>

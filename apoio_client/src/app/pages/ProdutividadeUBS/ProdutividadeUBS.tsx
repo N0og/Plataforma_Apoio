@@ -18,6 +18,7 @@ export const ProdutividadeUBS: React.FC<DefaultProps> = ({ setCurrentPage }) => 
     const [OrderURL, setOrderParam] = useState<string>("");
     const [DATAFilters, setDATAFilters] = useState<Array<string>>([]);
     const { control_states, toggleState } = useStateController()
+    const [AlertMessage, setAlertMessage] = useState<JSX.Element| null>(null) 
 
     useEffect(() => {
         useGetData(
@@ -43,17 +44,15 @@ export const ProdutividadeUBS: React.FC<DefaultProps> = ({ setCurrentPage }) => 
 
 
     const extract = () => {
-        //toggleState('data_state', false)
-        //toggleState('municipio_state', false)
 
-        console.log(DATAFilters)
-        
+        toggleState('municipio_state', false)
+        toggleState('data_state', false)
+
         const mun = MUNICIPIOFilters.filter(item => {
             return Object.values(item)[0] == true
         })
-        console.log(mun)
 
-        if (mun.length == 0){
+        if (mun.length == 0) {
             toggleState('municipio_state', true)
         }
 
@@ -68,11 +67,14 @@ export const ProdutividadeUBS: React.FC<DefaultProps> = ({ setCurrentPage }) => 
             )
         }
         else {
-            console.log('aqui')
             toggleState('data_state', true)
         }
 
     }
+
+    useEffect(()=>{
+        setAlertMessage(renderAlertMessage(control_states));
+    },[control_states])
 
     return (
         <div className="container_report">
@@ -82,8 +84,8 @@ export const ProdutividadeUBS: React.FC<DefaultProps> = ({ setCurrentPage }) => 
                         <button onClick={() => setCurrentPage(PagesEnum.Relatorios)}></button>
                         <i className="fa-solid fa-circle-chevron-left"></i>
                     </div>
+                    {AlertMessage}
                 </div>
-                {renderAlertMessage(control_states)}
                 <div className='title_container'>
                     <h4>PRODUTIVIDADE UBS</h4>
                 </div>
@@ -98,7 +100,7 @@ export const ProdutividadeUBS: React.FC<DefaultProps> = ({ setCurrentPage }) => 
             <div className="container_view">
                 <div className='extract_btn'>
                     <button
-                        onClick={() => { extract() }}
+                        onClick={() => { extract(); }}
                     >EXTRAIR</button>
                 </div>
             </div>

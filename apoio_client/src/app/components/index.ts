@@ -1,4 +1,4 @@
-export { renderPage as setPage }from "./RenderPage/RenderPage";
+export { renderPage }from "./RenderPage/RenderPage";
 export { TopMenu } from "./TopMenu/TopMenu";
 export { SideBar } from "./SideBar/SideBar";
 export { FiltroData, FiltroDinamico, FiltroSimples } from "./Filtros";

@@ -6,19 +6,20 @@ import { Flip, toast } from "react-toastify"
 export const renderAlertMessage = (controllers: IControllersStateType) => {
 
 
-    const showNotification = (message: AlertsEnum) => {
+    const showNotification = (message: AlertsEnum, autoClose?:number|false) => {
         toast(message,{
             type:'error',
             position:"top-right",
-            autoClose: 1000,
-            hideProgressBar: false,
+            autoClose,
+            hideProgressBar: true,
             closeOnClick: true,
             rtl:false,
             pauseOnFocusLoss:true,
             draggable:true,
             pauseOnHover:true,
             theme:"light",
-            transition: Flip
+            transition: Flip,
+            closeButton:true
         });
     };
 
@@ -31,19 +32,23 @@ export const renderAlertMessage = (controllers: IControllersStateType) => {
         )
     }
 
-    if (controllers.extract_state) return (
-        <div className='loading_container'>
-            <div className='loading_filter'></div>
-            <span>{AlertsEnum.Extract}</span>
-        </div>
-    )
+    if (controllers.extract_state) { 
+        return (
+            <div className='loading_container'>
+                <div className='loading_filter'></div>
+                <span>{AlertsEnum.Extract}</span>
+            </div>
+        )
+    }
 
 
     if (controllers.data_state) {
-        showNotification(AlertsEnum.DataFilter)
+        showNotification(AlertsEnum.DataFilter, 1000)
     }
 
     if (controllers.municipio_state) {
-        showNotification(AlertsEnum.MunFilter)
+        showNotification(AlertsEnum.MunFilter, 1000)
     }
+
+    return null
 }

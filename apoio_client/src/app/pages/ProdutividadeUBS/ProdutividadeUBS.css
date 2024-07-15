@@ -83,7 +83,8 @@
 
         .filters_organization{
             display: flex;
-            justify-content: center;
+            flex-direction: row;
+            justify-content: space-around;
             align-items: center;
             flex-wrap: wrap;
             width: 95%;
