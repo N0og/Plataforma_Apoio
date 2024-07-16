@@ -6,4 +6,5 @@ export { Dashboard } from "./DashBoard/Dashboard";
 export { Ajuda } from "./Ajuda/Ajuda";
 export { Duplicados } from "./Duplicados/Duplicados";
 export { VisitasPrioritarias } from "./VisitasPrioritarias/VisitasPrioritarias";
- 
+export { Completude } from "./Completude/Completude";
+export { Vacinas } from "./Vacinas/Vacinas";

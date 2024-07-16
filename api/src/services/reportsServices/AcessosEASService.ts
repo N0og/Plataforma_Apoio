@@ -1,6 +1,6 @@
 import { ExecuteSQL } from "../../database/execute";
 import { ConnectDBs } from "../../database/init";
-import { IAcessosEAS } from "../../interfaces/ReportsInterfaces/IAcessosEAS";
+import { IAcessosEAS } from "../../interfaces/IAcessosEAS";
 import { DefaultTypesJSON } from "../../utils/bd/DefaultTypesJSON";
 import DynamicParameters from "../../utils/reports/DynamicParameters";
 import { SQL_ACESSOS_EAS } from "./SQL";

@@ -1,11 +1,9 @@
-import { ICompletudeFilters, IATT_CPF } from "../../interfaces/ReportsInterfaces/ICompletude";
+import { ICompletudeFilters, IATT_CPF } from "../../interfaces";
 import checkFCI from "../../utils/reports/Completude/CheckFieldsFCI";
 import DynamicParameters from "../../utils/reports/DynamicParameters";
-import { queryConvert } from "../../utils/bd/pg/pgPlaceHolders";
 import { ConnectDBs } from "../../database/init";
 import { SQL_COMPLETUDE_ESUS } from "./SQL";
 import { SQL_COMPLETUDE_EAS } from "./SQL";
-import { DefaultTypesJSON } from "../../utils/bd/DefaultTypesJSON";
 import { ExecuteSQL } from "../../database/execute";
 
 export default class CompletudeQuery {

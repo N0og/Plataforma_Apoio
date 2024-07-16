@@ -19,6 +19,8 @@ router.get('/api/v1/reports/ProdutividadeACS/Consolidado', new CheckDBTypeMiddle
 
 router.get('/api/v1/reports/ProdutividadeUBS', new CheckDBTypeMiddleware().execute, new ReportController().handleProdutividadeUBS_Consolidado)
 
+router.get('/api/v1/reports/VacinasPEC', new CheckDBTypeMiddleware().execute, new ReportController().handleVacinasPEC)
+
 router.get('/api/v1/reports/Completude', new CheckDBTypeMiddleware().execute, new ReportController().handleCompletude)
 
 router.get('/api/v1/reports/DuplicadosPEC', new CheckDBTypeMiddleware().execute, new ReportController().handleDuplicadosPEC)

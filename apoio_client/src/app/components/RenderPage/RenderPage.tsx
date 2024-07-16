@@ -6,7 +6,9 @@ import {
     ProdutividadeUBS,
     Mapa,
     Duplicados,
-    VisitasPrioritarias
+    VisitasPrioritarias,
+    Completude,
+    Vacinas
 } from "../../pages";
 import { PagesEnum } from '../../constants/PageEnums';
 import React from "react";
@@ -25,7 +27,9 @@ export const renderPage = ({ currentPage, setCurrentPage }: RenderPagesProps) =>
         [PagesEnum.ProdutividadeUBS]: ProdutividadeUBS,
         [PagesEnum.Mapa]: Mapa,
         [PagesEnum.Duplicados]: Duplicados,
-        [PagesEnum.VisitasPrioritarias]: VisitasPrioritarias
+        [PagesEnum.VisitasPrioritarias]: VisitasPrioritarias,
+        [PagesEnum.Completude]: Completude,
+        [PagesEnum.Vacinas]: Vacinas
     };
 
     const PageComponent = pages[currentPage];

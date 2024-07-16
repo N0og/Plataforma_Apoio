@@ -1,21 +1,26 @@
 import axios from "axios";
 import { IControllersStateType } from "../interfaces/IControllerStates";
 
-export const useGetData = async (url: string, params: object, setLoading:(key: keyof IControllersStateType, state:boolean) => void) => {
-    setLoading('loading_state', true)
-    try {
-        const response = await axios({
+export const useGetData = (url: string, params: object, setLoading: (key: keyof IControllersStateType, state: boolean) => void) => {
+    setLoading('loading_state', true);
+    
+    return new Promise((resolve, reject) => {
+        axios({
             method: 'get', 
             url, 
             params,
-            headers:{
+            headers: {
                 'Content-Type': 'application/json',
-            }});     
-        setLoading('loading_state', false)
-        return response.data;
-    } catch (error) {
-        console.error('Erro na requisição GET: ', error);
-        setLoading('loading_state', false)
-        return null;
-    }
+            }
+        })
+        .then(response => {
+            setLoading('loading_state', false);
+            resolve(response.data);
+        })
+        .catch(error => {
+            console.error();
+            setLoading('loading_state', false);
+            reject({msg:`Erro na requisição GET: ${error.message}`, error});
+        });
+    });
 };

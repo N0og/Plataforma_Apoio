@@ -1,5 +1,5 @@
 import DynamicParameters from "../../utils/reports/DynamicParameters"
-import { IFilterProdutividadeUBS } from "../../interfaces/ReportsInterfaces/IProdutividadeUBS"
+import { IFilterProdutividadeUBS } from "../../interfaces/IProdutividadeUBS"
 import { queryConvert } from "../../utils/bd/pg/pgPlaceHolders"
 import { ConnectDBs } from "../../database/init"
 import {SQL_PROD_UBS} from "./SQL"

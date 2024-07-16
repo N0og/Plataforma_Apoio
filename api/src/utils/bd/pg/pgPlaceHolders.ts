@@ -8,6 +8,8 @@ export function queryConvert(parameterizedSql: string, params: {[key: string]: a
     const regex = new RegExp(`\\:${key}\\b`, 'g'); 
     text = text.replace(regex, `$${index + 1}`);
   });
+
+  console.log(text, values)
   
   return { text, values };
 }

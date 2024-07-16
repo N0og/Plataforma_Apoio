@@ -1,6 +1,6 @@
 import { ExecuteSQL } from "../../database/execute";
 import { ConnectDBs } from "../../database/init";
-import IProdutividadeACS from "../../interfaces/ReportsInterfaces/IProdutividadeACS";
+import { IProdutividadeACS } from "../../interfaces";
 import { DefaultTypesJSON } from "../../utils/bd/DefaultTypesJSON";
 import DynamicParameters from "../../utils/reports/DynamicParameters";
 import { SQL_PROD_ACS_CONSOLIDADO, SQL_PROD_ACS_POR_DIA } from "./SQL";

@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { IAtendimentosUBS } from "../../interfaces/ReportsInterfaces/IProdutividadeUBS";
+import { IAtendimentosUBS } from "../../interfaces/IProdutividadeUBS";
 
 
 @Entity('tb_fat_atendimento_ubs')

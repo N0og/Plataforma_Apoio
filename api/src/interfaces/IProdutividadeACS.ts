@@ -1,4 +1,4 @@
-export default interface IProdutividadeACS{
+export interface IProdutividadeACS{
     
     distritoId?: number;
     unidadeId?: number;

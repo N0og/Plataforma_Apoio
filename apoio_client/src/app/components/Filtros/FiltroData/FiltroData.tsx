@@ -3,7 +3,7 @@ import './FiltroData.css';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { pt } from 'date-fns/locale/pt';
-import { Flip, toast } from 'react-toastify';
+import { useNotifyEvent } from '../../../hooks/useNotifyEvent';
 
 registerLocale('pt', pt)
 
@@ -19,24 +19,10 @@ export const FiltroData: React.FC<{ changeFilter: React.Dispatch<SetStateAction<
       changeFilter([startDate.toJSON().split('T')[0], endDate.toJSON().split('T')[0]])
     }
   }, [startDate, endDate])
-
   const changeData = (date: Date | null, setDate: (date: any) => any) => {
     if (endDate && endDate > date! && date! <= new Date()) setDate(date)
     else {
-      toast('Data Inválida', {
-        type: 'error',
-        position: "top-right",
-        autoClose: 1000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        rtl: false,
-        pauseOnFocusLoss: true,
-        draggable: true,
-        pauseOnHover: true,
-        theme: "light",
-        transition: Flip,
-        closeButton: true
-      });
+      useNotifyEvent('Data Inválida', 1000, 'error')
     }
   }
 

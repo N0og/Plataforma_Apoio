@@ -1,6 +1,6 @@
 import { ConnectDBs } from "../../database/init";
-import { IReportControllerRequest } from "../../interfaces/ControllersInterfaces/IReportController";
-import { IResultConnection, db_conn_error } from "../../interfaces/ControllersInterfaces/IResultConnection";
+import { IReportControllerRequest } from "../../interfaces/IReportController";
+import { IResultConnection, db_conn_error } from "../../interfaces/IResultConnection";
 
 export async function handleIPSEAS(DB_CLIENT:ConnectDBs, IPSEAS: any, DB_TYPE: string, SERVICE_INSTANCE: any, req: IReportControllerRequest): Promise<IResultConnection> {
 

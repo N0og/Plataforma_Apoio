@@ -9,3 +9,4 @@ api/src/config/json/eas.json
 #FRONT
 apoio_client/node_modules
 apoio_client/.vscode/launch.json
+api/.vscode/launch.json

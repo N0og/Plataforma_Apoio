@@ -1,6 +1,5 @@
-import { DefaultTypesJSON } from "../../utils/bd/DefaultTypesJSON";
 import DynamicParameters from "../../utils/reports/DynamicParameters";
-import { IVisitasPrioriFiltros } from "../../interfaces/ReportsInterfaces/IVisitasPrioritarias";
+import { IVisitasPrioriFiltros } from "../../interfaces";
 import { ConnectDBs } from "../../database/init";
 import { SQL_VISITAS_PRIORITARIAS } from "./SQL";
 import { ExecuteSQL } from "../../database/execute";

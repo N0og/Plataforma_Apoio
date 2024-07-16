@@ -6,5 +6,7 @@ export enum PagesEnum {
     ProdutividadeUBS = 'produtividadeubs',
     Mapa = 'mapa',
     Duplicados = 'duplicados',
-    VisitasPrioritarias = 'visitasprioritarias'
+    VisitasPrioritarias = 'visitasprioritarias',
+    Completude = 'completude',
+    Vacinas = 'vacinas'
 }

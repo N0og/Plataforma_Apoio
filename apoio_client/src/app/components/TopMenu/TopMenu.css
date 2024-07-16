@@ -15,14 +15,14 @@
     flex-wrap: nowrap;
     height: 100%;
     width: 100%;
-    gap: 0.5vw;
+    gap: 0.3vw;
     h1{
-        font-size: 2vw;
+        font-size: 1.7vw;
         color: var(--cor-black);
     }
 
     span{
-        font-size: 2vw;
+        font-size: 1.8vw;
         color: var(--cor-rose);
     }
 }

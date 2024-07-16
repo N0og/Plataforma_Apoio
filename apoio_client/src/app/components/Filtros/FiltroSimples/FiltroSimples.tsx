@@ -1,5 +1,6 @@
 import { SetStateAction, useEffect, useRef, useState } from "react";
 import './FiltroSimples.css'
+import { Flip, toast } from "react-toastify";
 
 
 export const FiltroSimples: React.FC<{ name: string, filters: any[], changeFilter: React.Dispatch<SetStateAction<any[]>>, deactivated?: boolean }> = ({ name, filters, changeFilter, deactivated }) => {
@@ -52,6 +53,23 @@ export const FiltroSimples: React.FC<{ name: string, filters: any[], changeFilte
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  useEffect(()=>{
+    if (isOpen && filters.length == 0) toast('Falha ao Obter Municípios.', {
+      type: 'error',
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      rtl: false,
+      pauseOnFocusLoss: true,
+      draggable: true,
+      pauseOnHover: true,
+      theme: "light",
+      transition: Flip,
+      closeButton: true
+    })
+  },[isOpen])
 
   return (
     <div className="s_filter-container" ref={filterContainerRef}>

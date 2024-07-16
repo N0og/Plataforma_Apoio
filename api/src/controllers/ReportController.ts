@@ -4,7 +4,7 @@ import { ConnectDBs } from "../database/init";
 import { ConnEASRepository, ConneSUSRepository } from "../database/repository/API_DB_Repositorys";
 import ExcelBuilder from "../utils/excel_builder/ExcelBuilder"
 
-import { IOrderError, IReportControllerRequest } from "../interfaces/ControllersInterfaces/IReportController";
+import { IOrder, IOrderError, IReportControllerRequest, IResultConnection } from "../interfaces";
 
 import { ProdutividadeACS_PorDiaQuery, ProdutividadeACS_ConsolidadoQuery } from "../services/reportsServices/ProdutividadeACSService";
 import ProdutividadeUBS_ConsolidadoQuery from "../services/reportsServices/ProdutividadeUBSService";
@@ -14,10 +14,8 @@ import CompletudeQuery from "../services/reportsServices/CompletudeService";
 import AcessosEASService from "../services/reportsServices/AcessosEASService";
 import { handleIPSEAS, handleIPSESUS } from "./handlers";
 
-import { IOrder } from "../interfaces/IOrder";
-
 import JSZip from "jszip";
-import { IResultConnection } from "../interfaces/ControllersInterfaces/IResultConnection";
+import { VacinasPECService } from "../services/reportsServices/VacinasPECService";
 
 export default class ReportController {
 
@@ -190,5 +188,9 @@ export default class ReportController {
 
     handleAcessosRetaguarda = async (req: IReportControllerRequest, res: Response) => {
         this.executeHandler(req, res, AcessosEASService, `AcessosEAS`)
+    }
+
+    handleVacinasPEC = async (req: IReportControllerRequest, res: Response) => {
+        this.executeHandler(req, res, VacinasPECService, `VacinasPEC`)
     }
 }

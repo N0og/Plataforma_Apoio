@@ -1,28 +1,10 @@
 import { AlertsEnum } from "../../constants"
+import { useNotifyEvent } from "../../hooks/useNotifyEvent"
 import { IControllersStateType } from "../../interfaces/IControllerStates"
 import './AlertMessage.css'
-import { Flip, toast } from "react-toastify"
 
 export const renderAlertMessage = (controllers: IControllersStateType) => {
-
-
-    const showNotification = (message: AlertsEnum, autoClose?:number|false) => {
-        toast(message,{
-            type:'error',
-            position:"top-right",
-            autoClose,
-            hideProgressBar: true,
-            closeOnClick: true,
-            rtl:false,
-            pauseOnFocusLoss:true,
-            draggable:true,
-            pauseOnHover:true,
-            theme:"light",
-            transition: Flip,
-            closeButton:true
-        });
-    };
-
+    
     if (controllers.loading_state) {
         return (
             <div className='loading_container'>
@@ -41,21 +23,24 @@ export const renderAlertMessage = (controllers: IControllersStateType) => {
         )
     }
 
-
     if (controllers.data_state) {
-        showNotification(AlertsEnum.DataFilter, 1000)
+        useNotifyEvent(AlertsEnum.DataFilter, 1000, 'error')
     }
 
     if (controllers.municipio_state) {
-        showNotification(AlertsEnum.MunicipioFilter, 1000)
+        useNotifyEvent(AlertsEnum.MunicipioFilter, 1000, 'error')
     }
 
-    if (controllers.driver_state) {
-        showNotification(AlertsEnum.DriverFilter, 1000)
+    if (controllers.driver_state_more) {
+        useNotifyEvent(AlertsEnum.DriverFilterMore, 1000, 'error')
+    }
+
+    if (controllers.driver_state_less) {
+        useNotifyEvent(AlertsEnum.DriverFilterLess, 1000, 'error')
     }
 
     if (controllers.condicoes_state) {
-        showNotification(AlertsEnum.CondicoesFilter, 1000)
+        useNotifyEvent(AlertsEnum.CondicoesFilter, 1000, 'error')
     }
 
     return null

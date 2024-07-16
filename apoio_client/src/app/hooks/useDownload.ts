@@ -1,5 +1,8 @@
 import axios, { AxiosResponse } from "axios";
 import { IControllersStateType } from "../interfaces/IControllerStates";
+import { useNotifyEvent } from "./useNotifyEvent";
+import { AlertsEnum } from "../constants";
+
 
 export const useDownload = async (url: string, params: object, setLoading:(key: keyof IControllersStateType, state:boolean) => void) => {
     setLoading('extract_state', true)
@@ -31,6 +34,8 @@ export const useDownload = async (url: string, params: object, setLoading:(key: 
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            useNotifyEvent(AlertsEnum.Sucess, 3000, 'success')
+        
         } else {
             console.error('Falha ao obter o arquivo.');
         }

@@ -1,6 +1,6 @@
 import { ConnectDBs } from "../../database/init";
-import { IReportControllerRequest } from "../../interfaces/ControllersInterfaces/IReportController";
-import { IResultConnection, db_conn_error } from "../../interfaces/ControllersInterfaces/IResultConnection";
+import { IReportControllerRequest } from "../../interfaces/IReportController";
+import { IResultConnection, db_conn_error } from "../../interfaces/IResultConnection";
 
 export async function handleIPSESUS(DB_CLIENT: ConnectDBs, IPSESUS: any[], DB_TYPE: string, SERVICE_INSTANCE: any, req: IReportControllerRequest): Promise<IResultConnection> {
     
@@ -32,7 +32,7 @@ export async function handleIPSESUS(DB_CLIENT: ConnectDBs, IPSESUS: any[], DB_TY
 
         console.log(`${installation_local_name} - Conectado!: ${installation.dados.instalacao_esus}... `)
 
-        let service_return = await SERVICE_INSTANCE.execute(DB_TYPE, DB_CLIENT, req.query)
+        let service_return = await SERVICE_INSTANCE.execute(DB_TYPE, DB_CLIENT, req.body)
 
         if (!(service_return instanceof Error)){
             result = result.concat(service_return);

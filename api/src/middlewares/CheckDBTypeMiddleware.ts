@@ -1,6 +1,6 @@
 import { Response, NextFunction } from "express";
 import { ConnEASRepository, ConneSUSRepository, municipioRepository } from "../database/repository/API_DB_Repositorys";
-import { IReportControllerRequest } from "../interfaces/ControllersInterfaces/IReportController";
+import { IReportControllerRequest } from "../interfaces";
 
 export default class CheckDBTypeMiddleware {
 

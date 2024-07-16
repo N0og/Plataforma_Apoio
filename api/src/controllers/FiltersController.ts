@@ -5,17 +5,14 @@ import unidadeFilterService from "../services/filterServices/unidadeFilterServic
 import equipeFilterService from "../services/filterServices/equipeFilterService";
 
 export default class FiltersController {
-    async executeHandler(req: Request, res: Response, serviceClass: any, body_params: any, query_params: any) {
+    async executeHandler(req: Request, res: Response, serviceClass: any) {
 
         try {
             const serviceInstance = new serviceClass()
+            const result = await serviceInstance.execute(req.query)
 
-            const result = await serviceInstance.execute(body_params, query_params)
-
-            if (result instanceof Error) {
-                return res.status(400).json({ error: "Falha na solicitação." })
-            }
-
+            if (result instanceof Error) return res.status(400).json({ error: "Falha na solicitação." })
+            
             return res.json(result)
 
         } catch (error) {
@@ -29,30 +26,18 @@ export default class FiltersController {
     }
 
     handlerClientsFilter = async (req: Request, res: Response) => {
-        const body_params = req.body
-        const query_params = req.query
-
-        this.executeHandler(req, res, clientsFilterService, body_params, query_params)
+        this.executeHandler(req, res, clientsFilterService)
     }
 
     handlerInstalacoesFilter = async (req: Request, res: Response) => {
-        const body_params = req.body
-        const query_params = req.query
-
-        this.executeHandler(req, res, instalacaoFilterService, body_params, query_params)
+        this.executeHandler(req, res, instalacaoFilterService)
     }
 
     handlerUnidadesFilter = async (req: Request, res: Response) => {
-        const body_params = req.body
-        const query_params = req.query
-
-        this.executeHandler(req, res, unidadeFilterService, body_params, query_params)
+        this.executeHandler(req, res, unidadeFilterService)
     }
 
     handlerEquipesFilter = async (req: Request, res: Response) => {
-        const body_params = req.body
-        const query_params = req.query
-
-        this.executeHandler(req, res, equipeFilterService, body_params, query_params)
+        this.executeHandler(req, res, equipeFilterService)
     }
 }

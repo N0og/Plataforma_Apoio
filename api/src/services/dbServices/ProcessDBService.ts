@@ -3,7 +3,7 @@ import { queryConvert } from "../../utils/bd/pg/pgPlaceHolders"
 import DynamicParameters from "../../utils/reports/DynamicParameters"
 import { SQL_PROD_UBS } from "../reportsServices/SQL"
 import { Pool as PGPool } from "pg"
-import { IAtendimentosUBS } from "../../interfaces/ReportsInterfaces/IProdutividadeUBS"
+import { IAtendimentosUBS } from "../../interfaces"
 import { ConneSUS } from "../../database/entities/Conn"
 import { formatInTimeZone } from 'date-fns-tz'
 import { subDays } from "date-fns"
