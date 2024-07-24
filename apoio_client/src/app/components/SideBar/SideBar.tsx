@@ -1,50 +1,50 @@
 import { PagesEnum } from '../../constants/PageEnums';
-import './SideBar.css'
+import { InfoSystem, Item, ItemIcon, SideBarContainer, SideBarItem, SideBarStyled } from '../../styles';
 
-export const SideBar:React.FC<{setCurrentPage:React.Dispatch<React.SetStateAction<PagesEnum>>}> = ({setCurrentPage}) => {
+export const SideBar: React.FC<{ setCurrentPage: React.Dispatch<React.SetStateAction<PagesEnum>> }> = ({ setCurrentPage }) => {
 
     return (
-        <div className="side_bar_container">
-            <div className="side_bar">
-                    <div className="side_bar_item">
-                        <div className='item_icon'><i className="fa-solid fa-chart-simple"></i></div>
-                        <div className='item'>
-                            <button onClick={()=>{setCurrentPage(PagesEnum.Dashboard)}}></button>
-                            <span>Dashboard</span>
-                        </div>
-                    </div>
-                    <div className="side_bar_item">
-                        <div className='item_icon'><i className="fa-solid fa-file-contract"></i></div>
-                        <div className='item'>
-                            <button onClick={()=>{setCurrentPage(PagesEnum.Relatorios)}}></button>
-                            <span>Relatórios</span>
-                        </div>
-                    </div>
-                    <div className="side_bar_item">
-                        <div className='item_icon'><i className="fa-solid fa-map-location-dot"></i></div>
-                        <div className='item'>
-                            <button onClick={()=>{setCurrentPage(PagesEnum.Mapa)}}></button>
-                            <span>Mapa</span>
-                        </div>
-                    </div>
-                    <div className="side_bar_item">
-                        <div className='item_icon'><i className="fa-solid fa-clock-rotate-left"></i></div>
-                        <div className='item'>
-                            <button onClick={()=>{setCurrentPage(PagesEnum.Historico)}}></button>
-                            <span>Histórico</span>
-                        </div>
-                    </div>
-                    <div className="side_bar_item">
-                        <div className='item_icon'><i className="fa-solid fa-question"></i></div>
-                        <div className='item'>
-                            <button onClick={()=>{setCurrentPage(PagesEnum.Ajuda)}}></button>
-                            <span>Ajuda</span>
-                        </div>
-                    </div>
-            </div>
-            <div className='infoSystem'>
+        <SideBarContainer>
+            <SideBarStyled className="side_bar">
+                <SideBarItem className="side_bar_item">
+                    <ItemIcon className="item_icon"><i className="fa-solid fa-chart-simple"></i></ItemIcon>
+                    <Item className="item">
+                        <button onClick={() => { setCurrentPage(PagesEnum.Dashboard) }}></button>
+                        <span>Dashboard</span>
+                    </Item>
+                </SideBarItem>
+                <SideBarItem className="side_bar_item">
+                    <ItemIcon className="item_icon"><i className="fa-solid fa-file-contract"></i></ItemIcon>
+                    <Item className="item">
+                        <button onClick={() => { setCurrentPage(PagesEnum.Relatorios) }}></button>
+                        <span>Relatórios</span>
+                    </Item>
+                </SideBarItem>
+                <SideBarItem className="side_bar_item">
+                    <ItemIcon className="item_icon"><i className="fa-solid fa-map-location-dot"></i></ItemIcon>
+                    <Item className="item">
+                        <button onClick={() => { setCurrentPage(PagesEnum.Mapa) }}></button>
+                        <span>Mapa</span>
+                    </Item>
+                </SideBarItem>
+                <SideBarItem className="side_bar_item">
+                    <ItemIcon className="item_icon"><i className="fa-solid fa-clock-rotate-left"></i></ItemIcon>
+                    <Item className="item">
+                        <button onClick={() => { setCurrentPage(PagesEnum.Historico) }}></button>
+                        <span>Histórico</span>
+                    </Item>
+                </SideBarItem>
+                <SideBarItem className="side_bar_item">
+                    <ItemIcon className="item_icon"><i className="fa-solid fa-question"></i></ItemIcon>
+                    <Item className="item">
+                        <button onClick={() => { setCurrentPage(PagesEnum.Ajuda) }}></button>
+                        <span>Ajuda</span>
+                    </Item>
+                </SideBarItem>
+            </SideBarStyled>
+            <InfoSystem className="infoSystem">
                 <span>&copy; 2024 Apoio Novetech.</span>
-            </div>
-        </div>
+            </InfoSystem>
+        </SideBarContainer>
     );
 }

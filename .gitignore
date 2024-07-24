@@ -4,9 +4,11 @@ api/node_modules
 api/src/config/json/whitelist.json
 api/src/config/json/esus.json
 api/src/config/json/eas.json
+api/.vscode/launch.json
 
 
 #FRONT
 apoio_client/node_modules
 apoio_client/.vscode/launch.json
-api/.vscode/launch.json
+apoio_client/.env.development
+apoio_client/.env.production

@@ -34,7 +34,7 @@ export const renderPage = ({ currentPage, setCurrentPage }: RenderPagesProps) =>
 
     const PageComponent = pages[currentPage];
 
-    return <PageComponent setCurrentPage={setCurrentPage} />;
+    return <PageComponent currentPage={currentPage} setCurrentPage={setCurrentPage} />;
 
 };
 

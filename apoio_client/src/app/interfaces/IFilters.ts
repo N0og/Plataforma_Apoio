@@ -1,7 +1,8 @@
-export interface IDynamicFilterPartition {
-    [key: string]: {[key: string]: { [key: string]: boolean } };
-  }
   
   export interface ISimpleFilterPartition {
-    [key: string]: boolean ;
+    [key: string]: {[key: string]: any, condition: boolean};
+  }
+
+  export interface IDynamicFilterPartition {
+    [key: string]: {[key: string]: {value:any, condition: boolean}};
   }

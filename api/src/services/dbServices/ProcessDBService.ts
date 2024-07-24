@@ -1,69 +1,34 @@
-import { atendimentoUBSRepository, equipeRepository, instalacaoESUSRepository, processamentoRepository, unidadeRepository } from "../../database/repository/API_DB_Repositorys"
-import { queryConvert } from "../../utils/bd/pg/pgPlaceHolders"
+import { equipeRepository, instalacaoESUSRepository, processamentoRepository, unidadeRepository } from "../../database/repository/API_DB_Repositorys"
 import DynamicParameters from "../../utils/reports/DynamicParameters"
-import { SQL_PROD_UBS } from "../reportsServices/SQL"
-import { Pool as PGPool } from "pg"
-import { IAtendimentosUBS } from "../../interfaces"
 import { ConneSUS } from "../../database/entities/Conn"
 import { formatInTimeZone } from 'date-fns-tz'
-import { subDays } from "date-fns"
 import { IsNull, Not } from "typeorm"
+import { ConnectDBs } from "../../database/init"
+import { ExecuteSQL } from "../../database/execute"
 
 export default class ProcessDBService {
 
-    private DATA_PROCESSAMENTO = new Date(formatInTimeZone(new Date(), 'America/Sao_Paulo', 'yyyy-MM-dd'))
-    DB: PGPool
-    conn: ConneSUS
+    private DATA_PROCESSAMENTO: Date
+    private conn: ConneSUS
 
-    async execute(DB:PGPool, conn:ConneSUS) {
-
-        console.log()
-        this.DB = DB;
+    async execute(DB_TYPE: string, DB_CLIENT: ConnectDBs, REQ_PARAMS: any, conn: ConneSUS) {
+        this.DATA_PROCESSAMENTO = new Date(formatInTimeZone(new Date(), 'America/Sao_Paulo', 'yyyy-MM-dd'))
         this.conn = conn;
-        if (await this.atendimentosUBSProcess()){
-            
-            instalacaoESUSRepository.update({id_instalacao_esus:this.conn.dados.id_instalacao_esus!},
+        if (await this.equipeProcess(DB_TYPE, DB_CLIENT)) {
+            instalacaoESUSRepository.update({ id_instalacao_esus: this.conn.dados.id_instalacao_esus! },
                 {
                     date_process: this.DATA_PROCESSAMENTO,
                     sucess_process: "Processado com Sucesso."
                 })
-            return {sucess:200}
+            return { sucess: 200 }
         }
 
     }
 
-    async test(){
-
-    }
-
-    async atendimentosUBSProcess() {
+    async equipeProcess(DB_TYPE: string, DB_CLIENT: ConnectDBs) {
 
         const DYNAMIC_PARAMETERS = new DynamicParameters()
-        let QUERY_FILTERS = ""
-
-        const SQL = new SQL_PROD_UBS()
-
-        let SQL_BASE = SQL.getBase()
-
-        const ULTIMO_PROCESSAMENTO_GERAL = await processamentoRepository
-            .createQueryBuilder('process')
-            .select('MAX(process.dt_processamento)', 'maxDate')
-            .getOne();
-
-        const ULTIMO_PROCESSAMENTO_INSTALACAO = await instalacaoESUSRepository.findOne({where: {id_instalacao_esus: this.conn.dados.id_instalacao_esus!, date_process: Not(IsNull())}})
-
-        if (ULTIMO_PROCESSAMENTO_INSTALACAO) {
-            QUERY_FILTERS += `
-                and subquery.dt_registro between :data_inicio and :data_final
-            `
-            DYNAMIC_PARAMETERS.Add('data_inicio', ULTIMO_PROCESSAMENTO_INSTALACAO.date_process);
-            DYNAMIC_PARAMETERS.Add('data_final', subDays(this.DATA_PROCESSAMENTO, 1).toISOString().split('T')[0]);
-        }
-
-        SQL_BASE += `${QUERY_FILTERS}${SQL.getFrom()}`
-
-        const atendimentos = await this.DB.query(queryConvert(SQL_BASE, DYNAMIC_PARAMETERS.GetAll()))
-
+    
         const query_equipes = `
             select distinct 
                 tdus.no_unidade_saude as no_estabelecimento, 
@@ -84,10 +49,13 @@ export default class ProcessDBService {
                 tte.sg_tipo_equipe
         `
 
-        const equipes = await this.DB.query(query_equipes)
+        const equipes = await ExecuteSQL(DB_TYPE, query_equipes, DYNAMIC_PARAMETERS, DB_CLIENT)
 
-
-        for (const equipe of equipes.rows) {
+        if (!equipes) {
+            return false
+        }
+        
+        for (const equipe of equipes) {
 
             const UNIDADE = await unidadeRepository.findOneBy({ nu_cnes: equipe.nu_cnes })
 
@@ -108,7 +76,6 @@ export default class ProcessDBService {
                         unidade: new_unidade.generatedMaps[0]
                     })
                 }
-
                 continue
             }
 
@@ -123,13 +90,6 @@ export default class ProcessDBService {
                 })
             }
 
-        }
-
-        for (const atendimento of atendimentos.rows) {
-
-            const atdwithmeta: IAtendimentosUBS = { id_instalacao: this.conn.dados.id_instalacao_esus!, uf: this.conn.dados.uf, municipio: this.conn.dados.municipio, instalacao: this.conn.dados.instalacao_esus!, data_processamento: this.DATA_PROCESSAMENTO, ...atendimento }
-
-            await atendimentoUBSRepository.insert({ dados: atdwithmeta })
         }
         return true
 

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { MapContainer, Marker, Popup, TileLayer, Tooltip } from 'react-leaflet'
 
 //Components
-import { FiltroSimples, renderAlertMessage } from '../../components';
+import { FiltroSimples } from '../../components';
 
 
 //Interfaces

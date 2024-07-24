@@ -1,9 +1,9 @@
 import React, { SetStateAction, useEffect, useState } from 'react';
-import './FiltroData.css';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { pt } from 'date-fns/locale/pt';
 import { useNotifyEvent } from '../../../hooks/useNotifyEvent';
+import { FilterDataCalendar, FilterDataContainer, FilterIcon } from '../../../styles/FiltersStyles';
 
 registerLocale('pt', pt)
 
@@ -27,11 +27,11 @@ export const FiltroData: React.FC<{ changeFilter: React.Dispatch<SetStateAction<
   }
 
   return (
-    <div className="filterData-container">
-      <div className="filterIcon">
+    <FilterDataContainer>
+      <FilterIcon>
         <i className="fa-solid fa-calendar-days"></i>
-      </div>
-      <div className="datePicker-container">
+      </FilterIcon>
+      <FilterDataCalendar>
         <DatePicker
           selected={startDate}
           onChange={date => changeData(date, setStartDate)}
@@ -55,8 +55,8 @@ export const FiltroData: React.FC<{ changeFilter: React.Dispatch<SetStateAction<
           className="fimSelect"
           dateFormat={'dd/MM/yyyy'}
         />
-      </div>
+      </FilterDataCalendar>
 
-    </div>
+    </FilterDataContainer>
   )
 }

@@ -3,10 +3,10 @@ export enum PagesEnum {
     Relatorios = 'relatorios',
     Historico = 'historico',
     Ajuda = 'ajuda',
-    ProdutividadeUBS = 'produtividadeubs',
     Mapa = 'mapa',
-    Duplicados = 'duplicados',
-    VisitasPrioritarias = 'visitasprioritarias',
-    Completude = 'completude',
-    Vacinas = 'vacinas'
+    ProdutividadeUBS = 'ProdutividadeUBS',
+    Duplicados = 'DuplicadosPEC',
+    VisitasPrioritarias = 'VisitasPrioritarias',
+    Completude = 'Completude',
+    Vacinas = 'VacinasPEC'
 }

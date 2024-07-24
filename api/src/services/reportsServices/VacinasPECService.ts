@@ -14,6 +14,16 @@ export class VacinasPECService {
         let SQL_BASE = SQL.getBase()
         let SQL_FROM = SQL.getFrom()
 
+        if (filtros_params.unit){
+            const units = Array.isArray(filtros_params.unit) ? filtros_params.unit : Array(filtros_params.unit) as string[]
+            SQL_FROM += `AND (tdus.nu_cnes = ${units.join(' or tdus.nu_cnes = ')})`
+        }
+
+        if (filtros_params.team){
+            const teams = Array.isArray(filtros_params.team) ? filtros_params.team : Array(filtros_params.team) as string[]
+            SQL_FROM += `AND (tde.nu_ine = ${teams.join(' or tde.nu_ine = ')})`
+        }
+
         if (filtros_params.data_inicial && filtros_params.data_final) {
 
             SQL_FROM += `
@@ -34,38 +44,35 @@ export class VacinasPECService {
         }
 
 
-        /*
+        
         if (filtros_params.idade_ano_inicio && filtros_params.idade_mes_inicio && filtros_params.idade_ano_final && filtros_params.idade_mes_final) {
-            const interval_inicio = `${filtros_params.idade_ano_inicio} years ${filtros_params.idade_mes_inicio} months`
-            const interval_final = `${filtros_params.idade_ano_final} years ${filtros_params.idade_mes_final} months`
+            const interval_inicio = `'${filtros_params.idade_ano_inicio} years ${filtros_params.idade_mes_inicio} months'`
+            const interval_final = `'${filtros_params.idade_ano_final} years ${filtros_params.idade_mes_final} months'`
 
             SQL_FROM += `
-                AND Age(tdt.dt_registro, tfvac.dt_nascimento) BETWEEN INTERVAL :idade_inicio AND INTERVAL :idade_final
+                AND Age(tdt.dt_registro, tfvac.dt_nascimento) BETWEEN INTERVAL ${interval_inicio} AND INTERVAL ${interval_final}
             `
-            DYNAMIC_PARAMETERS.Add('idade_inicio', interval_inicio)
-            DYNAMIC_PARAMETERS.Add('idade_final', interval_final)
         }
 
 
         else if (filtros_params.idade_ano_inicio && filtros_params.idade_mes_inicio) {
+            const interval_inicio = `'${filtros_params.idade_ano_inicio} years ${filtros_params.idade_mes_inicio} months'`
+
             SQL_FROM += `
-                AND Age(tdt.dt_registro, tfvac.dt_nascimento) >= INTERVAL ':idade_ano_inicio years :idade_mes_inicio months'
+                AND Age(tdt.dt_registro, tfvac.dt_nascimento) >= INTERVAL ${interval_inicio}
             `
-            DYNAMIC_PARAMETERS.Add('idade_ano_inicio', filtros_params.idade_ano_inicio)
-            DYNAMIC_PARAMETERS.Add('idade_mes_inicio', filtros_params.idade_ano_inicio)
         }
 
         else if (filtros_params.idade_ano_final && filtros_params.idade_mes_final) {
+            const interval_final = `'${filtros_params.idade_ano_final} years ${filtros_params.idade_mes_final} months'`
+
             SQL_FROM += `
-                AND Age(tdt.dt_registro, tfvac.dt_nascimento) <= INTERVAL ':idade_ano_final years :idade_mes_final months'
+                AND Age(tdt.dt_registro, tfvac.dt_nascimento) <= INTERVAL ${interval_final}
             `
-            DYNAMIC_PARAMETERS.Add('idade_ano_final', filtros_params.idade_ano_final)
-            DYNAMIC_PARAMETERS.Add('idade_mes_final', filtros_params.idade_mes_final)
-        }*/
+        }
 
 
         SQL_BASE += SQL_FROM += SQL.getEnd()
-
 
         const REPORT = await ExecuteSQL(dbtype, SQL_BASE, DYNAMIC_PARAMETERS, dbClient)
 

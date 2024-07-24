@@ -7,6 +7,6 @@ export default class clientsFilterService{
             let mun = client.no_municipio
             return {[mun]: false}
         })
-        return modifiedClients.reduce((ob1, ob2) => {return ({...ob1, ...ob2})}, {})
+        return modifiedClients.reduce((obj1, obj2) => ({...obj1, ...obj2}), {})
     }
 }

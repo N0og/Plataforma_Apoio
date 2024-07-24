@@ -32,7 +32,7 @@ export async function handleIPSESUS(DB_CLIENT: ConnectDBs, IPSESUS: any[], DB_TY
 
         console.log(`${installation_local_name} - Conectado!: ${installation.dados.instalacao_esus}... `)
 
-        let service_return = await SERVICE_INSTANCE.execute(DB_TYPE, DB_CLIENT, req.body)
+        let service_return = await SERVICE_INSTANCE.execute(DB_TYPE, DB_CLIENT, req.query, installation)
 
         if (!(service_return instanceof Error)){
             result = result.concat(service_return);

@@ -3,13 +3,15 @@ import UpdateDBService from "../services/dbServices/UpdateDBService";
 import ProcessDBService from "../services/dbServices/ProcessDBService";
 import { ConneSUSRepository, instalacaoESUSRepository, processamentoRepository } from "../database/repository/API_DB_Repositorys";
 import { ConnectDBs } from "../database/init";
+import { handleIPSESUS } from "./handlers";
+import { IResultConnection } from "../interfaces";
 
 export default class API_DB_Controller {
-    async executeHandler(req: Request, res: Response, serviceClass: any, serviceParams: any) {
+    async executeHandler(req: Request, res: Response, serviceClass: any) {
         try {
 
             const serviceInstance = new serviceClass();
-            const result = await serviceInstance.execute(serviceParams);
+            const result = await serviceInstance.execute(req.body);
 
             if (result instanceof Error) {
                 return res.status(400).json({ error: result.message })
@@ -25,64 +27,27 @@ export default class API_DB_Controller {
     }
 
     handleUpdateDb = async (req: Request, res: Response) => {
-        this.executeHandler(req, res, UpdateDBService, {})
+        this.executeHandler(req, res, UpdateDBService)
     }
 
 
     handleProcessDb = async (req: Request, res: Response) => {
 
         const dbClient = new ConnectDBs();
-
         const CONN_ESUS = await ConneSUSRepository.find()
 
-        const ERROR: any[] = []
-
-        let counter = 0
 
         if (CONN_ESUS) {
-            for (const conn of CONN_ESUS) {
-                console.log(conn.dados.municipio, conn.dados.instalacao_esus, conn.dados.ip_esus)
-
-                const CHANGED = await dbClient.changeDB('psql', {
-                    host: conn.dados.ip_esus!,
-                    port: conn.dados.port_esus!,
-                    user: conn.dados.db_user_esus!,
-                    password: conn.dados.db_password_esus!
-                })
-
-                if (CHANGED instanceof Error) {
-                    const err = {
-                        uf: conn.dados.uf!,
-                        municipio: conn.dados.municipio!,
-                        instalacao: conn.dados.ip_esus!,
-                        message: "Falha na conexão com Banco de Dados."
-                    }
-
-                    ERROR.push(err)
-
-                    await instalacaoESUSRepository.update({ id_instalacao_esus: conn.dados.id_instalacao_esus! },
-                        {
-                            sucess_process: err.message
-                        })
-                    continue
-                }
-
-                console.log("Conectado.")
-                counter += 1
-                const DB = dbClient.getPostgDB()
-                await new ProcessDBService().execute(DB, conn)
-                console.log("Processado.")
-                continue
-            }
+            let result: IResultConnection = await handleIPSESUS(dbClient, CONN_ESUS, 'psql', new ProcessDBService(), req)
 
             await processamentoRepository.insert({
-                nu_instalacoes_processadas: counter
+                nu_instalacoes_processadas: result.successful
             })
 
             return res.json(
                 {
                     status: 200,
-                    erros: ERROR
+                    result
                 })
 
         }

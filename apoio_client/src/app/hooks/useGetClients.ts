@@ -1,35 +1,23 @@
 import { useEffect, useState } from "react"
 import { useGetData } from "./useGetData"
 import { IControllersStateType } from "../interfaces/IControllerStates"
-import { Flip, toast } from "react-toastify";
+import { ISimpleFilterPartition } from "../interfaces/IFilters";
+import { useNotifyEvent } from "./useNotifyEvent";
 
 export const useGetClients = (toggleState:(key: keyof IControllersStateType, state: boolean) => void) => {
 
-    const [clientsFilter, setClientFilter] = useState<any[]>([]);
+    const [clientsFilter, setClientFilter] = useState<ISimpleFilterPartition>({});
 
     useEffect(() => {
         useGetData(
-            "http://26.197.116.207:9090/api/v1/filters/clients",
+            `${process.env.VITE_API_URL}/api/v1/filters/clients`,
             {},
             toggleState
         ).then((response => {
-            if (response) setClientFilter(response as [])
+            if (response) setClientFilter(response as {})
         }))
     .catch((error)=>{
-        toast(error.msg, {
-            type: 'error',
-            position: "top-right",
-            autoClose: 1000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            rtl: false,
-            pauseOnFocusLoss: true,
-            draggable: true,
-            pauseOnHover: true,
-            theme: "light",
-            transition: Flip,
-            closeButton: true
-          });
+        useNotifyEvent(error.msg, 1000, 'error')
     })
     }, [])
 
