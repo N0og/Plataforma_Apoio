@@ -36,7 +36,7 @@ import {
     GroupFilterContainer,
     TitlePageContainer
 } from '../../styles';
-import './Mapa.css'
+import './Map.css'
 import 'leaflet/dist/leaflet.css';
 import { getIcon } from './Utils/getIcon';
 //#endregion

@@ -16,7 +16,7 @@ import {
   FilterContainer,
   FilterCounter,
   FilterIcon,
-  FilterList,
+  FilterSimpleList,
   FilterSimpleListClosed,
   FilterListOption
 } from "../../../styles";
@@ -102,7 +102,7 @@ export const SimpleFilter: React.FC<{
         </FilterButton>
         {!deactivated ? (
           isOpen ? (
-            <FilterList>
+            <FilterSimpleList>
               <FilterSelectAllOption key={`filter-option-0000-0000`}>
                 <label>
                   <input
@@ -127,7 +127,7 @@ export const SimpleFilter: React.FC<{
                   </label>
                 </FilterListOption>
               ))}
-            </FilterList>
+            </FilterSimpleList>
           ) : (
             <FilterSimpleListClosed />
           )

@@ -65,7 +65,7 @@ export class SQL_VAC_PEC{
             when tdev.no_estrategia_vacinacao is null then 'TRANSCRIÇÃO'
             else tdev.no_estrategia_vacinacao 
         end as "ESTRATEGIA",
-        tdt.dt_registro As "DATA APLICACAO",
+        tdt.dt_registro As "DATA DO REGISTRO",
         Case
             When tfvac.dt_nascimento Is Not Null
             Then Concat(Extract(Year From Age(tdt.dt_registro, tfvac.dt_nascimento)), ' Anos ', Extract(Month From

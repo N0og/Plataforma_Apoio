@@ -40,7 +40,6 @@ export const GroupFilterContainer = styled.div`
     align-items: center;
     width: 100%;
     height: 6%;
-    background-color: red;
     gap: 1vw;
 `
 
@@ -102,5 +101,4 @@ export const ViewPageContainer = styled.div`
     align-items: center;
     width: 100%;
     height: 100%;
-    background-color: blue;
 `

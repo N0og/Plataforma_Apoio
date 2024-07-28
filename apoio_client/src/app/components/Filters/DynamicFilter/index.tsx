@@ -15,7 +15,7 @@ import {
   FilterContainer,
   FilterCounter,
   FilterIcon,
-  FilterList,
+  FilterSimpleList,
   FilterSimpleListClosed,
   FilterListOption
 } from "../../../styles";
@@ -100,7 +100,7 @@ export const DynamicFilter: React.FC<{
 
         {!deactivated && (
           isOpen ? (
-            <FilterList>
+            <FilterSimpleList>
               {Object.keys(filters).map((container, container_index) => (
                 <div className="box-container" key={`container-${container_index}`}>
                   <FilterSelectAllOption>
@@ -131,7 +131,7 @@ export const DynamicFilter: React.FC<{
                   </div>
                 </div>
               ))}
-            </FilterList>
+            </FilterSimpleList>
           ) : <FilterSimpleListClosed />
         )}
       </FilterContainer >
