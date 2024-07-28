@@ -1,20 +1,23 @@
 import './Main.css'
-import { useState } from "react"
 import { TopMenu, SideBar } from "../components"
-import { PagesEnum } from '../constants/PageEnums'
 import { renderPage } from '../components'
+import { useSelector, TypedUseSelectorHook} from 'react-redux'
+import { rootReducer } from '../../redux/root-reducer'
 
 
 export const Main = () => {
-    const [currentPage, setCurrentPage] = useState<PagesEnum>(PagesEnum.Relatorios);
+
+    const useTypedSelector: TypedUseSelectorHook<rootReducer> = useSelector;
+
+    const {currentPage} = useTypedSelector(rootReducer => rootReducer.pageReducer);
 
     return (
         <div className="body_page">
             <TopMenu />
             <div className="container_bottom">
-                <SideBar setCurrentPage={setCurrentPage} />
+                <SideBar/>
                 <div className="content_container"> 
-                    {renderPage({currentPage, setCurrentPage})}
+                    {renderPage({currentPage})}
                 </div>
             </div>
         </div>

@@ -31,7 +31,7 @@ export const BackButtonContainer = styled.div`
     i{
         position: absolute;
         font-size: 1.5vw;
-        left:-10px;
+        left:-2px;
         color: var(--cor-min_grey);
     }
 

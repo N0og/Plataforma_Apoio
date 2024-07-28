@@ -10,32 +10,23 @@ import {
     Completude,
     Vacinas
 } from "../../pages";
-import { PagesEnum } from '../../constants/PageEnums';
+import { Pages } from '../../constants/';
 import React from "react";
 
-type RenderPagesProps = {
-    currentPage: PagesEnum,
-    setCurrentPage: React.Dispatch<React.SetStateAction<PagesEnum>>
-}
+export function renderPage({ currentPage }: { currentPage: Pages }) {
 
-export const renderPage = ({ currentPage, setCurrentPage }: RenderPagesProps) => {
-    const pages: { [key in PagesEnum]: React.ElementType } = {
-        [PagesEnum.Dashboard]: Dashboard,
-        [PagesEnum.Relatorios]: Relatorios,
-        [PagesEnum.Historico]: Historico,
-        [PagesEnum.Ajuda]: Ajuda,
-        [PagesEnum.ProdutividadeUBS]: ProdutividadeUBS,
-        [PagesEnum.Mapa]: Mapa,
-        [PagesEnum.Duplicados]: Duplicados,
-        [PagesEnum.VisitasPrioritarias]: VisitasPrioritarias,
-        [PagesEnum.Completude]: Completude,
-        [PagesEnum.Vacinas]: Vacinas
+    const pages: { [key in Pages]: React.ElementType } = {
+        [Pages.DASHBOARD_PAGE]: Dashboard,
+        [Pages.REPORTS_PAGE]: Relatorios,
+        [Pages.HISTORY_PAGE]: Historico,
+        [Pages.HELP_PAGE]: Ajuda,
+        [Pages.TEAM_PROD_PAGE]: ProdutividadeUBS,
+        [Pages.MAP_PAGE]: Mapa,
+        [Pages.DUPLICATES_PAGE]: Duplicados,
+        [Pages.PRIORITY_VISITS_PAGE]: VisitasPrioritarias,
+        [Pages.COMPLETENESS]: Completude,
+        [Pages.VACCINES]: Vacinas
     };
-
     const PageComponent = pages[currentPage];
-
-    return <PageComponent currentPage={currentPage} setCurrentPage={setCurrentPage} />;
-
+    return <PageComponent currentPage={currentPage} />;
 };
-
-export default renderPage;

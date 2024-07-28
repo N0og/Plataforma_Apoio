@@ -1,10 +1,7 @@
 import { Routers } from './Routes'
 
-function App() {
-
+export default function App() {
   return (
-    <Routers/>
+    <Routers />
   )
 }
-
-export default App

@@ -5,11 +5,11 @@ export const SideBarContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position:absolute;
+  position:fixed;
   left:0;
   z-index: 9998;
-  height: 100%;
-  width: 4%;
+  height: 100vh;
+  width: 3%;
   gap: 1vh;
   opacity: 35%;
   border: none;
@@ -135,4 +135,5 @@ export const InfoSystem = styled.div`
   transition: 0.2s;
   text-wrap: nowrap;
   font-size: 0.8vw;
+  margin-bottom: 1vw;
 `;

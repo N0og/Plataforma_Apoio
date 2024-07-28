@@ -1,7 +1,26 @@
-import { PagesEnum } from '../../constants/PageEnums';
-import { InfoSystem, Item, ItemIcon, SideBarContainer, SideBarItem, SideBarStyled } from '../../styles';
+import { useDispatch } from 'react-redux';
+import { PagesActions, Pages } from '../../constants';
+import {
+    InfoSystem,
+    Item,
+    ItemIcon,
+    SideBarContainer,
+    SideBarItem,
+    SideBarStyled
+} from '../../styles';
 
-export const SideBar: React.FC<{ setCurrentPage: React.Dispatch<React.SetStateAction<PagesEnum>> }> = ({ setCurrentPage }) => {
+
+export const SideBar = () => {
+
+    const dispatch = useDispatch();
+
+    const handleTogglePage = (page: Pages) => {
+        dispatch({
+            type: PagesActions.FORWARD,
+            payload: page
+        })
+    }
+
 
     return (
         <SideBarContainer>
@@ -9,35 +28,35 @@ export const SideBar: React.FC<{ setCurrentPage: React.Dispatch<React.SetStateAc
                 <SideBarItem className="side_bar_item">
                     <ItemIcon className="item_icon"><i className="fa-solid fa-chart-simple"></i></ItemIcon>
                     <Item className="item">
-                        <button onClick={() => { setCurrentPage(PagesEnum.Dashboard) }}></button>
+                        <button onClick={() => { handleTogglePage(Pages.DASHBOARD_PAGE) }}></button>
                         <span>Dashboard</span>
                     </Item>
                 </SideBarItem>
                 <SideBarItem className="side_bar_item">
                     <ItemIcon className="item_icon"><i className="fa-solid fa-file-contract"></i></ItemIcon>
                     <Item className="item">
-                        <button onClick={() => { setCurrentPage(PagesEnum.Relatorios) }}></button>
+                        <button onClick={() => { handleTogglePage(Pages.REPORTS_PAGE) }}></button>
                         <span>Relatórios</span>
                     </Item>
                 </SideBarItem>
                 <SideBarItem className="side_bar_item">
                     <ItemIcon className="item_icon"><i className="fa-solid fa-map-location-dot"></i></ItemIcon>
                     <Item className="item">
-                        <button onClick={() => { setCurrentPage(PagesEnum.Mapa) }}></button>
+                        <button onClick={() => { handleTogglePage(Pages.MAP_PAGE) }}></button>
                         <span>Mapa</span>
                     </Item>
                 </SideBarItem>
                 <SideBarItem className="side_bar_item">
                     <ItemIcon className="item_icon"><i className="fa-solid fa-clock-rotate-left"></i></ItemIcon>
                     <Item className="item">
-                        <button onClick={() => { setCurrentPage(PagesEnum.Historico) }}></button>
+                        <button onClick={() => { handleTogglePage(Pages.HISTORY_PAGE) }}></button>
                         <span>Histórico</span>
                     </Item>
                 </SideBarItem>
                 <SideBarItem className="side_bar_item">
                     <ItemIcon className="item_icon"><i className="fa-solid fa-question"></i></ItemIcon>
                     <Item className="item">
-                        <button onClick={() => { setCurrentPage(PagesEnum.Ajuda) }}></button>
+                        <button onClick={() => { handleTogglePage(Pages.HELP_PAGE) }}></button>
                         <span>Ajuda</span>
                     </Item>
                 </SideBarItem>

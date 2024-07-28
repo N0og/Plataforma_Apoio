@@ -3,16 +3,18 @@ export {
     FilterIcon,
     FilterCounter,
     FilterButton,
-    FilterList,
-    FilterListClosed,
-    FilterAllOption,
-    CustomCheckBoxAll,
-    CustomCheckBoxOption,
+    FilterSimpleList,
+    FilterSimpleListClosed,
+    FilterSelectAllOption,
+    SelectAllCheckBox,
+    OptionCheckBox,
     FilterListOption,
-    FilterBirthday,
+    FilterAge,
     FilterDataCalendar,
-    FilterBirthdayOption,
-    FilterBirthdayClosed
+    FilterAgeOption,
+    FilterAgeClosed,
+    FilterDataContainer,
+    FilterDynamicList
 } from "./FiltersStyles";
 
 
@@ -21,22 +23,19 @@ export {
     TitlePageContainer,
     GroupFilterContainer,
     GroupFilter,
-    ExtractButton
-} from './RelatorioPageStyles'
+    ExtractButton,
+    ViewPageContainer
+} from './ReportViewPageStyles'
 
 export {
     BackButtonContainer
 } from './BackButtonStyles'
 
-export {
-    ViewPageContainer
-} from './RelatorioViewStyles'
-
-export { LoadingContainer, LoadingComponent } from "./AlertMessageStyles";
+export { LoadingContainer, LoadingComponent } from "./LoadingStyles";
 
 
 export { CardTitle, CardStyled, CardContainer, CardButton, CardIcon } from "./CardStyles";
 
-export { ContentContainer, RelatoriosPageContainer, CardsContainer } from "./RelatoriosPageStyles";
+export { ContentContainer, RelatoriosPageContainer, CardsContainer } from "./ReportsPage";
 
 export { SideBarContainer, SideBarStyled, SideBarItem, ItemIcon, Item, InfoSystem } from "./SideBarStyles";

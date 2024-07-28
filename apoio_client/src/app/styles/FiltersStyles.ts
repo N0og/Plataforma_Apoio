@@ -80,6 +80,100 @@ export const FilterButton = styled.button`
     }
 `
 
+
+export const FilterSimpleList = styled.div`
+    display: flex;
+    flex-direction: column;
+    min-width: 13vw;
+    max-width: 18vw;
+    min-height: 3vh;
+    max-height: 30vh;
+    top: 2.0vw;
+    border-radius: 7px;
+    position: absolute;
+    transition: 0.5s;
+    overflow-y: auto;
+    overflow-x: hidden ;
+    gap: 0.2vw;
+    background-color: var(--cor-min_grey);
+    box-shadow: 0px 0px 8px rgb(144, 143, 143);
+    z-index:9999;
+    span {
+        text-align: start;
+        padding: 0.3vw;
+        width: 80%;
+        cursor: pointer;
+        text-wrap: nowrap;
+        font-size: 0.8vw;
+        }
+        }
+
+        .box-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+    }
+
+    &::-webkit-scrollbar {
+    width: 0.8vw;
+    /* Largura da scrollbar */
+    border-top-right-radius: 6px;
+
+    }
+    
+    &::-webkit-scrollbar-track {
+    background: var(--cor-min_grey);
+    /* Cor de fundo da track */
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+}
+
+&::-webkit-scrollbar-thumb {
+    background-color: var(--cor-rose);
+    /* Cor do thumb */
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    }
+    
+    /* Opções adicionais para hover */
+    &::-webkit-scrollbar-thumb:hover {
+        background-color: var(--cor-rose);
+        /* Cor do thumb ao passar o mouse */
+}
+
+`
+
+export const FilterSimpleListClosed = styled.div`
+    display: flex;
+    flex-direction: column;
+    min-width: 0vw;
+    max-width: 0vw;
+    min-height: 0vh;
+    max-height: 0vh;
+    top: 2.3vw;
+    overflow-y: hidden;
+    position: absolute;
+    transition: 0.5s;
+    opacity: 0%;
+    
+    span {
+        text-align: start;
+        padding: 0.5vw;
+        cursor: pointer;
+        font-size: 0.1vw;
+        opacity: 0%;
+        }
+
+    input {
+        width: 10%;
+        height: 10%;
+        left: 0;
+        appearance: none;
+        position: absolute;
+        background-color: transparent;
+        opacity: 0%;
+        }
+        `
 export const FilterDynamicList = styled.div`
     display: flex;
     flex-direction: column;
@@ -106,101 +200,7 @@ export const FilterDynamicList = styled.div`
     }
 `
 
-export const FilterList = styled.div`
-    display: flex;
-    flex-direction: column;
-    min-width: 13vw;
-    max-width: 18vw;
-    min-height: 3vh;
-    max-height: 30vh;
-    top: 2.0vw;
-    border-radius: 7px;
-    position: absolute;
-    transition: 0.5s;
-    overflow-y: auto;
-    overflow-x: hidden ;
-    gap: 0.2vw;
-    background-color: var(--cor-min_grey);
-    box-shadow: 0px 0px 8px rgb(144, 143, 143);
-    z-index:9999;
-    span {
-        text-align: start;
-        padding: 0.3vw;
-        width: 80%;
-        cursor: pointer;
-        text-wrap: nowrap;
-        font-size: 0.8vw;
-        }
-    }
-
-    .box-container {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-    }
-
-    &::-webkit-scrollbar {
-    width: 1.1vw;
-    /* Largura da scrollbar */
-    border-top-right-radius: 7px;
-
-}
-
-    &::-webkit-scrollbar-track {
-    background: var(--cor-min_grey);
-    /* Cor de fundo da track */
-    border-top-right-radius: 7px;
-    border-bottom-right-radius: 7px;
-}
-
-    &::-webkit-scrollbar-thumb {
-    background-color: var(--cor-rose);
-    /* Cor do thumb */
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
-}
-
-/* Opções adicionais para hover */
-    &::-webkit-scrollbar-thumb:hover {
-    background-color: var(--cor-rose);
-    /* Cor do thumb ao passar o mouse */
-}
-
-`
-
-export const FilterListClosed = styled.div`
-    display: flex;
-    flex-direction: column;
-    min-width: 0vw;
-    max-width: 0vw;
-    min-height: 0vh;
-    max-height: 0vh;
-    top: 2.3vw;
-    overflow-y: hidden;
-    position: absolute;
-    transition: 0.5s;
-    opacity: 0%;
-    
-    span {
-        text-align: start;
-        padding: 0.5vw;
-        cursor: pointer;
-        font-size: 0.1vw;
-        opacity: 0%;
-    }
-
-    input {
-        width: 10%;
-        height: 10%;
-        left: 0;
-        appearance: none;
-        position: absolute;
-        background-color: transparent;
-        opacity: 0%;
-    }
-`
-
-export const FilterAllOption = styled.div`
+export const FilterSelectAllOption = styled.div`
     padding-left: 0.5vw;
     background-color: var(--cor-rose);
     color: var(--cor-light);
@@ -219,11 +219,11 @@ export const FilterAllOption = styled.div`
             position: absolute;
             background-color: transparent;
         }
-    }
-
-    input[type="checkbox"]:checked+.custom-checkbox::after {
+        }
+        
+        input[type="checkbox"]:checked+.custom-checkbox::after {
                 opacity: 1;
-            }
+                }
 
     &:hover + .custom-checkbox {
         background-color: var(--cor-rose-light);
@@ -232,11 +232,11 @@ export const FilterAllOption = styled.div`
         &::after {
             opacity: 1;
         }
-    }
+        }
+        
+        `
 
-`
-
-export const CustomCheckBoxAll = styled.label`
+export const SelectAllCheckBox = styled.label`
     display: inline-block;
     width: 0.8vw;
     height: 0.8vw;
@@ -259,7 +259,7 @@ export const CustomCheckBoxAll = styled.label`
     }
 `
 
-export const CustomCheckBoxOption = styled.label`
+export const OptionCheckBox = styled.label`
     display: inline-block;
     width: 0.8vw;
     height: 0.8vw;
@@ -315,7 +315,7 @@ export const FilterListOption = styled.div`
     }
 `
 
-export const FilterBirthday = styled.div`
+export const FilterAge = styled.div`
     display: flex ;
     flex-direction: column;
     justify-content: space-between;
@@ -342,7 +342,7 @@ export const FilterBirthday = styled.div`
     }
 `
 
-export const FilterBirthdayClosed = styled.div`
+export const FilterAgeClosed = styled.div`
     display: flex;
     flex-direction: column;
     min-width: 0vw;
@@ -376,7 +376,7 @@ export const FilterBirthdayClosed = styled.div`
     }
 `
 
-export const FilterBirthdayOption = styled.div`
+export const FilterAgeOption = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-around;

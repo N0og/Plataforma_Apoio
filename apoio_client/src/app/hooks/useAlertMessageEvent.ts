@@ -1,37 +1,37 @@
-import { AlertsEnum } from "../constants"
+import { Alerts } from "../constants"
 import { useNotifyEvent } from "./useNotifyEvent"
 import { IControllersStateType } from "../interfaces/IControllerStates"
-import { Loading } from "../components/Loading"
+import { Loading } from "../components"
 import React from "react";
 
 export const useAlertMessageEvent = (controllers: IControllersStateType) => {
 
     if (controllers.loading_state) {
-        return React.createElement(Loading, { Enum: AlertsEnum.Loading })
+        return React.createElement(Loading, { alert: Alerts.LOADING })
     }
 
     if (controllers.extract_state) {
-        return React.createElement(Loading, { Enum: AlertsEnum.Extract })
+        return React.createElement(Loading, { alert: Alerts.EXTRACTING })
     }
 
     if (controllers.data_state) {
-        useNotifyEvent(AlertsEnum.DataFilter, 1000, 'error')
+        useNotifyEvent(Alerts.DATA_LESS, 1000, 'error')
     }
 
     if (controllers.municipio_state) {
-        useNotifyEvent(AlertsEnum.MunicipioFilter, 1000, 'error')
+        useNotifyEvent(Alerts.CITY_LESS, 1000, 'error')
     }
 
     if (controllers.driver_state_more) {
-        useNotifyEvent(AlertsEnum.DriverFilterMore, 1000, 'error')
+        useNotifyEvent(Alerts.DBFILTER_EXCESS, 1000, 'error')
     }
 
     if (controllers.driver_state_less) {
-        useNotifyEvent(AlertsEnum.DriverFilterLess, 1000, 'error')
+        useNotifyEvent(Alerts.DB_FILTER_LESS, 1000, 'error')
     }
 
     if (controllers.condicoes_state) {
-        useNotifyEvent(AlertsEnum.CondicoesFilter, 1000, 'error')
+        useNotifyEvent(Alerts.CONDITION_LESS, 1000, 'error')
     }
 
     return null

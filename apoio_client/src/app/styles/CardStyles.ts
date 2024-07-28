@@ -30,7 +30,7 @@ export const CardStyled = styled.div`
 
     &:active{
         background-color: #d5d4d4;
-        box-shadow: 0px 0px 0.0vw 0.2vw rgb(220, 167, 167);
+        box-shadow: 0px 0px 0.0vw 0.2vw var(--cor-shadow-mid);
         width: 12vw;
     }
 `

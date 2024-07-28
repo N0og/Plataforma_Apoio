@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { DriverEnum, PagesEnum } from "../constants";
+import { Databases, Pages } from "../constants";
 import { IDynamicFilterPartition, ISimpleFilterPartition } from "../interfaces/IFilters";
 
 interface IConfigOrder {
-  origin: PagesEnum,
+  origin: Pages,
   orders: ISimpleFilterPartition;
   driver: ISimpleFilterPartition;
   params: {[key: string]: IDynamicFilterPartition | ISimpleFilterPartition};
@@ -20,7 +20,7 @@ export const useMountOrder = (config: IConfigOrder, dependencys: React.Dependenc
 
   const [OrderURL, setOrderParam] = useState<string>("");
 
-  const getDriver = (sources: ISimpleFilterPartition): DriverEnum | undefined => {
+  const getDriver = (sources: ISimpleFilterPartition): Databases | undefined => {
     for (let key in sources) {
       if (sources[key].condition === true) {
         return sources[key].dbtype;

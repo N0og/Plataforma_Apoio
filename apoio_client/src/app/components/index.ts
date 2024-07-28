@@ -1,7 +1,14 @@
-export { renderPage }from "./RenderPage/RenderPage";
+export { renderPage } from "./RenderPage/RenderPage";
 export { TopMenu } from "./TopMenu/TopMenu";
 export { SideBar } from "./SideBar/SideBar";
-export { FiltroData, FiltroDinamico, FiltroSimples, FiltroIdade } from "./Filtros";
+export {
+    DateFilter,
+    DynamicFilter,
+    SimpleFilter,
+    AgeFilter
+} from "./Filters";
 export { DevStep } from "./DevStep/DevStep";
 export { Card } from "./Cards";
 export { Loading } from "./Loading";
+export { BackButton } from "./BackButton";
+export { DataTable } from "./Table";

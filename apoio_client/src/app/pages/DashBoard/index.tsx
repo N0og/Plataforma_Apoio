@@ -1,10 +1,7 @@
 import { DevStep } from "../../components"
-import { DefaultProps } from "../../types"
 
-export const Dashboard: React.FC<DefaultProps> = ({ setCurrentPage }) => {
+export const Dashboard = () => {
     return (
-               
-        <DevStep/>
-             
+        <DevStep />
     )
 }
