@@ -5,7 +5,8 @@ import {
     DateFilter,
     DynamicFilter,
     SimpleFilter,
-    BackButton
+    BackButton,
+    SearchButton
 } from '../../components'
 
 //Hooks
@@ -30,7 +31,6 @@ import { ISimpleFilterPartition } from '../../interfaces/IFilters';
 
 //Styles
 import {
-    ExtractButton,
     GroupFilter,
     GroupFilterContainer,
     ReportContainer,
@@ -55,7 +55,7 @@ import { rootReducer } from '../../../redux/root-reducer';
 
 const useTypedSelector: TypedUseSelectorHook<rootReducer> = useSelector;
 
-export const VisitasPrioritarias = () => {
+export const PriorityVisits = () => {
     const { currentPage } = useTypedSelector(rootReducer => rootReducer.pageReducer);
 
     const {
@@ -101,7 +101,7 @@ export const VisitasPrioritarias = () => {
         setAlertMessage(useAlertMessageEvent(control_states));
     }, [control_states])
 
-    const extract = () => {
+    const handleSearchAction = () => {
         toggleAllFalse()
         const mun = Object.entries(clientsFilter)
             .filter(([_key, value]) => value.condition == true)
@@ -152,11 +152,7 @@ export const VisitasPrioritarias = () => {
                     <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
                     <DateFilter changeFilter={setDataFilters} />
                 </GroupFilter>
-                <ExtractButton>
-                    <button
-                        onClick={() => { extract() }}
-                    >EXTRAIR</button>
-                </ExtractButton>
+                <SearchButton handleSearchAction={handleSearchAction} />
             </GroupFilterContainer>
             <ViewPageContainer>
 

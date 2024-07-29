@@ -1,7 +1,7 @@
 //#region Imports
 
 //Components
-import { DynamicFilter, SimpleFilter, BackButton } from '../../components';
+import { DynamicFilter, SimpleFilter, BackButton, SearchButton } from '../../components';
 
 //Hooks
 import {
@@ -25,7 +25,6 @@ import { ISimpleFilterPartition } from '../../interfaces/IFilters';
 
 //Styles
 import {
-    ExtractButton,
     GroupFilter,
     GroupFilterContainer,
     ReportContainer,
@@ -47,7 +46,7 @@ import { DATABASES_DEFAULT } from '../../constants';
 
 const useTypedSelector: TypedUseSelectorHook<rootReducer> = useSelector;
 
-export const Duplicados = () => {
+export const Duplicates = () => {
     const { currentPage } = useTypedSelector(rootReducer => rootReducer.pageReducer);
 
     const {
@@ -91,7 +90,7 @@ export const Duplicados = () => {
         setAlertMessage(useAlertMessageEvent(control_states));
     }, [control_states])
 
-    const extract = () => {
+    const handleSearchAction = () => {
         toggleAllFalse()
 
         const mun = Object.entries(clientsFilter)
@@ -123,11 +122,7 @@ export const Duplicados = () => {
                     <DynamicFilter name={"UNIDADE"} filters={UnitsFilter} changeFilter={setUnitsFilter} />
                     <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
                 </GroupFilter>
-                <ExtractButton>
-                    <button
-                        onClick={() => { extract() }}
-                    >EXTRAIR</button>
-                </ExtractButton>
+                <SearchButton handleSearchAction={handleSearchAction} />
             </GroupFilterContainer>
 
             <ViewPageContainer>

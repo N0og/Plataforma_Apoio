@@ -14,7 +14,7 @@ import {
 } from "../../styles"
 //#endregion
 
-export const Relatorios = () => {
+export const Reports = () => {
     return (
         <RelatoriosPageContainer>
             <div className='page-title'>

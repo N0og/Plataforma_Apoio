@@ -9,7 +9,7 @@ export const SideBarContainer = styled.div`
   left:0;
   z-index: 9998;
   height: 100vh;
-  width: 3%;
+  width: 1%;
   gap: 1vh;
   opacity: 35%;
   border: none;
@@ -28,10 +28,12 @@ export const SideBarContainer = styled.div`
     .side_bar {
       margin-left: 0.5vw;
       opacity: 100%;
+      background-color: transparent;
     }
 
     .side_bar_item {
       width: 90%;
+      opacity: 100%;
     }
 
     .side_bar_item span {
@@ -46,13 +48,19 @@ export const SideBarStyled = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100%;
   width: 100%;
   gap: 1vh;
-  opacity: 35%;
+  opacity: 100%;
   border: none;
   overflow: hidden;
-  transition: 0.5s;
+  transition: 0.2s;
+  background-color: var(--cor-rose);
+  border-top-right-radius: 2vw;
+  border-bottom-right-radius: 2vw;
+
+  .side_bar_item {
+      opacity: 0%;
+    }
 `;
 
 export const SideBarItem = styled.div`
@@ -129,11 +137,12 @@ export const Item = styled.div`
 `;
 
 export const InfoSystem = styled.div`
-  height: 10%;
+  position: absolute;
+  bottom: 2vw;
   overflow: hidden;
   opacity: 0%;
   transition: 0.2s;
   text-wrap: nowrap;
-  font-size: 0.8vw;
+  font-size: 12px;
   margin-bottom: 1vw;
 `;

@@ -14,27 +14,25 @@ export const FilterContainer = styled.div`
         width: 100%;
         height: 100%;
         border: none;
-        padding-left: 1.8vw;
         border-radius: 1vw;
         background-color: var(--cor-min_grey);
         box-shadow: 0 1px 0.1px 0px var(--cor-shadow-mid);
         outline: none;
         user-select: none;
         font-size: 0.8vw;
+        text-align: center;
     }
 
 `
 
 export const FilterIcon = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: absolute;
-    width: 15%;
-    height: 80%;
-    border-radius: 50vw;
-    border: none;
     background-color: transparent;
     color: var(--cor-rose-mid);
     left: 5%;
-    top: 25%;
     font-size: 0.7vw;
 `
 
@@ -58,25 +56,18 @@ export const FilterCounter = styled.div`
 `
 
 export const FilterButton = styled.button`
+    display: flex;
+    justify-content: end;
+    align-items: center;
     position: absolute;
     width: 100%;
     height: 80%;
-    border-radius: 50vw;
     border: none;
     background-color: transparent;
-    right: 0.4vw;
-    text-align: end;
+    cursor: pointer;
     i {
-        position: absolute;
-        width: 100%;
-        cursor: pointer;
-        height: 80%;
-        border-radius: 50vw;
-        border: none;
-        left: 0vw;
-        top: 15%;
         font-size: 1vw;
-        
+        padding: 0.4vw;
     }
 `
 
@@ -103,9 +94,7 @@ export const FilterSimpleList = styled.div`
         padding: 0.3vw;
         width: 80%;
         cursor: pointer;
-        text-wrap: nowrap;
         font-size: 0.8vw;
-        }
         }
 
         .box-container {
@@ -329,6 +318,7 @@ export const FilterAge = styled.div`
     overflow-y: hidden;
     overflow-x: hidden;
     transition: 0.5s;
+    z-index: 9999;
     .title_input{
         display: flex;
         justify-content: center;
@@ -356,8 +346,8 @@ export const FilterAgeClosed = styled.div`
     opacity: 0%;
 
     div{
-        display:flex
-        jjustify-content: start;
+        display:flex;
+        justify-content: start;
         align-items: start;
     }
 

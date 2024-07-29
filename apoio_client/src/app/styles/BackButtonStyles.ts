@@ -6,7 +6,7 @@ export const BackButtonContainer = styled.div`
     align-items: center;
     position: absolute;
     left: 20px;
-    height: 60%;
+    height: 45%;
     width: 1%;
     transition:0.2s;
     z-index:9997;
@@ -30,7 +30,7 @@ export const BackButtonContainer = styled.div`
 
     i{
         position: absolute;
-        font-size: 1.5vw;
+        font-size: 1.4vw;
         left:-2px;
         color: var(--cor-min_grey);
     }
@@ -48,7 +48,7 @@ export const BackButtonContainer = styled.div`
     }
 
     &:hover{
-        width: 9%;
+        width: 7%;
         .back_button, span{
             opacity: 100%;
         }

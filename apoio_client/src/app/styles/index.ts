@@ -23,13 +23,16 @@ export {
     TitlePageContainer,
     GroupFilterContainer,
     GroupFilter,
-    ExtractButton,
     ViewPageContainer
 } from './ReportViewPageStyles'
 
 export {
     BackButtonContainer
 } from './BackButtonStyles'
+
+export {
+    SearchButtonContainer
+} from './SearchButtonStyles'
 
 export { LoadingContainer, LoadingComponent } from "./LoadingStyles";
 

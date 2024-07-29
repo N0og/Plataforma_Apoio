@@ -7,7 +7,8 @@ import {
     AgeFilter,
     DynamicFilter,
     BackButton,
-    DataTable
+    DataTable,
+    SearchButton
 } from '../../components'
 
 //Hooks
@@ -29,15 +30,12 @@ import {
 
 //Styles
 import {
-    ExtractButton,
     GroupFilter,
     GroupFilterContainer,
     ReportContainer,
     TitlePageContainer,
     ViewPageContainer
 } from '../../styles';
-//
-import './style.css'
 
 //Interfaces
 import { ISimpleFilterPartition } from '../../interfaces/IFilters';
@@ -55,7 +53,7 @@ import { rootReducer } from '../../../redux/root-reducer';
 
 const useTypedSelector: TypedUseSelectorHook<rootReducer> = useSelector;
 
-export const Vacinas = () => {
+export const Vaccines = () => {
     const { currentPage } = useTypedSelector(rootReducer => rootReducer.pageReducer);
 
     const {
@@ -79,6 +77,7 @@ export const Vacinas = () => {
         teamsFilter,
         setTeamsFilter
     } = useGetTeams(UnitsFilter, toggleState)
+    
 
     const [dataFilters, setDataFilters] = useState<Array<string>>([]);
     const [AlertMessage, setAlertMessage] = useState<JSX.Element | null>(null)
@@ -100,7 +99,7 @@ export const Vacinas = () => {
         setAlertMessage(useAlertMessageEvent(control_states));
     }, [control_states])
 
-    const extract = () => {
+    const handleSearchAction = () => {
 
         toggleAllFalse()
 
@@ -144,11 +143,7 @@ export const Vacinas = () => {
                     <AgeFilter name={"IDADE"} />
                     <DateFilter changeFilter={setDataFilters} />
                 </GroupFilter>
-                <ExtractButton>
-                    <button
-                        onClick={() => { extract() }}
-                    >BUSCAR</button>
-                </ExtractButton>
+                <SearchButton handleSearchAction={handleSearchAction} />
             </GroupFilterContainer>
             <ViewPageContainer>
                 <DataTable />

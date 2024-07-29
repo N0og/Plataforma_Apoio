@@ -1,6 +1,6 @@
 import { DevStep } from "../../components"
 
-export const Ajuda = () => {
+export const Help = () => {
     return (            
         <DevStep/>   
     )

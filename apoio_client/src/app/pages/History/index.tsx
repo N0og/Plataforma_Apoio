@@ -1,6 +1,6 @@
 import { DevStep } from "../../components"
 
-export const Historico = () => {
+export const History = () => {
     return (
         <DevStep />
     )

@@ -4,7 +4,8 @@
 import {
     DynamicFilter,
     SimpleFilter,
-    BackButton
+    BackButton,
+    SearchButton
 } from '../../components';
 
 //Hooks
@@ -29,7 +30,6 @@ import { ISimpleFilterPartition } from '../../interfaces/IFilters';
 
 //Styles
 import {
-    ExtractButton,
     GroupFilter,
     GroupFilterContainer,
     ReportContainer,
@@ -51,7 +51,7 @@ import { DATABASES_DEFAULT } from '../../constants';
 
 const useTypedSelector: TypedUseSelectorHook<rootReducer> = useSelector;
 
-export const Completude = () => {
+export const Completeness = () => {
 
     const { currentPage } = useTypedSelector(rootReducer => rootReducer.pageReducer);
 
@@ -97,7 +97,7 @@ export const Completude = () => {
         setAlertMessage(useAlertMessageEvent(control_states));
     }, [control_states])
 
-    const extract = () => {
+    const handleSearchAction = () => {
         toggleAllFalse()
 
         const mun = Object.entries(clientsFilter)
@@ -136,11 +136,7 @@ export const Completude = () => {
                     <DynamicFilter name={"UNIDADE"} filters={UnitsFilter} changeFilter={setUnitsFilter} />
                     <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
                 </GroupFilter>
-                <ExtractButton>
-                    <button
-                        onClick={() => { extract() }}
-                    >EXTRAIR</button>
-                </ExtractButton>
+                <SearchButton handleSearchAction={handleSearchAction}/>
             </GroupFilterContainer>
             <ViewPageContainer>
 

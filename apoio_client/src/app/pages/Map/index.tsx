@@ -43,7 +43,7 @@ import { getIcon } from './Utils/getIcon';
 
 
 
-export const Mapa = () => {
+export const Map = () => {
 
     const {
         control_states,
