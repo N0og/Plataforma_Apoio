@@ -3,53 +3,53 @@ export class SQL_PROD_UBS{
     private SQL_BASE: string = 
     `
         select
-            subquery."CNES" as nu_cnes,
-            subquery."ESTABELECIMENTO" as no_estabelecimento,
-            subquery."NOME EQUIPE" as no_equipe,
-            subquery."TIPO DE EQUIPE" as tp_equipe,
-            subquery."INE" as nu_ine,
-            subquery."CBO" as nu_cbo,
-            subquery."DESCRIÇÃO DO CBO" as ds_cbo,
-            subquery."PROFISSIONAL" as no_prof,
-            subquery."TIPO DE REGISTRO" as tp_reg,
-            subquery."TIPO DE FICHA" as tp_ficha,
-            subquery."TIPO ATENDIMENTO" as tp_atend,
-            subquery."TIPO DE CONSULTA" as tp_consulta,
-            subquery."LOCAL DE ATENDIMENTO" as no_local_atend,
-            TO_CHAR(EXTRACT(YEAR FROM subquery.dt_registro), '9999') AS nu_ano,
-            TO_CHAR(EXTRACT(MONTH FROM subquery.dt_registro), '99') AS nu_mes,
-        SUM(case when extract(day from subquery.dt_registro) = 1 then subquery.REALIZADOS else 0 end) as dia_01,
-        SUM(case when extract(day from subquery.dt_registro) = 2 then subquery.REALIZADOS else 0 end) as dia_02,
-        SUM(case when extract(day from subquery.dt_registro) = 3 then subquery.REALIZADOS else 0 end) as dia_03,
-        SUM(case when extract(day from subquery.dt_registro) = 4 then subquery.REALIZADOS else 0 end) as dia_04,
-        SUM(case when extract(day from subquery.dt_registro) = 5 then subquery.REALIZADOS else 0 end) as dia_05,
-        SUM(case when extract(day from subquery.dt_registro) = 6 then subquery.REALIZADOS else 0 end) as dia_06,
-        SUM(case when extract(day from subquery.dt_registro) = 7 then subquery.REALIZADOS else 0 end) as dia_07,
-        SUM(case when extract(day from subquery.dt_registro) = 8 then subquery.REALIZADOS else 0 end) as dia_08,
-        SUM(case when extract(day from subquery.dt_registro) = 9 then subquery.REALIZADOS else 0 end) as dia_09,
-        SUM(case when extract(day from subquery.dt_registro) = 10 then subquery.REALIZADOS else 0 end) as dia_10,
-        SUM(case when extract(day from subquery.dt_registro) = 11 then subquery.REALIZADOS else 0 end) as dia_11,
-        SUM(case when extract(day from subquery.dt_registro) = 12 then subquery.REALIZADOS else 0 end) as dia_12,
-        SUM(case when extract(day from subquery.dt_registro) = 13 then subquery.REALIZADOS else 0 end) as dia_13,
-        SUM(case when extract(day from subquery.dt_registro) = 14 then subquery.REALIZADOS else 0 end) as dia_14,
-        SUM(case when extract(day from subquery.dt_registro) = 15 then subquery.REALIZADOS else 0 end) as dia_15,
-        SUM(case when extract(day from subquery.dt_registro) = 16 then subquery.REALIZADOS else 0 end) as dia_16,
-        SUM(case when extract(day from subquery.dt_registro) = 17 then subquery.REALIZADOS else 0 end) as dia_17,
-        SUM(case when extract(day from subquery.dt_registro) = 18 then subquery.REALIZADOS else 0 end) as dia_18,
-        SUM(case when extract(day from subquery.dt_registro) = 19 then subquery.REALIZADOS else 0 end) as dia_19,
-        SUM(case when extract(day from subquery.dt_registro) = 20 then subquery.REALIZADOS else 0 end) as dia_20,
-        SUM(case when extract(day from subquery.dt_registro) = 21 then subquery.REALIZADOS else 0 end) as dia_21,
-        SUM(case when extract(day from subquery.dt_registro) = 22 then subquery.REALIZADOS else 0 end) as dia_22,
-        SUM(case when extract(day from subquery.dt_registro) = 23 then subquery.REALIZADOS else 0 end) as dia_23,
-        SUM(case when extract(day from subquery.dt_registro) = 24 then subquery.REALIZADOS else 0 end) as dia_24,
-        SUM(case when extract(day from subquery.dt_registro) = 25 then subquery.REALIZADOS else 0 end) as dia_25,
-        SUM(case when extract(day from subquery.dt_registro) = 26 then subquery.REALIZADOS else 0 end) as dia_26,
-        SUM(case when extract(day from subquery.dt_registro) = 27 then subquery.REALIZADOS else 0 end) as dia_27,
-        SUM(case when extract(day from subquery.dt_registro) = 28 then subquery.REALIZADOS else 0 end) as dia_28,
-        SUM(case when extract(day from subquery.dt_registro) = 29 then subquery.REALIZADOS else 0 end) as dia_29,
-        SUM(case when extract(day from subquery.dt_registro) = 30 then subquery.REALIZADOS else 0 end) as dia_30,
-        SUM(case when extract(day from subquery.dt_registro) = 31 then subquery.REALIZADOS else 0 end) as dia_31,
-        SUM(subquery.REALIZADOS) as total_geral
+            subquery."CNES",
+            subquery."ESTABELECIMENTO", 
+            subquery."NOME EQUIPE" as "EQUIPE",
+            subquery."TIPO DE EQUIPE",
+            subquery."INE",
+            subquery."CBO",
+            subquery."DESCRIÇÃO DO CBO",
+            subquery."PROFISSIONAL",
+            subquery."TIPO DE REGISTRO",
+            subquery."TIPO DE FICHA",
+            subquery."TIPO ATENDIMENTO" as "TIPO DE ATENDIMENTO",
+            subquery."TIPO DE CONSULTA",
+            subquery."LOCAL DE ATENDIMENTO",
+            TO_CHAR(EXTRACT(YEAR FROM subquery.dt_registro), '9999') AS "ANO",
+            TO_CHAR(EXTRACT(MONTH FROM subquery.dt_registro), '99') AS "MÊS",
+        SUM(case when extract(day from subquery.dt_registro) = 1 then subquery.REALIZADOS else 0 end) as "DIA 01",
+        SUM(case when extract(day from subquery.dt_registro) = 2 then subquery.REALIZADOS else 0 end) as "DIA 02",
+        SUM(case when extract(day from subquery.dt_registro) = 3 then subquery.REALIZADOS else 0 end) as "DIA 03",
+        SUM(case when extract(day from subquery.dt_registro) = 4 then subquery.REALIZADOS else 0 end) as "DIA 04",
+        SUM(case when extract(day from subquery.dt_registro) = 5 then subquery.REALIZADOS else 0 end) as "DIA 05",
+        SUM(case when extract(day from subquery.dt_registro) = 6 then subquery.REALIZADOS else 0 end) as "DIA 06",
+        SUM(case when extract(day from subquery.dt_registro) = 7 then subquery.REALIZADOS else 0 end) as "DIA 07",
+        SUM(case when extract(day from subquery.dt_registro) = 8 then subquery.REALIZADOS else 0 end) as "DIA 08",
+        SUM(case when extract(day from subquery.dt_registro) = 9 then subquery.REALIZADOS else 0 end) as "DIA 09",
+        SUM(case when extract(day from subquery.dt_registro) = 10 then subquery.REALIZADOS else 0 end) as "DIA 10",
+        SUM(case when extract(day from subquery.dt_registro) = 11 then subquery.REALIZADOS else 0 end) as "DIA 11",
+        SUM(case when extract(day from subquery.dt_registro) = 12 then subquery.REALIZADOS else 0 end) as "DIA 12",
+        SUM(case when extract(day from subquery.dt_registro) = 13 then subquery.REALIZADOS else 0 end) as "DIA 13",
+        SUM(case when extract(day from subquery.dt_registro) = 14 then subquery.REALIZADOS else 0 end) as "DIA 14",
+        SUM(case when extract(day from subquery.dt_registro) = 15 then subquery.REALIZADOS else 0 end) as "DIA 15",
+        SUM(case when extract(day from subquery.dt_registro) = 16 then subquery.REALIZADOS else 0 end) as "DIA 16",
+        SUM(case when extract(day from subquery.dt_registro) = 17 then subquery.REALIZADOS else 0 end) as "DIA 17",
+        SUM(case when extract(day from subquery.dt_registro) = 18 then subquery.REALIZADOS else 0 end) as "DIA 18",
+        SUM(case when extract(day from subquery.dt_registro) = 19 then subquery.REALIZADOS else 0 end) as "DIA 19",
+        SUM(case when extract(day from subquery.dt_registro) = 20 then subquery.REALIZADOS else 0 end) as "DIA 20",
+        SUM(case when extract(day from subquery.dt_registro) = 21 then subquery.REALIZADOS else 0 end) as "DIA 21",
+        SUM(case when extract(day from subquery.dt_registro) = 22 then subquery.REALIZADOS else 0 end) as "DIA 22",
+        SUM(case when extract(day from subquery.dt_registro) = 23 then subquery.REALIZADOS else 0 end) as "DIA 23",
+        SUM(case when extract(day from subquery.dt_registro) = 24 then subquery.REALIZADOS else 0 end) as "DIA 24",
+        SUM(case when extract(day from subquery.dt_registro) = 25 then subquery.REALIZADOS else 0 end) as "DIA 25",
+        SUM(case when extract(day from subquery.dt_registro) = 26 then subquery.REALIZADOS else 0 end) as "DIA 26",
+        SUM(case when extract(day from subquery.dt_registro) = 27 then subquery.REALIZADOS else 0 end) as "DIA 27",
+        SUM(case when extract(day from subquery.dt_registro) = 28 then subquery.REALIZADOS else 0 end) as "DIA 28",
+        SUM(case when extract(day from subquery.dt_registro) = 29 then subquery.REALIZADOS else 0 end) as "DIA 29",
+        SUM(case when extract(day from subquery.dt_registro) = 30 then subquery.REALIZADOS else 0 end) as "DIA 30",
+        SUM(case when extract(day from subquery.dt_registro) = 31 then subquery.REALIZADOS else 0 end) as "DIA 31",
+        SUM(subquery.REALIZADOS) as "TOTAL GERAL"
         FROM
         (Select
             Distinct 
@@ -181,16 +181,17 @@ export class SQL_PROD_UBS{
             left JOIN tb_dim_profissional tdp ON tfp.co_dim_profissional = tdp.co_seq_dim_profissional
             left JOIN tb_dim_equipe tde ON tfp.co_dim_equipe = tde.co_seq_dim_equipe
             left join tb_equipe te on te.nu_ine = tde.nu_ine
+            left join tb_unidade_saude tus on tus.co_seq_unidade_saude = te.co_unidade_saude 
             left join tb_tipo_equipe tte on te.tp_equipe = tte.co_seq_tipo_equipe
             left JOIN tb_dim_unidade_saude tdus ON tfp.co_dim_unidade_saude = tdus.co_seq_dim_unidade_saude
             left JOIN tb_dim_cbo tdc ON tfp.co_dim_cbo = tdc.co_seq_dim_cbo
             left JOIN tb_dim_tempo tdt ON tfp.co_dim_tempo = tdt.co_seq_dim_tempo
             left join tb_dim_tipo_ficha tdtf on tdtf.co_seq_dim_tipo_ficha = tfp.co_dim_tipo_ficha
-            left join tb_fat_proced_atend_proced tfpap on tfpap.co_fat_procedimento = tfp.co_seq_fat_procedimento
-            left join tb_dim_local_atendimento tdla on tdla.co_seq_dim_local_atendimento = tfpap.co_dim_local_atendimento
-            left join tb_dim_procedimento tdproced on tdproced.co_seq_dim_procedimento = tfpap.co_dim_procedimento 
-        WHERE
-            tdproced.co_proced not in (select tp.co_proced from tb_proced tp where tp.no_proced like '%CONSULTA%')
+            left join tb_fat_proced_atend tfpa on tfpa.co_fat_procedimento = tfp.co_seq_fat_procedimento
+            left join tb_dim_local_atendimento tdla on tdla.co_seq_dim_local_atendimento = tfpa.co_dim_local_atendimento
+        where
+        	tus.nu_cnes = tdus.nu_cnes
+            and tfpa.ds_filtro_procedimento not in ('0301010030', '0301', '030101')
         group by
             "CNES",
             "ESTABELECIMENTO",
@@ -327,9 +328,9 @@ export class SQL_PROD_UBS{
             subquery."TIPO ATENDIMENTO",
             subquery."TIPO DE CONSULTA",
             subquery."LOCAL DE ATENDIMENTO",
-            nu_ano,
-            nu_mes
-        order by nu_ano
+            "ANO",
+            "MÊS"
+        order by "ANO"
     `
 
 

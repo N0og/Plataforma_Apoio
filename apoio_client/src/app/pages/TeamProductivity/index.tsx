@@ -6,7 +6,8 @@ import {
     DynamicFilter,
     SimpleFilter,
     BackButton,
-    SearchButton
+    SearchButton,
+    DataTable
 } from '../../components'
 
 //Hooks
@@ -15,10 +16,12 @@ import {
     useStateController,
     useDownload,
     useMountOrder,
-    useGetInstallations,
     useGetTeams,
     useGetUnits,
-    useAlertMessageEvent
+    useAlertMessageEvent,
+    useNotifyEvent,
+    useGetData,
+    useGetInstallations
 } from '../../hooks';
 //
 import {
@@ -39,7 +42,7 @@ import {
 } from '../../styles';
 
 //Constants
-import { DATABASES_DEFAULT } from '../../constants';
+import { Alerts, DATABASES_DEFAULT } from '../../constants';
 
 //Redux
 import {
@@ -48,6 +51,8 @@ import {
 } from 'react-redux';
 //
 import { rootReducer } from '../../../redux/root-reducer';
+import { CITY } from '../../constants/alertsEnum';
+import { useTratament } from '../../hooks/useTratament';
 //#endregion
 
 const useTypedSelector: TypedUseSelectorHook<rootReducer> = useSelector;
@@ -63,60 +68,69 @@ export const TeamProductivity = () => {
     const {
         clientsFilter,
         setClientFilter
-    } = useGetClients(toggleState);
+    } = useGetClients(toggleState)
     const {
         installationsFilter,
         setInstallationsFilter
     } = useGetInstallations(clientsFilter, toggleState)
     const {
-        UnitsFilter,
+        unitsFilter,
         setUnitsFilter
     } = useGetUnits(installationsFilter, toggleState)
     const {
         teamsFilter,
         setTeamsFilter
-    } = useGetTeams(UnitsFilter, toggleState)
+    } = useGetTeams(unitsFilter, toggleState)
 
     const [dataFilters, setDataFilters] = useState<Array<string>>([]);
     const [AlertMessage, setAlertMessage] = useState<JSX.Element | null>(null)
-    const [driverFilter, setDriverFilter] = useState<ISimpleFilterPartition>(DATABASES_DEFAULT)
+    const [driverFilter, _setDriverFilter] = useState<ISimpleFilterPartition>({ ...DATABASES_DEFAULT, 'eSUS': { ...DATABASES_DEFAULT.eSUS, condition: true } })
 
+    const [values, setValues] = useState({})
 
     const { OrderURL } = useMountOrder(
         {
             'origin': currentPage,
             'orders': clientsFilter,
-            'download': true,
             'params': {
-                'unit': UnitsFilter,
+                'unit': unitsFilter,
+                'installations': installationsFilter,
                 'team': teamsFilter
             },
             'driver': driverFilter
-        }, [clientsFilter, UnitsFilter, teamsFilter])
+        }, [clientsFilter, unitsFilter, teamsFilter])
 
     useEffect(() => {
         setAlertMessage(useAlertMessageEvent(control_states));
     }, [control_states])
 
-    const handleSearchAction = () => {
-        toggleAllFalse()
-        const mun = Object.entries(clientsFilter)
-            .filter(([_key, value]) => value.condition == true)
-        if (mun.length == 0) {
-            toggleState('municipio_state', true)
+    const handleSearchAction = (event: any) => {
+
+        let useHook = (event === 'download') ? useDownload : useGetData
+        const verified = useTratament({
+            no_empty: [
+                { filter: clientsFilter, enums: CITY }
+            ]
         }
-        else if (dataFilters.length > 0) {
-            useDownload(
+            , toggleAllFalse)
+
+        if (verified) {
+            useHook(
                 OrderURL,
                 {
                     data_inicial: dataFilters[0],
-                    data_final: dataFilters[1]
+                    data_final: dataFilters[1],    
+                    download: false
                 },
                 toggleState
             )
-        }
-        else {
-            toggleState('data_state', true)
+                .then(resp => {
+                    setValues(resp as {})
+                    useNotifyEvent(Alerts.SUCESS, 'success')
+                })
+                .catch(error => {
+                    useNotifyEvent(error.msg, 'error')
+                })
         }
     }
 
@@ -131,16 +145,16 @@ export const TeamProductivity = () => {
             </TitlePageContainer>
             <GroupFilterContainer>
                 <GroupFilter>
-                    <SimpleFilter name={"FONTE"} filters={driverFilter} changeFilter={setDriverFilter} deactivated={true} />
                     <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} />
-                    <DynamicFilter name={"INSTALAÇÃO"} filters={installationsFilter} changeFilter={setInstallationsFilter} />
-                    <DynamicFilter name={"UNIDADE"} filters={UnitsFilter} changeFilter={setUnitsFilter} />
+                    <DynamicFilter name={"INSTALAÇÕES"} filters={installationsFilter} changeFilter={setInstallationsFilter} />
+                    <DynamicFilter name={"UNIDADE"} filters={unitsFilter} changeFilter={setUnitsFilter} />
                     <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
                     <DateFilter changeFilter={setDataFilters} />
                 </GroupFilter>
-                    <SearchButton handleSearchAction = {handleSearchAction}/>
+                <SearchButton handleSearchAction={handleSearchAction} />
             </GroupFilterContainer>
             <ViewPageContainer>
+                <DataTable values={values} handleButton={handleSearchAction} handleProps={'download'} />
             </ViewPageContainer>
         </ReportContainer>
     )

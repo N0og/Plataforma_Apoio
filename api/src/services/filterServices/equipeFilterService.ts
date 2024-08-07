@@ -9,7 +9,6 @@ export default class equipeFilterService {
             return new Error("Falha na solicitação")
         }
 
-
         let equipes_response: any[] = []
 
         for (const unidade of order) {

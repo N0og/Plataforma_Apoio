@@ -11,19 +11,19 @@ router.get('/')
 
 //#region Relatórios
 
-router.get('/api/v1/reports/VisitasPrioritarias', new CheckDBTypeMiddleware().execute, new ReportController().handleVisitaGrupoPrioritario)
+router.get('/api/v1/reports/PRIORITYVISITS', new CheckDBTypeMiddleware().execute, new ReportController().handleVisitaGrupoPrioritario)
 
 router.get('/api/v1/reports/ProdutividadeACS/VisitasPorDia', new CheckDBTypeMiddleware().execute, new ReportController().handleProdutividadeACS_PorDia)
 
 router.get('/api/v1/reports/ProdutividadeACS/Consolidado', new CheckDBTypeMiddleware().execute, new ReportController().handleProdutividadeACS_Consolidado)
 
-router.get('/api/v1/reports/ProdutividadeUBS', new CheckDBTypeMiddleware().execute, new ReportController().handleProdutividadeUBS_Consolidado)
+router.get('/api/v1/reports/TEAM%20PRODUCTIVITY', new CheckDBTypeMiddleware().execute, new ReportController().handleProdutividadeUBS_Consolidado)
 
-router.get('/api/v1/reports/VacinasPEC', new CheckDBTypeMiddleware().execute, new ReportController().handleVacinasPEC)
+router.get('/api/v1/reports/VACCINES', new CheckDBTypeMiddleware().execute, new ReportController().handleVacinasPEC)
 
-router.get('/api/v1/reports/Completude', new CheckDBTypeMiddleware().execute, new ReportController().handleCompletude)
+router.get('/api/v1/reports/COMPLETENESS', new CheckDBTypeMiddleware().execute, new ReportController().handleCompletude)
 
-router.get('/api/v1/reports/DuplicadosPEC', new CheckDBTypeMiddleware().execute, new ReportController().handleDuplicadosPEC)
+router.get('/api/v1/reports/DUPLICATES', new CheckDBTypeMiddleware().execute, new ReportController().handleDuplicadosPEC)
 
 router.get('/api/v1/reports/AcessosEAS', new CheckDBTypeMiddleware().execute, new ReportController().handleAcessosRetaguarda)
 
@@ -42,6 +42,7 @@ router.get('/api/v1/filters/clients', new FiltersController().handlerClientsFilt
 router.get('/api/v1/filters/instalacoes', new FiltersController().handlerInstalacoesFilter)
 router.get('/api/v1/filters/unidades', new FiltersController().handlerUnidadesFilter)
 router.get('/api/v1/filters/equipes', new FiltersController().handlerEquipesFilter)
+router.get('/api/v1/filters/imunos', new FiltersController().handlerImunosFilter)
 
 //#endregion
 

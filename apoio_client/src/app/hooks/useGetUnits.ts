@@ -4,14 +4,14 @@ import { IControllersStateType } from "../interfaces/IControllerStates"
 import { IDynamicFilterPartition } from "../interfaces/IFilters";
 import { useNotifyEvent } from "./useNotifyEvent";
 
-export const useGetUnits = (installationsFilter: IDynamicFilterPartition, toggleState: (key: keyof IControllersStateType, state: boolean) => void) => {
+export const useGetUnits = (installationsFilters: IDynamicFilterPartition, toggleState: (key: keyof IControllersStateType, state: boolean) => void) => {
 
-    const [UnitsFilter, setUnitsFilter] = useState<IDynamicFilterPartition>({});
+    const [unitsFilter, setUnitsFilter] = useState<IDynamicFilterPartition>({});
 
     useEffect(() => {
-        if (Object.keys(installationsFilter).length > 0) {
+        if (Object.keys(installationsFilters).length > 0) {
             useGetData(
-                `${process.env.VITE_API_URL}/api/v1/filters/unidades?dbtype=psql${Object.entries(installationsFilter)
+                `${process.env.VITE_API_URL}/api/v1/filters/unidades?dbtype=psql${Object.entries(installationsFilters)
                     .flatMap(([_containerKey, containerValue]) =>
                         Object.entries(containerValue)
                             .filter(([_key, value]) => value.condition === true)
@@ -53,11 +53,11 @@ export const useGetUnits = (installationsFilter: IDynamicFilterPartition, toggle
 
             }))
                 .catch((error) => {
-                    useNotifyEvent(error.msg, 1000, 'error')
+                    useNotifyEvent(error.msg, 'error')
                 })
         }
         else setUnitsFilter({})
-    }, [installationsFilter])
+    }, [installationsFilters])
 
-    return { UnitsFilter, setUnitsFilter }
+    return { unitsFilter, setUnitsFilter }
 }

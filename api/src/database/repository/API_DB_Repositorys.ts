@@ -8,6 +8,7 @@ import { API_DB_DataSource } from "../init";
 import { Processamento } from "../entities/Processamento";
 import { Equipe } from "../entities/Equipes";
 import { Unidade } from "../entities/Unidades";
+import { Imunobiologico } from "../entities/Imunobiologicos";
 
 
 export const instalacaoESUSRepository = API_DB_DataSource.getRepository(Instalacao_eSUS)
@@ -28,3 +29,4 @@ export const ConneSUSRepository = API_DB_DataSource.getRepository(ConneSUS)
 
 export const ConnEASRepository = API_DB_DataSource.getRepository(ConnEAS)
 
+export const ImunoseSUSRepository = API_DB_DataSource.getRepository(Imunobiologico)

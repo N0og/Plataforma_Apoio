@@ -7,6 +7,7 @@ export interface IReportControllerRequest extends Request{
     order?: string[] | ParsedQs[]
     download?: boolean;
     organize?: boolean;
+    installations?: string[] | ParsedQs[]
 }
 
 export interface IOrderError{

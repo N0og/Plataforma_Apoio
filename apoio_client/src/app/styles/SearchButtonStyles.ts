@@ -5,7 +5,7 @@ export const SearchButtonContainer = styled.div`
     justify-content: center;
     align-items: center;
     width: 10vw;
-    height: 1.5vw;
+    height: 1.6vw;
 
     button{
         width: 100%;
@@ -16,28 +16,14 @@ export const SearchButtonContainer = styled.div`
         color: var(--cor-light);
         box-shadow: 0 2px 5px var(--cor-shadow-mid);
         transition: 0.1s;
-        font-size:0.7vw;
+        font-size:0.8vw;
         cursor: pointer;
     }
 
     button:hover{
-        width: 100%;
-        height: 105%;
-        border-radius: 0.5vw;
         border: none;
         background-color: var(--cor-rose);
-        color: var(--cor-light);
-        box-shadow: 0 1px 3px var(--cor_black);
-        cursor: pointer;
+        color: var(--cor-rose-mid);
     }
 
-    button:active{
-        width: 98%;
-        border-radius: 0.5vw;
-        border: none;
-        background-color: var(--cor-rose-mid);
-        color: var(--cor-light);
-        box-shadow: 0 1px 3px var(--cor_black);
-        cursor: pointer;
-    }
 `

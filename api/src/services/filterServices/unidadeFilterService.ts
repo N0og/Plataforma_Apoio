@@ -1,4 +1,4 @@
-import { instalacaoESUSRepository, unidadeRepository } from "../../database/repository/API_DB_Repositorys";
+import { ConneSUSRepository, instalacaoESUSRepository, municipioRepository, unidadeRepository } from "../../database/repository/API_DB_Repositorys";
 
 export default class unidadeoFilterService {
     async execute(params: any) {
@@ -10,13 +10,20 @@ export default class unidadeoFilterService {
 
         let instalacao_response: any[] = []
 
-        for (const instalacao of order) {
+        for (const installation of order) {
 
-            const inst = await instalacaoESUSRepository.findOneBy({ id_instalacao_esus: instalacao })
+            const inst = await instalacaoESUSRepository.findOne({
+                where:{ id_instalacao_esus: installation },
+                relations: ['municipio']
+            })
+
+            console.log(inst)
+
+            const mun = await municipioRepository.findOneBy(inst!.municipio)
 
             const unidades_esus = await unidadeRepository.createQueryBuilder("unidade")
                 .leftJoinAndSelect("unidade.instalacao", "instalacao")
-                .where("instalacao.id_instalacao_esus = :id_instalacao", { id_instalacao: instalacao })
+                .where("instalacao.id_instalacao_esus = :id_instalacao", { id_instalacao: installation })
                 .getMany();
 
             if (unidades_esus && inst) {
@@ -24,7 +31,7 @@ export default class unidadeoFilterService {
                     return { [unidade.no_estabelecimento]: { value: unidade.nu_cnes, condition: false } }
                 })
 
-                instalacao_response.push({ [inst.no_instalacao]: modifiedUnidade.reduce((obj1, obj2)=>({...obj1, ...obj2}), {}) })
+                instalacao_response.push({ [`${mun!.no_municipio} - ${inst.no_instalacao}`]: modifiedUnidade.reduce((obj1, obj2)=>({...obj1, ...obj2}), {}) })
             }
 
 

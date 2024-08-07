@@ -22,7 +22,7 @@ export class ConfigPostgresDatabase implements PGConfig, DatabaseConfig {
     database: string = "esus";
     password: string;
     port: number;
-
+    connectionTimeoutMillis: 2000;
     changeConfig(config: Partial<DatabaseConfig>) {
         if (
             this.host !== config.host || 

@@ -34,14 +34,12 @@ export const DateFilter: React.FC<{
   }, [startDate, endDate])
 
   const changeData = (date: Date | null, setDate: (date: any) => any) => {
-    if (endDate &&
-      endDate > date! &&
-      date! <= new Date()) {
+    if (date! <= new Date()) {
       setDate(date)
     }
 
     else {
-      useNotifyEvent('Data Inválida', 1000, 'error')
+      useNotifyEvent('Data Inválida', 'error', 1000)
     }
   }
 

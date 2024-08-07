@@ -3,7 +3,7 @@ export enum PagesActions {
     BACKWARD = "page/backward"
 }
 
-export enum AlertsActions{
+export enum AlertsActions {
     SUCESS = "alerts/sucess",
     FAILED = "alerts/failed",
     WAIT = "alerts/wait",

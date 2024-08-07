@@ -6,7 +6,8 @@ import {
     DynamicFilter,
     SimpleFilter,
     BackButton,
-    SearchButton
+    SearchButton,
+    DataTable
 } from '../../components'
 
 //Hooks
@@ -18,7 +19,9 @@ import {
     useAlertMessageEvent,
     useGetInstallations,
     useGetUnits,
-    useGetTeams
+    useGetTeams,
+    useGetData,
+    useNotifyEvent
 } from '../../hooks';
 //
 import {
@@ -41,7 +44,10 @@ import {
 //Constants
 import {
     PRIORITY_VISITS_DEFAULT,
-    DATABASES_DEFAULT
+    DATABASES_DEFAULT,
+    CONDITION,
+    CITY,
+    Alerts
 } from '../../constants';
 
 //Redux
@@ -51,6 +57,7 @@ import {
 } from 'react-redux';
 //
 import { rootReducer } from '../../../redux/root-reducer';
+import { useTratament } from '../../hooks/useTratament';
 //#endregion
 
 const useTypedSelector: TypedUseSelectorHook<rootReducer> = useSelector;
@@ -72,64 +79,64 @@ export const PriorityVisits = () => {
         setInstallationsFilter
     } = useGetInstallations(clientsFilter, toggleState)
     const {
-        UnitsFilter,
+        unitsFilter,
         setUnitsFilter
     } = useGetUnits(installationsFilter, toggleState)
     const {
         teamsFilter,
         setTeamsFilter
-    } = useGetTeams(UnitsFilter, toggleState)
+    } = useGetTeams(unitsFilter, toggleState)
 
     const [dataFilters, setDataFilters] = useState<Array<string>>([]);
     const [condicoesFilter, setCondicoesFilter] = useState<ISimpleFilterPartition>(PRIORITY_VISITS_DEFAULT)
     const [AlertMessage, setAlertMessage] = useState<JSX.Element | null>(null)
     const [driverFilter, setDriverFilter] = useState<ISimpleFilterPartition>(DATABASES_DEFAULT)
 
+    const [values, setValues] = useState({})
+
     const { OrderURL } = useMountOrder(
         {
             'origin': currentPage,
             'orders': clientsFilter,
-            'download': true,
             'params': {
-                'unit': UnitsFilter,
+                'unit': unitsFilter,
+                'installations': installationsFilter,
                 'team': teamsFilter
             },
             'driver': driverFilter
-        }, [clientsFilter, UnitsFilter, teamsFilter])
+        }, [clientsFilter, unitsFilter, teamsFilter])
 
     useEffect(() => {
         setAlertMessage(useAlertMessageEvent(control_states));
     }, [control_states])
 
-    const handleSearchAction = () => {
-        toggleAllFalse()
-        const mun = Object.entries(clientsFilter)
-            .filter(([_key, value]) => value.condition == true)
-        const cond = Object.entries(condicoesFilter)
-            .filter(([_key, value]) => value.condition == true)
-            .map(item => {
-                return { [item[1].value]: item[1].condition }
-            })
-            .reduce((ob1, ob2) => { return ({ ...ob1, ...ob2 }) }, {})
-
-        if (Object.keys(cond).length === 0) toggleState('condicoes_state', true)
-
-        else if (mun.length == 0) {
-            toggleState('municipio_state', true)
+    const handleSearchAction = (event: any) => {
+        let useHook = (event === 'download') ? useDownload : useGetData
+        const verified = useTratament({
+            no_empty: [
+                { filter: clientsFilter, enums: CITY },
+                { filter: condicoesFilter, enums: CONDITION }
+            ]
         }
-        else if (dataFilters.length > 0) {
-            useDownload(
+            , toggleAllFalse)
+
+        if (verified) {
+            useHook(
                 OrderURL,
                 {
                     data_inicial: dataFilters[0],
                     data_final: dataFilters[1],
-                    ...cond
+                    download: false
                 },
                 toggleState
             )
-        }
-        else {
-            toggleState('data_state', true)
+                .then(resp => {
+                    setValues(resp as {})
+                    useNotifyEvent(Alerts.SUCESS, 'success')
+                })
+                .catch(error => {
+                    useNotifyEvent(error.msg, 'error')
+                })
         }
     }
 
@@ -147,15 +154,19 @@ export const PriorityVisits = () => {
                     <SimpleFilter name={"FONTE"} filters={driverFilter} changeFilter={setDriverFilter} deactivated={true} />
                     <SimpleFilter name={"CONDIÇÕES"} filters={condicoesFilter} changeFilter={setCondicoesFilter} />
                     <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} />
-                    <DynamicFilter name={"INSTALAÇÃO"} filters={installationsFilter} changeFilter={setInstallationsFilter} />
-                    <DynamicFilter name={"UNIDADE"} filters={UnitsFilter} changeFilter={setUnitsFilter} />
-                    <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
+                    {driverFilter.eSUS.condition === true && driverFilter.AtendSaúde.condition === false ? (
+                        <>
+                        <DynamicFilter name={"INSTALAÇÕES"} filters={installationsFilter} changeFilter={setInstallationsFilter} />
+                        <DynamicFilter name={"UNIDADE"} filters={unitsFilter} changeFilter={setUnitsFilter} />
+                        <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
+                        </>
+                    ) : null}
                     <DateFilter changeFilter={setDataFilters} />
                 </GroupFilter>
                 <SearchButton handleSearchAction={handleSearchAction} />
             </GroupFilterContainer>
             <ViewPageContainer>
-
+                <DataTable values={values} handleButton={handleSearchAction} handleProps={'download'} />
             </ViewPageContainer>
         </ReportContainer>
     )

@@ -5,7 +5,8 @@ import {
     DynamicFilter,
     SimpleFilter,
     BackButton,
-    SearchButton
+    SearchButton,
+    DataTable
 } from '../../components';
 
 //Hooks
@@ -17,7 +18,10 @@ import {
     useGetInstallations,
     useGetUnits,
     useGetTeams,
-    useAlertMessageEvent
+    useAlertMessageEvent,
+    useGetData,
+    useNotifyEvent,
+    useTratament
 } from '../../hooks';
 //
 import {
@@ -46,7 +50,7 @@ import {
 import { rootReducer } from '../../../redux/root-reducer';
 
 //Constants
-import { DATABASES_DEFAULT } from '../../constants';
+import { Alerts, CITY, DATABASES_DEFAULT, DBFILTER } from '../../constants';
 //#endregion
 
 const useTypedSelector: TypedUseSelectorHook<rootReducer> = useSelector;
@@ -70,54 +74,63 @@ export const Completeness = () => {
     } = useGetInstallations(clientsFilter, toggleState)
 
     const {
-        UnitsFilter,
+        unitsFilter,
         setUnitsFilter
     } = useGetUnits(installationsFilter, toggleState)
     const {
         teamsFilter,
         setTeamsFilter
-    } = useGetTeams(UnitsFilter, toggleState)
+    } = useGetTeams(unitsFilter, toggleState)
 
     const [driverFilter, setDriverFilter] = useState<ISimpleFilterPartition>(DATABASES_DEFAULT)
     const [AlertMessage, setAlertMessage] = useState<JSX.Element | null>(null)
+
+    const [values, setValues] = useState({})
 
     const { OrderURL } = useMountOrder(
         {
             'origin': currentPage,
             'orders': clientsFilter,
-            'download': true,
             'params': {
-                'unit': UnitsFilter,
+                'unit': unitsFilter,
+                'installations': installationsFilter,
                 'team': teamsFilter
             },
             'driver': driverFilter
-        }, [clientsFilter, UnitsFilter, teamsFilter])
+        }, [clientsFilter, unitsFilter, teamsFilter])
 
     useEffect(() => {
         setAlertMessage(useAlertMessageEvent(control_states));
     }, [control_states])
 
-    const handleSearchAction = () => {
-        toggleAllFalse()
+    const handleSearchAction = (event: any) => {
+        let useHook = (event === 'download') ? useDownload : useGetData
+        const verified = useTratament({
+            no_empty: [
+                { filter: clientsFilter, enums: CITY }
+            ],
+            only_one: [
+                { filter: driverFilter, enums: DBFILTER }
+            ]
+        }
+            , toggleAllFalse)
 
-        const mun = Object.entries(clientsFilter)
-            .filter(([_key, value]) => value.condition == true)
-
-        const drivers = Object.entries(driverFilter)
-            .filter(([_key, value]) => value.condition === true)
-            .map(([_key, value]) => value.dbtype);
-
-        if (drivers.length === 0) { toggleState('driver_state_less', true) }
-
-        else if (drivers.length > 1) { toggleState('driver_state_more', true) }
-
-        else if (mun.length == 0) { toggleState('municipio_state', true) }
-
-        else useDownload(
-            OrderURL,
-            {},
-            toggleState
-        )
+        if (verified) {
+            useHook(
+                OrderURL,
+                {
+                    download: false
+                },
+                toggleState
+            )
+                .then(resp => {
+                    setValues(resp as {})
+                    useNotifyEvent(Alerts.SUCESS, 'success')
+                })
+                .catch(error => {
+                    useNotifyEvent(error.msg, 'error')
+                })
+        }
     }
     return (
         <ReportContainer>
@@ -132,14 +145,18 @@ export const Completeness = () => {
                 <GroupFilter>
                     <SimpleFilter name={"FONTE"} filters={driverFilter} changeFilter={setDriverFilter} />
                     <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} />
-                    <DynamicFilter name={"INSTALAÇÃO"} filters={installationsFilter} changeFilter={setInstallationsFilter} />
-                    <DynamicFilter name={"UNIDADE"} filters={UnitsFilter} changeFilter={setUnitsFilter} />
-                    <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
+                    {driverFilter.eSUS.condition === true && driverFilter.AtendSaúde.condition === false ? (
+                        <>
+                        <DynamicFilter name={"INSTALAÇÕES"} filters={installationsFilter} changeFilter={setInstallationsFilter} />
+                        <DynamicFilter name={"UNIDADE"} filters={unitsFilter} changeFilter={setUnitsFilter} />
+                        <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
+                        </>
+                    ) : null}
                 </GroupFilter>
-                <SearchButton handleSearchAction={handleSearchAction}/>
+                <SearchButton handleSearchAction={handleSearchAction} />
             </GroupFilterContainer>
             <ViewPageContainer>
-
+                <DataTable values={values} handleButton={handleSearchAction} handleProps={'download'} />
             </ViewPageContainer>
         </ReportContainer>
     )

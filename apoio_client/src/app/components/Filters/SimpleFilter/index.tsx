@@ -87,7 +87,7 @@ export const SimpleFilter: React.FC<{
     }, []);
 
     useEffect(() => {
-      if (isOpen && Object.keys(filters).length == 0) useNotifyEvent('Falha ao Obter Municípios.', 1000, 'error')
+      if (isOpen && Object.keys(filters).length == 0) useNotifyEvent('Falha ao Obter Municípios.', 'error', 1000)
     }, [isOpen])
 
     return (

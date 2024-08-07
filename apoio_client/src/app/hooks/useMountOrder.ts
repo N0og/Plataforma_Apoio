@@ -6,8 +6,7 @@ interface IConfigOrder {
   origin: Pages,
   orders: ISimpleFilterPartition;
   driver: ISimpleFilterPartition;
-  params: {[key: string]: IDynamicFilterPartition | ISimpleFilterPartition};
-  download: boolean
+  params: { [key: string]: IDynamicFilterPartition | ISimpleFilterPartition };
 }
 
 const isSimpleFilterPartition = (obj: any) => {
@@ -21,21 +20,23 @@ export const useMountOrder = (config: IConfigOrder, dependencys: React.Dependenc
   const [OrderURL, setOrderParam] = useState<string>("");
 
   const getDriver = (sources: ISimpleFilterPartition): Databases | undefined => {
+
     for (let key in sources) {
       if (sources[key].condition === true) {
-        return sources[key].dbtype;
+        return sources[key].value;
       }
     }
     return undefined;
   };
 
   useEffect(() => {
-    let URL = `${process.env.VITE_API_URL}/api/v1/reports/${config.origin}?dbtype=${getDriver(config.driver)}&download=${config.download}${Object.entries(config.orders)
+    let URL = `${process.env.VITE_API_URL}/api/v1/reports/${config.origin}?dbtype=${getDriver(config.driver)}${Object.entries(config.orders)
       .filter(([_key, value]) => value.condition === true)
       .map(([key, _value]) => `&order=${key.replace(/ /g, "%20")}`)
       .join('')}`
-    
-    if (Object.keys(config.params).length > 0){
+
+    if (Object.keys(config.params).length > 0) {
+
       Object.entries(config.params).forEach(([FilterTitle, FilterObject]) => {
         if (isSimpleFilterPartition(FilterObject)) {
           URL += Object.entries(FilterObject)
@@ -52,8 +53,6 @@ export const useMountOrder = (config: IConfigOrder, dependencys: React.Dependenc
         }
       });
     }
-    
-
     console.log(URL)
     setOrderParam(URL)
   }, dependencys)

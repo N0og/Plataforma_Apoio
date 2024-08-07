@@ -1,4 +1,4 @@
-import { equipeRepository, instalacaoESUSRepository, processamentoRepository, unidadeRepository } from "../../database/repository/API_DB_Repositorys"
+import { equipeRepository, ImunoseSUSRepository, instalacaoESUSRepository, processamentoRepository, unidadeRepository } from "../../database/repository/API_DB_Repositorys"
 import DynamicParameters from "../../utils/reports/DynamicParameters"
 import { ConneSUS } from "../../database/entities/Conn"
 import { formatInTimeZone } from 'date-fns-tz'
@@ -90,6 +90,37 @@ export default class ProcessDBService {
                 })
             }
 
+        }
+        return true
+    }
+
+    async imunoProcess(DB_TYPE: string, DB_CLIENT: ConnectDBs) {
+
+        const DYNAMIC_PARAMETERS = new DynamicParameters()
+    
+        const query_equipes = `
+            select * from tb_imunobiologico ti 
+        `
+
+        const imunobiologicos = await ExecuteSQL(DB_TYPE, query_equipes, DYNAMIC_PARAMETERS, DB_CLIENT)
+
+        if (!imunobiologicos) {
+            return false
+        }
+        
+        for (const imuno of imunobiologicos) {
+
+            const IMUNO = await ImunoseSUSRepository.findOneBy({ co_imuno_esus: imuno.co_imunobiologico })
+
+            if (!IMUNO) {
+                const new_imuno = await ImunoseSUSRepository.insert({
+                    co_imuno_esus: imuno.co_imunobiologico,
+                    sg_imuno_esus: imuno.sg_imunibiologico,
+                    no_imuno_esus: imuno.no_imunobiologico
+                })
+
+                continue
+            }
         }
         return true
 

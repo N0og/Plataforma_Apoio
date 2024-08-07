@@ -3,6 +3,7 @@ import clientsFilterService from "../services/filterServices/clientFilterService
 import instalacaoFilterService from "../services/filterServices/instalacaoFilterService";
 import unidadeFilterService from "../services/filterServices/unidadeFilterService";
 import equipeFilterService from "../services/filterServices/equipeFilterService";
+import imunosFilterService from "../services/filterServices/imunosFilterService";
 
 export default class FiltersController {
     async executeHandler(req: Request, res: Response, serviceClass: any) {
@@ -10,7 +11,7 @@ export default class FiltersController {
         try {
             const serviceInstance = new serviceClass()
             const result = await serviceInstance.execute(req.query)
-
+            
             if (result instanceof Error) return res.status(400).json({ error: "Falha na solicitação." })
             
             return res.json(result)
@@ -39,5 +40,9 @@ export default class FiltersController {
 
     handlerEquipesFilter = async (req: Request, res: Response) => {
         this.executeHandler(req, res, equipeFilterService)
+    }
+
+    handlerImunosFilter = async (req: Request, res: Response) => {
+        this.executeHandler(req, res, imunosFilterService)
     }
 }

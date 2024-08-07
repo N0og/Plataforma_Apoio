@@ -29,7 +29,6 @@ export default class CheckDBTypeMiddleware {
         if (typeof req.query.download === 'undefined') req.download = false
 
         if (req.query.order === "") return res.status(400).json({ error: 'Nenhum pedido requisitado.'})
-
         else req.download = Boolean(req.query.download) ? req.query.download === "true" : false
 
         if (req.query.order!.toString().toLocaleLowerCase() == 'all'){
@@ -53,6 +52,10 @@ export default class CheckDBTypeMiddleware {
 
         else{
             req.order = Array.isArray(req.query.order) ? req.query.order : Array(req.query.order) as string[]
+        }
+
+        if (req.query.installations) {
+            req.installations =  Array.isArray(req.query.installations) ? req.query.installations : Array(req.query.installations) as string[]
         }
 
         next()

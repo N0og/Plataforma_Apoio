@@ -25,20 +25,17 @@ export default class ProdutividadeUBS_ConsolidadoQuery {
             DYNAMIC_PARAMETERS.Add('data_final', filtros_params.data_final);
         }
 
-        if (filtros_params.cnes != null) {
-            QUERY_FILTERS += 
-            `
-                and subquery."CNES" = :unidade
-            `
-            DYNAMIC_PARAMETERS.Add('unidade', filtros_params.cnes);
+
+        if (filtros_params.unit) {
+            const units = Array.isArray(filtros_params.unit) ? filtros_params.unit : Array(filtros_params.unit) as string[]
+            const formattedUnits = units.map(unit => `'${unit}'`);
+            QUERY_FILTERS += `AND (subquery."CNES" = ${formattedUnits.join(' or subquery."CNES" = ')})`;
         }
 
-        if (filtros_params.ine != null) {
-            QUERY_FILTERS += 
-            `
-                and subquery."INE" = :equipe
-            `
-            DYNAMIC_PARAMETERS.Add('equipe', filtros_params.ine);
+        if (filtros_params.team) {
+            const teams = Array.isArray(filtros_params.team) ? filtros_params.team : Array(filtros_params.team) as string[]
+            const formattedTeams = teams.map(team => `'${team}'`);
+            QUERY_FILTERS += `AND (subquery."INE" = ${formattedTeams.join(' or subquery."INE" = ')})`;
         }
 
         if (filtros_params.profissional != null) {

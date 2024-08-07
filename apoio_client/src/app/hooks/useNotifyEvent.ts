@@ -1,12 +1,12 @@
 import { toast, Flip, TypeOptions } from 'react-toastify'
 
-export const useNotifyEvent = (message: string, autoClose: number | undefined | false, type: TypeOptions) => {
+export const useNotifyEvent = (message: string, type: TypeOptions, autoClose?: number | undefined | false,) => {
     
     try{
         toast(message,{
-            type:'error',
+            type,
             position:"top-right",
-            autoClose,
+            autoClose: autoClose ? autoClose : 1000,
             hideProgressBar: true,
             closeOnClick: true,
             rtl:false,

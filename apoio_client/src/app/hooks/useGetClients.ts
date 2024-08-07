@@ -17,9 +17,8 @@ export const useGetClients = (toggleState:(key: keyof IControllersStateType, sta
             if (response) setClientFilter(response as {})
         }))
     .catch((error)=>{
-        useNotifyEvent(error.msg, 1000, 'error')
+        useNotifyEvent(error.msg, 'error')
     })
     }, [])
-
     return { clientsFilter, setClientFilter }
 }

@@ -1,51 +1,110 @@
+import { useEffect, useState } from 'react';
 import './style.css'
 
-import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRowsProp, GridToolbar } from '@mui/x-data-grid';
 
-    
+import { ptBR } from '@mui/x-data-grid/locales'
+import { ptBR as CorePtBR } from '@mui/material/locale';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-export const DataTable = () => {
 
-    const headers = ['NOME', 'CPF', 'CARTAO SUS', 'DATA DE NASCIMENTO', 'FAIXA ETARIA NA EXTRACAO', 'IDADE NA EXTRACAO', 'IMUNOBIOLOGICO', 'DOSE', 'ESTRATEGIA', 'DATA DE APLICACAO', 'IDADE NA APLICACAO', 'FAIXA ETARIA POR DATA DE APLICACAO', 'TIPO DE REGISTRO', 'TIPO DE FICHA', 'LOCAL DE ATENDIMENTO', 'PROFISSIONAL', 'CNS PROFISSIONAL', 'UNIDADE', 'CNES', 'INE', 'NOME EQUIPE', 'CIDADE', 'UF']
 
-    const rows: GridRowsProp = [
-        { id: 1, col1: "Hello", col2: "World"},
-        { id: 2, col1: "MUI X", col2: "is awesome" },
-        { id: 3, col1: "Material UI", col2: "is amazing" },
-        { id: 4, col1: "MUI", col2: "" },
-        { id: 5, col1: "Joy UI", col2: "is awesome" },
-        { id: 6, col1: "MUI Base", col2: "is amazing" },
-        { id: 7, col1: "Hello", col2: "World" },
-        { id: 8, col1: "ALo", col2:"Terezinha"},
-        { id: 7, col1: "Hello", col2: "World" },
-        { id: 8, col1: "ALo", col2:"Terezinha"},
-        { id: 7, col1: "Hello", col2: "World" },
-        { id: 8, col1: "ALo", col2:"Terezinha"},
-        { id: 7, col1: "Hello", col2: "World" },
-        { id: 8, col1: "ALo", col2:"Terezinha"}
-       
-      ];
-      
-      const columns = headers.map((header, index) => ({
-        field: `col${index + 1}`,
-        headerName: header,
-        width: 150,
-        headerAlign: "center",
-        hideable: true,
-        disableColumnMenu: true,
-        display: 'text'
-      } as GridColDef)) as GridColDef[];
-   
+const theme = createTheme(
+    {},
+    ptBR,
+    CorePtBR
+)
+
+export const DataTable: React.FC<{ 
+    values: { [key: string]: {}[] } 
+    handleButton:any,
+    handleProps:  string
+    }> = ({ values, handleButton, handleProps }) => {
+
+    const [rows, setRows] = useState<GridRowsProp>([])
+    const [columns, setCol] = useState<GridColDef[]>([])
+
+    const [_labelText, setText] = useState<string>('Aplique os Filtros Desejados Acima.')
+
+    useEffect(() => {
+
+
+
+        if (Object.keys(values).length > 0) {
+            if (Object.values(values)[0].length > 0) {
+                setCol(
+                    Object.entries(Object.values(Object.values(values)[0])[0]).map(([key, value]) => {
+
+                        let type, width;
+
+                        if (typeof value === 'string') {
+                            type = 'string'
+                            width = (key.length > value.length) ? (key.length * 10) : (value.length * 12)
+
+                            if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value)) type = 'date'
+                            if (typeof value === 'string' && !isNaN(Number(value))) type = 'number'
+                        }
+
+                        return {
+                            field: key,
+                            headerName: key,
+                            width,
+                            headerAlign: "center",
+                            hideable: true,
+                            disableColumnMenu: false,
+                            display: 'text',
+                            align: 'center',
+                            type,
+                            editable: true,
+                            headerClassName: 'DataGridHeader'
+                        } as GridColDef
+                    }) as GridColDef[]
+                )
+
+
+                setRows(
+                    Object.values(Object.values(values)[0])
+                        .map((value, index) => {
+                            let newValue: { [key: string]: any } = { ...value };
+                            for (const key in newValue) {
+                                if (typeof newValue[key] === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(newValue[key])) {
+                                    newValue[key] = new Date(newValue[key]);
+                                }
+                            }
+                            return { id: index, ...newValue };
+                        })
+                );
+            }
+            else {
+                setCol([])
+                setRows([])
+                setText("Sem Dados Para Estes Filtros...")
+            }
+        }
+
+    }, [values])
+
+
 
     return (
         <div className='table-container'>
-            
             <div className='table_view'>
-                <DataGrid rows={rows} columns={columns} autoPageSize={true} className='test'/>
+                <ThemeProvider theme={theme}>
+
+                    <DataGrid
+                        rows={rows}
+                        columns={columns}
+                        autoPageSize={true}
+                        className='DataGridContainer'
+                        showCellVerticalBorder={true}
+                        slots={{ toolbar: GridToolbar }}
+                    />
+
+                </ThemeProvider>
             </div>
             <div className='toolbar'>
                 <div className='buttonbar'>
-                <button className='export'><i className="fa-regular fa-file-excel"></i> EXPORT</button>
+                    <button className='export' onClick={()=>{handleButton(handleProps)}}><i className="fa-regular fa-file-excel"></i> EXPORT</button>
                 </div>
             </div>
         </div>

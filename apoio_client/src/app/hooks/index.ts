@@ -8,3 +8,5 @@ export { useGetInstallations } from "./useGetInstallations";
 export { useGetUnits } from "./useGetUnits";
 export { useGetTeams } from "./useGetTeams";
 export { useAlertMessageEvent } from "./useAlertMessageEvent";
+export { useGetVaccines } from "./useGetVaccines";
+export { useTratament } from "./useTratament";

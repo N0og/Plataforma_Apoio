@@ -41,16 +41,11 @@ export const FilterCounter = styled.div`
     justify-content: center;
     align-items: center;
     text-align: center;
-    position: absolute;
-    width: 1.0vw;
-    height: 1.0vw;
+    width: 0.8vw;
+    height: 0.8vw;
     border-radius: 50vw;
-    border: none;
-    background-color: transparent;
-    right: 10%;
-    top: 0%;
     z-index: 999;
-    font-size: 0.6vw;
+    font-size: 0.5vw;
     background-color: var(--cor-rose);
     color: var(--cor-light);
 `

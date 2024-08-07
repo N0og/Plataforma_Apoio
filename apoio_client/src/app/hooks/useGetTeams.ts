@@ -53,7 +53,7 @@ export const useGetTeams = (unitsFilter: IDynamicFilterPartition, toggleState: (
             
             }))
             .catch((error) => {
-                    useNotifyEvent(error.msg, 1000, 'error')
+                    useNotifyEvent(error.msg, 'error')
             })
         }
             else setTeamsFilter({})

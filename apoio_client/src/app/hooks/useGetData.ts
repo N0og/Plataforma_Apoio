@@ -18,9 +18,9 @@ export const useGetData = (url: string, params: object, setLoading: (key: keyof 
             resolve(response.data);
         })
         .catch(error => {
-            console.error();
+            console.error(error);
             setLoading('loading_state', false);
-            reject({msg:`Erro na requisição GET: ${error.message}`, error});
+            reject({msg:error.response.data.msg, error});
         });
     });
 };

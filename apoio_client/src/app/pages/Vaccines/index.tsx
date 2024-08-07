@@ -18,9 +18,12 @@ import {
     useDownload,
     useMountOrder,
     useGetUnits,
-    useGetInstallations,
     useGetTeams,
-    useAlertMessageEvent
+    useAlertMessageEvent,
+    useGetData,
+    useNotifyEvent,
+    useGetVaccines,
+    useGetInstallations
 } from '../../hooks';
 //
 import {
@@ -41,7 +44,7 @@ import {
 import { ISimpleFilterPartition } from '../../interfaces/IFilters';
 
 //Constants
-import { DATABASES_DEFAULT } from '../../constants';
+import { DATABASES_DEFAULT, Alerts, CITY } from '../../constants';
 
 //Redux
 import {
@@ -49,6 +52,7 @@ import {
     useSelector
 } from 'react-redux';
 import { rootReducer } from '../../../redux/root-reducer';
+import { useTratament } from '../../hooks/useTratament';
 //#endregion
 
 const useTypedSelector: TypedUseSelectorHook<rootReducer> = useSelector;
@@ -64,63 +68,75 @@ export const Vaccines = () => {
     const {
         clientsFilter,
         setClientFilter
-    } = useGetClients(toggleState);
+    } = useGetClients(toggleState)
     const {
         installationsFilter,
-        setInstallationsFilter: _setInstallationsFilter
+        setInstallationsFilter
     } = useGetInstallations(clientsFilter, toggleState)
     const {
-        UnitsFilter,
+        unitsFilter,
         setUnitsFilter
     } = useGetUnits(installationsFilter, toggleState)
     const {
         teamsFilter,
         setTeamsFilter
-    } = useGetTeams(UnitsFilter, toggleState)
-    
+    } = useGetTeams(unitsFilter, toggleState)
+    const {
+        vaccinesFilter,
+        setVaccinesFilter
+    } = useGetVaccines(toggleState)
+
 
     const [dataFilters, setDataFilters] = useState<Array<string>>([]);
     const [AlertMessage, setAlertMessage] = useState<JSX.Element | null>(null)
-    const [driverFilter, setDriverFilter] = useState<ISimpleFilterPartition>(DATABASES_DEFAULT)
+    const [driverFilter, _setDriverFilter] = useState<ISimpleFilterPartition>({ ...DATABASES_DEFAULT, 'eSUS': { ...DATABASES_DEFAULT.eSUS, condition: true } })
+
+    const [values, setValues] = useState({})
 
     const { OrderURL } = useMountOrder(
         {
             'origin': currentPage,
             'orders': clientsFilter,
-            'download': true,
             'params': {
-                'unit': UnitsFilter,
-                'team': teamsFilter
+                'unit': unitsFilter,
+                'installations': installationsFilter,
+                'team': teamsFilter,
+                'imunos': vaccinesFilter
             },
             'driver': driverFilter
-        }, [clientsFilter, UnitsFilter, teamsFilter])
+        }, [clientsFilter, vaccinesFilter, unitsFilter, teamsFilter])
 
     useEffect(() => {
         setAlertMessage(useAlertMessageEvent(control_states));
     }, [control_states])
 
-    const handleSearchAction = () => {
+    const handleSearchAction = (event: any) => {
 
-        toggleAllFalse()
-
-        const mun = Object.entries(clientsFilter)
-            .filter(([_key, value]) => value.condition == true)
-        if (mun.length == 0) {
-            toggleState('municipio_state', true)
+        let useHook = (event === 'download') ? useDownload : useGetData
+        const verified = useTratament({
+            no_empty: [
+                { filter: clientsFilter, enums: CITY }
+            ]
         }
+            , toggleAllFalse)
 
-        else if (dataFilters.length > 0) {
-            useDownload(
+        if (verified) {
+            useHook(
                 OrderURL,
                 {
                     data_inicial: dataFilters[0],
-                    data_final: dataFilters[1]
+                    data_final: dataFilters[1],    
+                    download: false
                 },
                 toggleState
             )
-        }
-        else {
-            toggleState('data_state', true)
+                .then(resp => {
+                    setValues(resp as {})
+                    useNotifyEvent(Alerts.SUCESS, 'success')
+                })
+                .catch(error => {
+                    useNotifyEvent(error.msg, 'error')
+                })
         }
     }
 
@@ -135,18 +151,18 @@ export const Vaccines = () => {
             </TitlePageContainer>
             <GroupFilterContainer>
                 <GroupFilter>
-                    <SimpleFilter name={"FONTE"} filters={driverFilter} changeFilter={setDriverFilter} deactivated={true} />
                     <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} />
-                    <DynamicFilter name={"UNIDADE"} filters={UnitsFilter} changeFilter={setUnitsFilter} />
+                    <DynamicFilter name={"INSTALAÇÕES"} filters={installationsFilter} changeFilter={setInstallationsFilter}/>
+                    <DynamicFilter name={"UNIDADE"} filters={unitsFilter} changeFilter={setUnitsFilter} />
                     <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
-                    <SimpleFilter name={"IMUNOBIOLÓGICO"} filters={clientsFilter} changeFilter={setClientFilter} />
+                    <DynamicFilter name={"IMUNOBIOLÓGICO"} filters={vaccinesFilter} changeFilter={setVaccinesFilter} />
                     <AgeFilter name={"IDADE"} />
                     <DateFilter changeFilter={setDataFilters} />
                 </GroupFilter>
                 <SearchButton handleSearchAction={handleSearchAction} />
             </GroupFilterContainer>
             <ViewPageContainer>
-                <DataTable />
+                <DataTable values={values} handleButton={handleSearchAction} handleProps={'download'} />
             </ViewPageContainer>
         </ReportContainer>
     )

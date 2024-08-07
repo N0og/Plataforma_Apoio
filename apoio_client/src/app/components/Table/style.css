@@ -10,7 +10,11 @@
     
 }
 
-.test{
+.DataGridHeader{
+    background-color: rgb(241, 241, 241);
+}
+
+.DataGridContainer{
     background-color: var(--cor-light);
 }
 
@@ -34,22 +38,24 @@
         .export {
             height: 100%;
             width: 100%;
-            font-size: 0.7vw;
-            background-color: #4CAF50;
+            font-size: 0.9vw;
+            background-color: #659867;
             color: white;
             border: none;
             cursor: pointer;
-            transition: 0.1s;
+            transition: 0.08s;
             font-weight: bold;
+            i{
+                font-size: 1vw;
+            }
         }
 
         .export:hover {
-            background-color: #45a049;
+            background-color: #68a96a;
         }
 
         .export:active {
-            font-size: 0.6vw;
-            background-color: #45a049;
+            background-color: #4e7950;
         }
     }
 

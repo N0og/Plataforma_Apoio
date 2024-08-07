@@ -1,3 +1,5 @@
+import { ParsedQs } from "qs";
+
 export interface IAtendimentosUBS {
 
     id_instalacao?: number;
@@ -57,6 +59,8 @@ export interface IAtendimentosUBS {
 export interface IFilterProdutividadeUBS{
     
     //Filtros Vínculo e Data.
+    unit: string[] | ParsedQs[]
+    team: string[] | ParsedQs[]
     data_inicial: Date;
     data_final: Date;
     cnes?: string;

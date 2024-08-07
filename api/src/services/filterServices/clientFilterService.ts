@@ -5,7 +5,7 @@ export default class clientsFilterService{
         const clients = await municipioRepository.find({order: {no_municipio: 'ASC'}})
         const modifiedClients = clients.map(client => {
             let mun = client.no_municipio
-            return {[mun]: false}
+            return {[mun]: {value: null, condition:false}}
         })
         return modifiedClients.reduce((obj1, obj2) => ({...obj1, ...obj2}), {})
     }

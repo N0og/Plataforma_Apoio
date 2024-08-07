@@ -1,7 +1,7 @@
 //#region Imports
 
 //Components
-import { DynamicFilter, SimpleFilter, BackButton, SearchButton } from '../../components';
+import { DynamicFilter, SimpleFilter, BackButton, SearchButton, DataTable } from '../../components';
 
 //Hooks
 import {
@@ -12,7 +12,9 @@ import {
     useAlertMessageEvent,
     useGetInstallations,
     useGetUnits,
-    useGetTeams
+    useGetTeams,
+    useNotifyEvent,
+    useGetData
 } from '../../hooks';
 //
 import {
@@ -41,7 +43,8 @@ import {
 import { rootReducer } from '../../../redux/root-reducer';
 
 //Constantes
-import { DATABASES_DEFAULT } from '../../constants';
+import { Alerts, CITY, DATABASES_DEFAULT } from '../../constants';
+import { useTratament } from '../../hooks/useTratament';
 //#endregion
 
 const useTypedSelector: TypedUseSelectorHook<rootReducer> = useSelector;
@@ -63,47 +66,60 @@ export const Duplicates = () => {
         setInstallationsFilter
     } = useGetInstallations(clientsFilter, toggleState)
     const {
-        UnitsFilter,
+        unitsFilter,
         setUnitsFilter
     } = useGetUnits(installationsFilter, toggleState)
     const {
         teamsFilter,
         setTeamsFilter
-    } = useGetTeams(UnitsFilter, toggleState)
+    } = useGetTeams(unitsFilter, toggleState)
 
     const [AlertMessage, setAlertMessage] = useState<JSX.Element | null>(null)
     const [driverFilter, setDriverFilter] = useState<ISimpleFilterPartition>(DATABASES_DEFAULT)
+
+    const [values, setValues] = useState({})
 
     const { OrderURL } = useMountOrder(
         {
             'origin': currentPage,
             'orders': clientsFilter,
-            'download': true,
             'params': {
-                'unit': UnitsFilter,
+                'unit': unitsFilter,
+                'installations': installationsFilter,
                 'team': teamsFilter
             },
             'driver': driverFilter
-        }, [clientsFilter, UnitsFilter, teamsFilter])
+        }, [clientsFilter, unitsFilter, teamsFilter])
 
     useEffect(() => {
         setAlertMessage(useAlertMessageEvent(control_states));
     }, [control_states])
 
-    const handleSearchAction = () => {
-        toggleAllFalse()
+    const handleSearchAction = (event: any) => {
+        let useHook = (event === 'download') ? useDownload : useGetData
+        const verified = useTratament({
+            no_empty: [
+                { filter: clientsFilter, enums: CITY }
+            ]
+        }
+            , toggleAllFalse)
 
-        const mun = Object.entries(clientsFilter)
-            .filter(([_key, value]) => value.condition == true)
-
-        if (mun.length == 0)
-            toggleState('municipio_state', true)
-
-        else useDownload(
-            OrderURL,
-            {},
-            toggleState
-        )
+        if (verified) {
+            useHook(
+                OrderURL,
+                {
+                    download: false
+                },
+                toggleState
+            )
+                .then(resp => {
+                    setValues(resp as {})
+                    useNotifyEvent(Alerts.SUCESS, 'success')
+                })
+                .catch(error => {
+                    useNotifyEvent(error.msg, 'error')
+                })
+        }
     }
     return (
         <ReportContainer>
@@ -119,14 +135,13 @@ export const Duplicates = () => {
                     <SimpleFilter name={"FONTE"} filters={driverFilter} changeFilter={setDriverFilter} deactivated={true} />
                     <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} />
                     <DynamicFilter name={"INSTALAÇÃO"} filters={installationsFilter} changeFilter={setInstallationsFilter} />
-                    <DynamicFilter name={"UNIDADE"} filters={UnitsFilter} changeFilter={setUnitsFilter} />
+                    <DynamicFilter name={"UNIDADE"} filters={unitsFilter} changeFilter={setUnitsFilter} />
                     <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
                 </GroupFilter>
                 <SearchButton handleSearchAction={handleSearchAction} />
             </GroupFilterContainer>
-
             <ViewPageContainer>
-
+                <DataTable values={values} handleButton={handleSearchAction} handleProps={'download'} />
             </ViewPageContainer>
         </ReportContainer>
     )

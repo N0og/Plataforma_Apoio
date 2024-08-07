@@ -19,9 +19,10 @@ import { VacinasPECService } from "../services/reportsServices/VacinasPECService
 
 export default class ReportController {
 
-    DB_CLIENT: ConnectDBs
-    ORDERS_PROCESS: IOrder
-    ORDERS_ERRORS: IOrderError[]
+    DB_CLIENT: ConnectDBs;
+    INSTALLATIONS: any;
+    ORDERS_PROCESS: IOrder;
+    ORDERS_ERRORS: IOrderError[];
 
 
     private async executeHandler(req: IReportControllerRequest, res: Response, serviceClass: any, type: string) {
@@ -31,17 +32,18 @@ export default class ReportController {
             this.DB_CLIENT = new ConnectDBs();
             this.ORDERS_PROCESS = {};
             this.ORDERS_ERRORS = [];
+            this.INSTALLATIONS = req.installations;
 
             const SERVICE_INSTANCE = new serviceClass();
             const DB_TYPE = req.dbtype;
             const ORDERS = req.order;
             const DOWNLOAD = req.download;
 
+
             console.log(`PEDIDO IP: ${req.ip} - INÍCIO DE EXTRAÇÃO.`)
             for (const db_name of ORDERS!) {
 
                 let result: IResultConnection = await this.processConnection(db_name, DB_TYPE!, SERVICE_INSTANCE, req);
-
                 if (!result.extracted) {
                     this.ORDERS_ERRORS.push({ order: db_name.toString(), result: result })
                 }
@@ -119,13 +121,18 @@ export default class ReportController {
 
     private async processConnection(connection_name: any, DB_TYPE: string, SERVICE_INSTANCE: any, req: IReportControllerRequest): Promise<IResultConnection> {
 
-        const IPSESUS = DB_TYPE === 'psql' ? await this.getConnections(ConneSUSRepository, connection_name) : null;
-        const IPSEAS = DB_TYPE === 'mdb' ? await this.getConnections(ConnEASRepository, connection_name) : null;
+        let IPSESUS = DB_TYPE === 'psql' ? await this.getConnections(ConneSUSRepository, connection_name) : null;
+        let IPSEAS = DB_TYPE === 'mdb' ? await this.getConnections(ConnEASRepository, connection_name) : null;
 
         if (IPSEAS && IPSEAS.length > 0) {
             return await handleIPSEAS(this.DB_CLIENT, IPSEAS[0], DB_TYPE, SERVICE_INSTANCE, req);
         }
         else if (IPSESUS && IPSESUS.length > 0) {
+            if (this.INSTALLATIONS) {
+                IPSESUS = IPSESUS.filter(conneSUS =>
+                    this.INSTALLATIONS.includes(conneSUS.id.toString()))
+            }
+
             return await handleIPSESUS(this.DB_CLIENT, IPSESUS, DB_TYPE, SERVICE_INSTANCE, req);
         }
         else {

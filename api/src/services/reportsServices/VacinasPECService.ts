@@ -14,14 +14,22 @@ export class VacinasPECService {
         let SQL_BASE = SQL.getBase()
         let SQL_FROM = SQL.getFrom()
 
-        if (filtros_params.unit){
+        if (filtros_params.unit) {
             const units = Array.isArray(filtros_params.unit) ? filtros_params.unit : Array(filtros_params.unit) as string[]
-            SQL_FROM += `AND (tdus.nu_cnes = ${units.join(' or tdus.nu_cnes = ')})`
+            const formattedUnits = units.map(unit => `'${unit}'`);
+            SQL_FROM += `AND (tdus.nu_cnes = ${formattedUnits.join(" or tdus.nu_cnes = ")})`;
         }
 
-        if (filtros_params.team){
+        if (filtros_params.team) {
             const teams = Array.isArray(filtros_params.team) ? filtros_params.team : Array(filtros_params.team) as string[]
-            SQL_FROM += `AND (tde.nu_ine = ${teams.join(' or tde.nu_ine = ')})`
+            const formattedTeams = teams.map(team => `'${team}'`);
+            SQL_FROM += `AND (tde.nu_ine = ${formattedTeams.join(" or tde.nu_ine = ")})`;
+        }
+
+        if (filtros_params.imunos) {
+            const imunos = Array.isArray(filtros_params.imunos) ? filtros_params.imunos : Array(filtros_params.imunos) as string[]
+            const formattedImunos = imunos.map(imuno => `'${imuno}'`);
+            SQL_FROM += `AND (tdi.nu_identificador = ${formattedImunos.join(" or tdi.nu_identificador = ")})`;
         }
 
         if (filtros_params.data_inicial && filtros_params.data_final) {
@@ -33,18 +41,6 @@ export class VacinasPECService {
             DYNAMIC_PARAMETERS.Add('data_final', filtros_params.data_final)
         }
 
-        if (filtros_params.imunobiologico && filtros_params.imunobiologico.length > 0) {
-
-            const tupleString = filtros_params.imunobiologico.map(item => `'${item}'`).join(',');
-
-            SQL_FROM += `
-                AND tdi.sg_imunobiologico in (:imunobiologicos)
-            `
-            DYNAMIC_PARAMETERS.Add('imunobiologicos', tupleString)
-        }
-
-
-        
         if (filtros_params.idade_ano_inicio && filtros_params.idade_mes_inicio && filtros_params.idade_ano_final && filtros_params.idade_mes_final) {
             const interval_inicio = `'${filtros_params.idade_ano_inicio} years ${filtros_params.idade_mes_inicio} months'`
             const interval_final = `'${filtros_params.idade_ano_final} years ${filtros_params.idade_mes_final} months'`
