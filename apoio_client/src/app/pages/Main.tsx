@@ -20,6 +20,7 @@ export const Main = () => {
                     {renderPage({currentPage})}
                 </div>
             </div>
+            
         </div>
     )
 }

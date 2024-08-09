@@ -18,6 +18,7 @@ export interface IVisitasPrioriFiltros{
     //#endregion
 
     //Filtros Condições de Saúde.
+    conditions?: any;
     gestantes?: boolean;
     idosos?: boolean;
     criancas?: boolean;

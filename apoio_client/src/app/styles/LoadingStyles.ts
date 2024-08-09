@@ -9,15 +9,19 @@ export const LoadingContainer = styled.div`
     justify-content: center;
     align-items: center;
     gap: 0.5vw;
-    font-size: 0.8vw;
+    font-size: 12px;
+
+    @media (max-width:768px){
+        span{display: none;}
+    }
 `
 
 export const LoadingComponent = styled.div`
-    margin-left: 0.8vw;
-    border: 0.2vw solid #f3f3f3;
-    border-top: 0.2vw solid var(--cor-rose);
+    margin-left: 5px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid var(--cor-rose);
     border-radius: 50%;
-    width: 0.6vw;
-    height: 0.6vw;
+    width: 12px;
+    height: 12px;
     animation: spin 1s linear infinite;
 `

@@ -11,7 +11,7 @@ router.get('/')
 
 //#region Relatórios
 
-router.get('/api/v1/reports/PRIORITYVISITS', new CheckDBTypeMiddleware().execute, new ReportController().handleVisitaGrupoPrioritario)
+router.get('/api/v1/reports/PRIORITY%20VISITS', new CheckDBTypeMiddleware().execute, new ReportController().handleVisitaGrupoPrioritario)
 
 router.get('/api/v1/reports/ProdutividadeACS/VisitasPorDia', new CheckDBTypeMiddleware().execute, new ReportController().handleProdutividadeACS_PorDia)
 

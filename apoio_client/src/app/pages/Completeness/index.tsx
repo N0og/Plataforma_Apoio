@@ -5,7 +5,6 @@ import {
     DynamicFilter,
     SimpleFilter,
     BackButton,
-    SearchButton,
     DataTable
 } from '../../components';
 
@@ -153,7 +152,6 @@ export const Completeness = () => {
                         </>
                     ) : null}
                 </GroupFilter>
-                <SearchButton handleSearchAction={handleSearchAction} />
             </GroupFilterContainer>
             <ViewPageContainer>
                 <DataTable values={values} handleButton={handleSearchAction} handleProps={'download'} />

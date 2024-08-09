@@ -1,7 +1,7 @@
 //#region Imports
 
 //Components
-import { DynamicFilter, SimpleFilter, BackButton, SearchButton, DataTable } from '../../components';
+import { DynamicFilter, SimpleFilter, BackButton, DataTable } from '../../components';
 
 //Hooks
 import {
@@ -138,7 +138,6 @@ export const Duplicates = () => {
                     <DynamicFilter name={"UNIDADE"} filters={unitsFilter} changeFilter={setUnitsFilter} />
                     <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
                 </GroupFilter>
-                <SearchButton handleSearchAction={handleSearchAction} />
             </GroupFilterContainer>
             <ViewPageContainer>
                 <DataTable values={values} handleButton={handleSearchAction} handleProps={'download'} />

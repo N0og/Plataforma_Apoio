@@ -6,7 +6,6 @@ import {
     DynamicFilter,
     SimpleFilter,
     BackButton,
-    SearchButton,
     DataTable
 } from '../../components'
 
@@ -90,7 +89,7 @@ export const PriorityVisits = () => {
     const [dataFilters, setDataFilters] = useState<Array<string>>([]);
     const [condicoesFilter, setCondicoesFilter] = useState<ISimpleFilterPartition>(PRIORITY_VISITS_DEFAULT)
     const [AlertMessage, setAlertMessage] = useState<JSX.Element | null>(null)
-    const [driverFilter, setDriverFilter] = useState<ISimpleFilterPartition>(DATABASES_DEFAULT)
+    const [driverFilter, _setDriverFilter] = useState<ISimpleFilterPartition>({ ...DATABASES_DEFAULT, 'AtendSaúde': { ...DATABASES_DEFAULT.AtendSaúde, condition: true } })
 
     const [values, setValues] = useState({})
 
@@ -101,10 +100,11 @@ export const PriorityVisits = () => {
             'params': {
                 'unit': unitsFilter,
                 'installations': installationsFilter,
-                'team': teamsFilter
+                'team': teamsFilter,
+                'conditions': condicoesFilter
             },
             'driver': driverFilter
-        }, [clientsFilter, unitsFilter, teamsFilter])
+        }, [clientsFilter, condicoesFilter, unitsFilter, teamsFilter])
 
     useEffect(() => {
         setAlertMessage(useAlertMessageEvent(control_states));
@@ -131,10 +131,11 @@ export const PriorityVisits = () => {
                 toggleState
             )
                 .then(resp => {
+                    if (resp)
                     setValues(resp as {})
                     useNotifyEvent(Alerts.SUCESS, 'success')
                 })
-                .catch(error => {
+                .catch((error: any) => {
                     useNotifyEvent(error.msg, 'error')
                 })
         }
@@ -151,7 +152,7 @@ export const PriorityVisits = () => {
             </TitlePageContainer>
             <GroupFilterContainer>
                 <GroupFilter>
-                    <SimpleFilter name={"FONTE"} filters={driverFilter} changeFilter={setDriverFilter} deactivated={true} />
+                    <SimpleFilter name={"FONTE"} filters={driverFilter} changeFilter={_setDriverFilter} deactivated={true} />
                     <SimpleFilter name={"CONDIÇÕES"} filters={condicoesFilter} changeFilter={setCondicoesFilter} />
                     <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} />
                     {driverFilter.eSUS.condition === true && driverFilter.AtendSaúde.condition === false ? (
@@ -162,8 +163,7 @@ export const PriorityVisits = () => {
                         </>
                     ) : null}
                     <DateFilter changeFilter={setDataFilters} />
-                </GroupFilter>
-                <SearchButton handleSearchAction={handleSearchAction} />
+                </GroupFilter>   
             </GroupFilterContainer>
             <ViewPageContainer>
                 <DataTable values={values} handleButton={handleSearchAction} handleProps={'download'} />

@@ -10,9 +10,21 @@ interface IConfigOrder {
 }
 
 const isSimpleFilterPartition = (obj: any) => {
-  return (typeof obj === 'object' &&
-    'value' in obj &&
-    'condition' in obj)
+  if (typeof obj !== 'object' || obj === null) {
+    return false;
+  }
+
+  for (const key in obj) {
+    if (typeof obj[key] !== 'object' || obj[key] === null || !('condition' in obj[key])) {
+      return false;
+    }
+
+    if (typeof obj[key].condition !== 'boolean') {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 export const useMountOrder = (config: IConfigOrder, dependencys: React.DependencyList) => {

@@ -34,20 +34,6 @@
         align-items: center;
         height: 100%;
         width: 100%;
-
-        .export {
-            height: 100%;
-            width: 100%;
-            font-size: 0.9vw;
-            background-color: #659867;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: 0.08s;
-            font-weight: bold;
-            i{
-                font-size: 1vw;
-            }
         }
 
         .export:hover {
@@ -57,8 +43,6 @@
         .export:active {
             background-color: #4e7950;
         }
-    }
-
 }
 
 .table_view {

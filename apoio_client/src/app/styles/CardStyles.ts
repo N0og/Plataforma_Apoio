@@ -4,8 +4,8 @@ export const CardContainer = styled.div`
     display:flex;
     flex-direction: center;
     justify-content:center;
-    width: 11.5vw;
-    height: 5vw;
+    width: 250px;
+    height: 110px;
 `
 
 export const CardStyled = styled.div`
@@ -14,24 +14,22 @@ export const CardStyled = styled.div`
     justify-content: center;
     align-items: center;
     position: relative;
-    width: 10vw;
-    height: 4vw;
-    border-radius: 1vw;
+    width: 100%;
+    border-radius: 15px;
     background-color: var(--cor-min_grey);
     box-shadow: 0px 0.3vw 0.1vw 0px var(--cor-shadow-mid);
     transition: 0.3s;
     gap: 0.5vw;
-    padding: 0.5vw;
 
     &:hover{
         box-shadow: 0px 0px 0.0vw 0.1vw var(--cor-shadow-mid);
-        width: 10.5vw;
+        width: 247px;
     }
 
     &:active{
         background-color: #d5d4d4;
         box-shadow: 0px 0px 0.0vw 0.2vw var(--cor-shadow-mid);
-        width: 12vw;
+        
     }
 `
 
@@ -40,9 +38,13 @@ export const CardIcon = styled.div`
     left: 1vw;
     justify-content: center;
     align-items: center;
-    font-size: 2vw;
+    font-size: 35px;
     i{
         color: var(--cor-rose);
+    }
+
+    @media (max-width:760px){
+        font-size: 10vw;
     }
 `
 
@@ -75,6 +77,10 @@ export const CardTitle = styled.div`
         text-wrap: wrap;
         width: 100%;
         height: 100%; 
-        font-size: 0.7vw;
+        font-size: 15px;
+    }
+
+    @media (max-width:760px){
+        span{font-size: 13.5px;}
     }
 `

@@ -23,7 +23,7 @@ export const SideBar = () => {
 
 
     return (
-        <SideBarContainer>
+        <SideBarContainer className="side_bar_container">
             <SideBarStyled className="side_bar">
                 <SideBarItem className="side_bar_item">
                     <ItemIcon className="item_icon"><i className="fa-solid fa-chart-simple"></i></ItemIcon>

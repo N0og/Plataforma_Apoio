@@ -6,20 +6,19 @@ export const FilterContainer = styled.div`
     justify-content: start;
     align-items: center;
     position: relative;
-    width: 10vw;
-    height: 1.3vw;
-    
+    width: 180px;
+    height: 25px;
     
     .FilterInput {
         width: 100%;
         height: 100%;
         border: none;
-        border-radius: 1vw;
+        border-radius: 15px;
         background-color: var(--cor-min_grey);
         box-shadow: 0 1px 0.1px 0px var(--cor-shadow-mid);
         outline: none;
         user-select: none;
-        font-size: 0.8vw;
+        font-size: 12px;
         text-align: center;
     }
 
@@ -33,7 +32,7 @@ export const FilterIcon = styled.div`
     background-color: transparent;
     color: var(--cor-rose-mid);
     left: 5%;
-    font-size: 0.7vw;
+    font-size: 12px;
 `
 
 export const FilterCounter = styled.div`
@@ -41,11 +40,11 @@ export const FilterCounter = styled.div`
     justify-content: center;
     align-items: center;
     text-align: center;
-    width: 0.8vw;
-    height: 0.8vw;
-    border-radius: 50vw;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
     z-index: 999;
-    font-size: 0.5vw;
+    font-size: 09px;
     background-color: var(--cor-rose);
     color: var(--cor-light);
 `
@@ -61,8 +60,8 @@ export const FilterButton = styled.button`
     background-color: transparent;
     cursor: pointer;
     i {
-        font-size: 1vw;
-        padding: 0.4vw;
+        font-size: 15px;
+        padding: 10px;
     }
 `
 
@@ -70,26 +69,26 @@ export const FilterButton = styled.button`
 export const FilterSimpleList = styled.div`
     display: flex;
     flex-direction: column;
-    min-width: 13vw;
-    max-width: 18vw;
-    min-height: 3vh;
-    max-height: 30vh;
-    top: 2.0vw;
+    min-width: 200px;
+    max-width: 250px;
+    min-height: 20px;
+    max-height: 250px;
+    top: 30px;
     border-radius: 7px;
     position: absolute;
     transition: 0.5s;
     overflow-y: auto;
     overflow-x: hidden ;
-    gap: 0.2vw;
+    gap: 2px;
     background-color: var(--cor-min_grey);
     box-shadow: 0px 0px 8px rgb(144, 143, 143);
     z-index:9999;
     span {
         text-align: start;
-        padding: 0.3vw;
+        padding: 5px;
         width: 80%;
         cursor: pointer;
-        font-size: 0.8vw;
+        font-size: 12px;
         }
 
         .box-container {
@@ -134,7 +133,6 @@ export const FilterSimpleListClosed = styled.div`
     max-width: 0vw;
     min-height: 0vh;
     max-height: 0vh;
-    top: 2.3vw;
     overflow-y: hidden;
     position: absolute;
     transition: 0.5s;
@@ -161,17 +159,17 @@ export const FilterSimpleListClosed = styled.div`
 export const FilterDynamicList = styled.div`
     display: flex;
     flex-direction: column;
-    min-width: 15vw;
-    max-width: 30vw;
-    min-height: 3vh;
-    max-height: 30vh;
-    top: 2.3vw;
+    min-width: 200px;
+    max-width: 250px;
+    min-height: 20px;
+    max-height: 250px;
+    top: 30px;
     border-radius: 7px;
     position: absolute;
     transition: 0.5s;
     overflow-y: auto;
     overflow-x: hidden;
-    gap: 0.2vw;
+    gap: 2px;
     background-color: var(--cor-min_grey);
     box-shadow: 0px 0px 8px rgb(144, 143, 143);
     z-index: 9993;
@@ -193,7 +191,7 @@ export const FilterSelectAllOption = styled.div`
         justify-content: start;
         align-items: center;
         flex-direction: row;
-        font-size: 1vw;
+        font-size: 12px;
         
         input {
             width: 10%;
@@ -222,9 +220,9 @@ export const FilterSelectAllOption = styled.div`
 
 export const SelectAllCheckBox = styled.label`
     display: inline-block;
-    width: 0.8vw;
-    height: 0.8vw;
-    border-radius: 1vw;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
     background-color: var(--cor-shadow-mid);
     position: relative;
 
@@ -245,9 +243,9 @@ export const SelectAllCheckBox = styled.label`
 
 export const OptionCheckBox = styled.label`
     display: inline-block;
-    width: 0.8vw;
-    height: 0.8vw;
-    border-radius: 1vw;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
     background-color: var(--cor-min_grey);
     position: relative;
     transition: 0.2s;
@@ -257,7 +255,7 @@ export const OptionCheckBox = styled.label`
         position: absolute;
         width: 100%;
         height: 100%;
-        border-radius: 1vw;
+        border-radius: 50%;
         background-color: var(--cor-rose);
         top: 50%;
         left: 50%;
@@ -268,14 +266,14 @@ export const OptionCheckBox = styled.label`
 `
 
 export const FilterListOption = styled.div`
-    padding-left: 0.5vw;
+    padding-left: 5px;
 
     label {
         display: flex;
         justify-content: start;
         align-items: center;
         flex-direction: row;
-        font-size: 1vw;
+        font-size: 12px;
 
         input {
             width: 10%;
@@ -306,7 +304,7 @@ export const FilterAge = styled.div`
     align-items: center;
     position: absolute;
     width: 100%;
-    top: 2.3vw;
+    top: 30px;
     border-radius: 7px;
     background-color: rgb(238, 238, 238);
     box-shadow: 0px 0px 8px rgb(144, 143, 143);
@@ -319,9 +317,9 @@ export const FilterAge = styled.div`
         justify-content: center;
         align-items: center;
         text-align: center;
-        font-size: 0.8vw;
+        font-size: 12px;
         width: 100%;
-        padding:0.1vw;
+        padding: 3px;
         background-color: var(--cor-rose);
         color: var(--cor-light);
     }
@@ -334,7 +332,6 @@ export const FilterAgeClosed = styled.div`
     max-width: 0vw;
     min-height: 0vh;
     max-height: 0vh;
-    top: 2.3vw;
     overflow-y: hidden;
     position: absolute;
     transition: 0.5s;
@@ -348,13 +345,13 @@ export const FilterAgeClosed = styled.div`
 
     span{
         text-align: start;
-        padding: 0.5vw;
+        padding: 5px;
         cursor: pointer;
         font-size: 0.1vw;
         padding-left: 10px ;
-        border-radius: 2vw;
+        border-radius: 12px;
         border: none;
-        width: 0vw;
+        width: 0;
         background-color: transparent;
         position: absolute;
         opacity: 0%;
@@ -367,14 +364,14 @@ export const FilterAgeOption = styled.div`
     justify-content: space-around;
     align-items: center;
     width: 100%;
-    padding: 10px;
+    padding: 11px;
     input{
         border: none;
         width: 45%;
-        padding: 0.4vw 0;
+        padding: 3px 0;
         text-align: center;
-        font-size: 0.8vw;
-        border-radius: 0.3vw;
+        font-size: 12px;
+        border-radius: 12px;
         outline: none;
         user-select: none;
         background-color: var(--cor-min_grey);
@@ -389,13 +386,13 @@ export const FilterDataContainer = styled.div`
     align-items: center;
     justify-content: center;
     position: relative;
-    border-radius: 2vw;
+    border-radius: 25px;
     background-color: var(--cor-min_grey);
     box-shadow: 0 1px 0.1px 0px var(--cor-shadow-mid);
     outline: none;
     user-select: none;
-    width: 13vw;
-    height: 1.5vw;
+    width: 200px;
+    height: 25px;
     font-family: Arial, sans-serif;
 `
 
@@ -403,8 +400,8 @@ export const FilterDataCalendar = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 80%;
-    height: 100%;
+    width: 150px;
+    height: 15px;
     background-color: transparent;
 
     /* Estilo dos campos de data */
@@ -417,7 +414,7 @@ export const FilterDataCalendar = styled.div`
         height: 100%;
         background-color: transparent;
         text-align: center;
-        font-size: 0.8vi;
+        font-size: 12px;
     }
 
     .react-datepicker__input-container{

@@ -17,8 +17,6 @@ export default class unidadeoFilterService {
                 relations: ['municipio']
             })
 
-            console.log(inst)
-
             const mun = await municipioRepository.findOneBy(inst!.municipio)
 
             const unidades_esus = await unidadeRepository.createQueryBuilder("unidade")

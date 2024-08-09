@@ -8,18 +8,26 @@ export const SideBarContainer = styled.div`
   position:fixed;
   left:0;
   z-index: 9998;
-  height: 100vh;
+  height: 28%;
   width: 1%;
+  
   gap: 1vh;
+  border-top-right-radius: 10vw;
+  border-bottom-right-radius: 10vw;
   opacity: 35%;
-  border: none;
-  overflow: hidden;
   transition: 0.4s;
   
+  @media (max-width: 768px) {
+      width: 2.5%;
+      
+  }
+
   &:hover {
     width: 18%;
+    height: 100%;
+    border-radius: 0;
     background-color: var(--cor-light);
-    box-shadow: 0px 15px 8px 0px rgb(116, 114, 114);
+    /*box-shadow: 0px 15px 8px 0px rgb(116, 114, 114);*/
     opacity: 100%;
     .infoSystem {
       opacity: 100%;
@@ -40,6 +48,10 @@ export const SideBarContainer = styled.div`
       opacity: 100%;
       transform: translateX(1vw);
     }
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
   }
 `;
 
@@ -55,19 +67,38 @@ export const SideBarStyled = styled.div`
   overflow: hidden;
   transition: 0.2s;
   background-color: var(--cor-rose);
-  border-top-right-radius: 2vw;
-  border-bottom-right-radius: 2vw;
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+
+  .side_bar_item {
+    opacity: 0%;
+  }
+
+  @media (max-width: 768px) {
+      height: 100%;
+  
 
   .side_bar_item {
       opacity: 0%;
+      min-height: 55px;
+      .item_icon {
+        width: 100%;
+        height: 100%;
+      }
+    &:hover{
+      .item_icon {
+        opacity: 0%;
+      }
     }
+    }
+  }
 `;
 
 export const SideBarItem = styled.div`
   display: flex;
   align-items: center;
   position: relative;
-  height: 2.1vw;
+  min-height: 35px;
   width: 2.3vw;
   border-radius: 50px;
   border: none;
@@ -93,8 +124,8 @@ export const ItemIcon = styled.div`
   justify-content: center;
   align-items: center;
   background-color: var(--cor-rose);
-  height: 2.1vw;
-  width: 2.3vw;
+  height: 33px;
+  width: 33px;
   border-radius: 50px;
   overflow: hidden;
   z-index: 999;
@@ -103,8 +134,10 @@ export const ItemIcon = styled.div`
   i {
     transition: 0.58ms;
     color: var(--cor-light);
-    font-size: 1vw;
+    font-size: 15px;
   }
+
+  
 `;
 
 export const Item = styled.div`
@@ -132,7 +165,7 @@ export const Item = styled.div`
     transition: 0.3s;
     transform: translateX(1vw);
     opacity: 0%;
-    font-size: 1vw;
+    font-size: 15px;
   }
 `;
 
@@ -143,6 +176,6 @@ export const InfoSystem = styled.div`
   opacity: 0%;
   transition: 0.2s;
   text-wrap: nowrap;
-  font-size: 12px;
+  font-size: 0.8vw;
   margin-bottom: 1vw;
 `;

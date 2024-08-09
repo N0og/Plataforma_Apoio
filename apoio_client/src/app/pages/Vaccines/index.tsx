@@ -7,8 +7,7 @@ import {
     AgeFilter,
     DynamicFilter,
     BackButton,
-    DataTable,
-    SearchButton
+    DataTable
 } from '../../components'
 
 //Hooks
@@ -159,7 +158,6 @@ export const Vaccines = () => {
                     <AgeFilter name={"IDADE"} />
                     <DateFilter changeFilter={setDataFilters} />
                 </GroupFilter>
-                <SearchButton handleSearchAction={handleSearchAction} />
             </GroupFilterContainer>
             <ViewPageContainer>
                 <DataTable values={values} handleButton={handleSearchAction} handleProps={'download'} />

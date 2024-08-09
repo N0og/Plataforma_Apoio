@@ -112,19 +112,22 @@ export default class VisitasPrioritariasQuery {
             diarreira: 'SQL_DYNAMIC_DIARREIA',
             egresso_internacao: 'SQL_DYNAMIC_EGRESSOS_INTERNACAO'
         };
-        
-        for (const filter in filtros_params) {
-            if (filtros_params[filter] && DYNAMIC_FILTER_MAP[filter]) {
-                DYNAMIC_QUERY += SQL[DYNAMIC_FILTER_MAP[filter]](DYNAMIC_QUERY_FILTERS);
+
+        if (filtros_params.conditions) {
+            const conditions = Array.isArray(filtros_params.conditions) ? filtros_params.conditions : Array(filtros_params.conditions) as string[]
+            for (const condition in conditions) {
+                if (condition && DYNAMIC_FILTER_MAP[condition]) {
+                    DYNAMIC_QUERY += SQL[DYNAMIC_FILTER_MAP[condition]](DYNAMIC_QUERY_FILTERS);
+                }
             }
         }
-        
+
         // Construção final da consulta SQL
         SQL_BASE += `
             ${DYNAMIC_QUERY}
             ${SQL.getFrom()}
             ${QUERY_FILTERS}
-        `; 
+        `;
 
         const REPORT = await ExecuteSQL(dbtype, SQL_BASE, DYNAMIC_PARAMETERS, dbClient)
 

@@ -1,12 +1,12 @@
 import { SearchButtonContainer } from "../../styles"
 
-export const SearchButton: React.FC<{handleSearchAction: Function}> = ({handleSearchAction}) => {
+export const SearchButton: React.FC<{color?: string, title: string, handleSearchAction: Function}> = ({color, title, handleSearchAction}) => {
 
     return (
         <SearchButtonContainer>
-            <button
+            <button style={{backgroundColor:color}}
                 onClick={() => { handleSearchAction() }}
-            >Buscar</button>
+            >{title}</button>
         </SearchButtonContainer>
     )
 }

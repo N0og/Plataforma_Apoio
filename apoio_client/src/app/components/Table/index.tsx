@@ -6,6 +6,7 @@ import { DataGrid, GridColDef, GridRowsProp, GridToolbar } from '@mui/x-data-gri
 import { ptBR } from '@mui/x-data-grid/locales'
 import { ptBR as CorePtBR } from '@mui/material/locale';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { SearchButton } from '../SearchButton';
 
 
 
@@ -104,7 +105,8 @@ export const DataTable: React.FC<{
             </div>
             <div className='toolbar'>
                 <div className='buttonbar'>
-                    <button className='export' onClick={()=>{handleButton(handleProps)}}><i className="fa-regular fa-file-excel"></i> EXPORT</button>
+                <SearchButton color={'#659867'} title={'EXPORT'} handleSearchAction={() => handleButton(handleProps)} />
+                    <SearchButton title={'SEARCH'} handleSearchAction={handleButton} />
                 </div>
             </div>
         </div>

@@ -6,7 +6,6 @@ import {
     DynamicFilter,
     SimpleFilter,
     BackButton,
-    SearchButton,
     DataTable
 } from '../../components'
 
@@ -106,6 +105,8 @@ export const TeamProductivity = () => {
 
     const handleSearchAction = (event: any) => {
 
+        setValues({})
+
         let useHook = (event === 'download') ? useDownload : useGetData
         const verified = useTratament({
             no_empty: [
@@ -151,7 +152,6 @@ export const TeamProductivity = () => {
                     <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
                     <DateFilter changeFilter={setDataFilters} />
                 </GroupFilter>
-                <SearchButton handleSearchAction={handleSearchAction} />
             </GroupFilterContainer>
             <ViewPageContainer>
                 <DataTable values={values} handleButton={handleSearchAction} handleProps={'download'} />
