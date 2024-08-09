@@ -115,7 +115,7 @@ export default class VisitasPrioritariasQuery {
 
         if (filtros_params.conditions) {
             const conditions = Array.isArray(filtros_params.conditions) ? filtros_params.conditions : Array(filtros_params.conditions) as string[]
-            for (const condition in conditions) {
+            for (const condition of conditions) {
                 if (condition && DYNAMIC_FILTER_MAP[condition]) {
                     DYNAMIC_QUERY += SQL[DYNAMIC_FILTER_MAP[condition]](DYNAMIC_QUERY_FILTERS);
                 }

@@ -152,7 +152,6 @@ export const PriorityVisits = () => {
             </TitlePageContainer>
             <GroupFilterContainer>
                 <GroupFilter>
-                    <SimpleFilter name={"FONTE"} filters={driverFilter} changeFilter={_setDriverFilter} deactivated={true} />
                     <SimpleFilter name={"CONDIÇÕES"} filters={condicoesFilter} changeFilter={setCondicoesFilter} />
                     <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} />
                     {driverFilter.eSUS.condition === true && driverFilter.AtendSaúde.condition === false ? (

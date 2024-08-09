@@ -6,12 +6,11 @@ export const SideBarContainer = styled.div`
   justify-content: center;
   align-items: center;
   position:fixed;
-  left:0;
   z-index: 9998;
-  height: 28%;
   width: 1%;
-  
   gap: 1vh;
+  left:0;
+  height: 300px;
   border-top-right-radius: 10vw;
   border-bottom-right-radius: 10vw;
   opacity: 35%;
@@ -24,7 +23,7 @@ export const SideBarContainer = styled.div`
 
   &:hover {
     width: 18%;
-    height: 100%;
+    height: 100vh;
     border-radius: 0;
     background-color: var(--cor-light);
     /*box-shadow: 0px 15px 8px 0px rgb(116, 114, 114);*/

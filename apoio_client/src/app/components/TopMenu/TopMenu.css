@@ -4,7 +4,7 @@
     justify-content: center;
     align-items: center;
     width: 25%;
-    font-size: 25px;
+    height: 100%;
     @media (max-width:760px) {
         width: 100%;
    }
@@ -19,26 +19,26 @@
     flex-wrap: nowrap;
     height: 100%;
     width: 100%;
-    gap: 0.3vw;
+    gap: 5px;
     h1{
-        font-size: 1.7vw;
+        font-size: 25px;
         color: var(--cor-black);
     }
 
     span{
-        font-size: 1.7vw;
+        font-size: 25px;
         color: var(--cor-rose);
     }
 
     @media (max-width:760px) {
         gap: 1vw;
         h1{
-            font-size: 5vw;
+            font-size: 25px;
             color: var(--cor-black);
         }
     
         span{
-            font-size: 5vw;
+            font-size: 25px;
             color: var(--cor-rose);
         }
    }
@@ -63,6 +63,12 @@
     flex-wrap: wrap;
     width: 25%;
     height: 100%;
+
+    img{
+        width: 100px;
+
+    }
+
     @media (max-width:760px) {
         display: none;
    }

@@ -95,7 +95,6 @@ export const DataTable: React.FC<{
                     <DataGrid
                         rows={rows}
                         columns={columns}
-                        autoPageSize={true}
                         className='DataGridContainer'
                         showCellVerticalBorder={true}
                         slots={{ toolbar: GridToolbar }}
@@ -103,12 +102,10 @@ export const DataTable: React.FC<{
 
                 </ThemeProvider>
             </div>
-            <div className='toolbar'>
                 <div className='buttonbar'>
-                <SearchButton color={'#659867'} title={'EXPORT'} handleSearchAction={() => handleButton(handleProps)} />
-                    <SearchButton title={'SEARCH'} handleSearchAction={handleButton} />
+                    <SearchButton color={'#659867'} title={'EXTRAIR'} handleSearchAction={() => handleButton(handleProps)} />
+                    <SearchButton title={'BUSCAR'} handleSearchAction={handleButton} />
                 </div>
-            </div>
         </div>
 
     )

@@ -132,7 +132,6 @@ export const Duplicates = () => {
             </TitlePageContainer>
             <GroupFilterContainer>
                 <GroupFilter>
-                    <SimpleFilter name={"FONTE"} filters={driverFilter} changeFilter={setDriverFilter} deactivated={true} />
                     <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} />
                     <DynamicFilter name={"INSTALAÇÃO"} filters={installationsFilter} changeFilter={setInstallationsFilter} />
                     <DynamicFilter name={"UNIDADE"} filters={unitsFilter} changeFilter={setUnitsFilter} />

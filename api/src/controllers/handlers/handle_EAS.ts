@@ -23,7 +23,7 @@ export async function handleIPSEAS(DB_CLIENT:ConnectDBs, IPSEAS: any, DB_TYPE: s
         }
     }
 
-    let service_return = await SERVICE_INSTANCE.execute(DB_TYPE, DB_CLIENT, req.body, req.query)
+    let service_return = await SERVICE_INSTANCE.execute(DB_TYPE, DB_CLIENT, req.query)
 
     if (!(service_return instanceof Error)){
         result = result.concat(service_return);

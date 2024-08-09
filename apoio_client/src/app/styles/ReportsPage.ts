@@ -6,7 +6,7 @@ export const RelatoriosPageContainer = styled.div`
     justify-content: start;
     align-items: center;
     height: 100%;
-    width: 100%;
+    width: 75%;
     .page-title{
         display: flex;
         justify-content: center;
@@ -17,10 +17,10 @@ export const RelatoriosPageContainer = styled.div`
         margin-top: 2vw;
         min-height: 45px;
         h2{
-            font-size: 1.8vw;
+            font-size: 35px;
         }
         span{
-            font-size: 1.8vw;
+            font-size: 35px;
             color: var(--cor-rose);
         }
     }

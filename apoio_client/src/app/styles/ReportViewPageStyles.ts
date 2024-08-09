@@ -7,7 +7,7 @@ export const ReportContainer = styled.div`
     justify-content: start;
     align-items: center;
     height: 100%;
-    width: 100vw;
+    width: 100%;
 `
 
 export const TitlePageContainer = styled.div`
@@ -30,9 +30,9 @@ export const TitlePageContainer = styled.div`
         font-size: 20px;
     }
 
-    @media (max-width:350px){
+    @media (max-width:450px){
         .title_container{
-            font-size: 10px;
+            font-size: 12px;
         }
     }
 `
@@ -59,5 +59,4 @@ export const ViewPageContainer = styled.div`
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 100%;
 `

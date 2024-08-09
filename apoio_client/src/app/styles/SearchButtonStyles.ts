@@ -4,7 +4,7 @@ export const SearchButtonContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    height: 35px;
     width: 100%;
     button{
         width: 100%;

@@ -24,7 +24,9 @@ export const TopMenu = ()=>{
         <div className="mid_container_top">
         </div>
         <div className="right_container_top">
+
             <SubMenu loggedState={loggedState}/>
+            <img src="./nvtch.png" alt="" />
         </div>
     </div>
     )

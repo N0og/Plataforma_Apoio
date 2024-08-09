@@ -105,8 +105,10 @@ export const Map = () => {
         <div className='container_map'>
             <TitlePageContainer>
                 <BackButton />
-                <h2>MAPA - EQUIPES - TERRITORIALIZAÇÃO</h2>
                 {AlertMessage}
+                <div className='title_container'>
+                    <h4>MAPA - EQUIPES - TERRITORIALIZAÇÃO</h4>
+                </div>
             </TitlePageContainer>
             <GroupFilterContainer>
                 <GroupFilter>
