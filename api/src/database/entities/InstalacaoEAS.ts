@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Municipio } from "./Municipios";
+import { Municipio } from ".";
 
 @Entity('tb_instalacoes_eas')
 export class Instalacao_EAS {

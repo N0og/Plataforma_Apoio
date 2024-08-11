@@ -1,32 +1,39 @@
 
-import { Estado } from "../entities/Estados";
-import { ConnEAS, ConneSUS } from "../entities/Conn";
-import { Instalacao_EAS } from "../entities/InstalacaoEAS";
-import { Instalacao_eSUS } from "../entities/InstalacaoeSUS";
-import { Municipio } from "../entities/Municipios";
-import { API_DB_DataSource } from "../init";
-import { Processamento } from "../entities/Processamento";
-import { Equipe } from "../entities/Equipes";
-import { Unidade } from "../entities/Unidades";
-import { Imunobiologico } from "../entities/Imunobiologicos";
+import {
+    Estado,
+    ConnEAS,
+    ConneSUS,
+    Instalacao_EAS,
+    Instalacao_eSUS,
+    Municipio,
+    Equipe,
+    Processamento,
+    Unidade,
+    Imunobiologico
+} from "../entities"; // Importa as entidades
 
+import { API_DB_DataSource } from "../init"; // Importa o DataSource configurado para o banco de dados
 
-export const instalacaoESUSRepository = API_DB_DataSource.getRepository(Instalacao_eSUS)
+import {
+    EntityTarget,
+    ObjectLiteral
+} from "typeorm"; // Importa a tipagem do TypeORM
 
-export const instalacaoEASRepository = API_DB_DataSource.getRepository(Instalacao_EAS)
+/**
+ * Função genérica para criar um repositório para uma entidade específica.
+ * @param entity - A entidade para a qual o repositório será criado.
+ * @returns O repositório da entidade.
+ */
+const createRepository = <T extends EntityTarget<ObjectLiteral>>(entity: T) => API_DB_DataSource.getRepository(entity);
 
-export const processamentoRepository = API_DB_DataSource.getRepository(Processamento)
-
-export const equipeRepository = API_DB_DataSource.getRepository(Equipe)
-
-export const unidadeRepository = API_DB_DataSource.getRepository(Unidade)
-
-export const municipioRepository = API_DB_DataSource.getRepository(Municipio)
-
-export const estadoRepository = API_DB_DataSource.getRepository(Estado)
-
-export const ConneSUSRepository = API_DB_DataSource.getRepository(ConneSUS)
-
-export const ConnEASRepository = API_DB_DataSource.getRepository(ConnEAS)
-
-export const ImunoseSUSRepository = API_DB_DataSource.getRepository(Imunobiologico)
+// Criação dos repositórios para cada entidade utilizando a função genérica
+export const instalacaoESUSRepository = createRepository(Instalacao_eSUS); // Repositório para a entidade Instalacao_eSUS
+export const instalacaoEASRepository = createRepository(Instalacao_EAS); // Repositório para a entidade Instalacao_EAS
+export const processamentoRepository = createRepository(Processamento); // Repositório para a entidade Processamento
+export const equipeRepository = createRepository(Equipe); // Repositório para a entidade Equipe
+export const unidadeRepository = createRepository(Unidade); // Repositório para a entidade Unidade
+export const municipioRepository = createRepository(Municipio); // Repositório para a entidade Municipio
+export const estadoRepository = createRepository(Estado); // Repositório para a entidade Estado
+export const ConneSUSRepository = createRepository(ConneSUS); // Repositório para a entidade ConneSUS
+export const ConnEASRepository = createRepository(ConnEAS); // Repositório para a entidade ConnEAS
+export const ImunoseSUSRepository = createRepository(Imunobiologico); // Repositório para a entidade Imunobiologico

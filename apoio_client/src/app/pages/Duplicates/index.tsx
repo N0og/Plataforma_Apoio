@@ -75,7 +75,7 @@ export const Duplicates = () => {
     } = useGetTeams(unitsFilter, toggleState)
 
     const [AlertMessage, setAlertMessage] = useState<JSX.Element | null>(null)
-    const [driverFilter, setDriverFilter] = useState<ISimpleFilterPartition>(DATABASES_DEFAULT)
+    const [driverFilter, _setDriverFilter] = useState<ISimpleFilterPartition>(DATABASES_DEFAULT)
 
     const [values, setValues] = useState({})
 

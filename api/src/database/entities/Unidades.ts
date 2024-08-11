@@ -1,6 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Instalacao_eSUS } from "./InstalacaoeSUS";
-import { Equipe } from "./Equipes";
+import { Instalacao_eSUS, Equipe } from ".";
 
 @Entity('tb_unidades_esus')
 export class Unidade {
@@ -10,11 +9,11 @@ export class Unidade {
     @Column({ type: "varchar", length: "100" })
     no_estabelecimento: string
 
-    @Column({ type: "varchar", length: "50", nullable: true})
+    @Column({ type: "varchar", length: "50", nullable: true })
     nu_cnes: string
 
     @ManyToOne(() => Instalacao_eSUS, (instalacao) => instalacao.unidades)
-    @JoinColumn({name:"instalacao_id"})
+    @JoinColumn({ name: "instalacao_id" })
     instalacao: Instalacao_eSUS
 
     @OneToMany(() => Equipe, (equipe) => equipe.unidade)

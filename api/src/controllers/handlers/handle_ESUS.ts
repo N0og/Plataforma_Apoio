@@ -1,9 +1,12 @@
 import { ConnectDBs } from "../../database/init";
-import { IReportControllerRequest } from "../../interfaces/IReportController";
-import { IResultConnection, db_conn_error } from "../../interfaces/IResultConnection";
+import {
+    IResultConnection,
+    db_conn_error,
+    IReportControllerRequest
+} from "../../interfaces";
 
 export async function handleIPSESUS(DB_CLIENT: ConnectDBs, IPSESUS: any[], DB_TYPE: string, SERVICE_INSTANCE: any, req: IReportControllerRequest): Promise<IResultConnection> {
-    
+
     let successful: number = 0
     const BD_ERROS: Array<db_conn_error> = []
     let result = []
@@ -23,10 +26,10 @@ export async function handleIPSESUS(DB_CLIENT: ConnectDBs, IPSESUS: any[], DB_TY
 
             console.error(`${installation_local_name} - Falha na conexão: ${installation.dados.instalacao_esus}... `)
 
-            BD_ERROS.push({ 
-                    instalation_address: installation.dados.instalacao_esus , 
-                    traceback: "Falha na conexão de banco" 
-                });
+            BD_ERROS.push({
+                instalation_address: installation.dados.instalacao_esus,
+                traceback: "Falha na conexão de banco"
+            });
             continue;
         }
 
@@ -34,14 +37,14 @@ export async function handleIPSESUS(DB_CLIENT: ConnectDBs, IPSESUS: any[], DB_TY
 
         let service_return = await SERVICE_INSTANCE.execute(DB_TYPE, DB_CLIENT, req.query, installation)
 
-        if (!(service_return instanceof Error)){
+        if (!(service_return instanceof Error)) {
             result = result.concat(service_return);
-            successful+=1
-        }   
-        
+            successful += 1
+        }
+
     }
 
-    if (successful === 0){
+    if (successful === 0) {
         return {
             expected: IPSESUS.length,
             successful: successful,

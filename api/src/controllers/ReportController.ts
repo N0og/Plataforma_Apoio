@@ -1,21 +1,38 @@
 import { Response } from "express";
 
 import { ConnectDBs } from "../database/init";
-import { ConnEASRepository, ConneSUSRepository } from "../database/repository/API_DB_Repositorys";
-import ExcelBuilder from "../utils/excel_builder/ExcelBuilder"
 
-import { IOrder, IOrderError, IReportControllerRequest, IResultConnection } from "../interfaces";
+import {
+    ConnEASRepository,
+    ConneSUSRepository
+} from "../database/repository/API_DB_Repositorys";
 
-import { ProdutividadeACS_PorDiaQuery, ProdutividadeACS_ConsolidadoQuery } from "../services/reportsServices/ProdutividadeACSService";
-import ProdutividadeUBS_ConsolidadoQuery from "../services/reportsServices/ProdutividadeUBSService";
-import VisitasPrioritariasQuery from "../services/reportsServices/VisitasPrioritariasService";
-import DuplicadosPECQuery from "../services/reportsServices/DuplicadosService";
-import CompletudeQuery from "../services/reportsServices/CompletudeService";
-import AcessosEASService from "../services/reportsServices/AcessosEASService";
-import { handleIPSEAS, handleIPSESUS } from "./handlers";
+import { ExcelBuilder } from "../utils"
+
+import {
+    IOrder,
+    IOrderError,
+    IReportControllerRequest,
+    IResultConnection
+} from "../interfaces";
+
+import {
+    ACS_ProductivityReportService_Day,
+    ACS_ProductivityReportService,
+    TeamProductivityReportService,
+    PriorityVisitsReportService,
+    DuplicatesReportService,
+    CompletenessReportService,
+    AccessEASReportService,
+    VaccinesReportService
+} from "../services";
+
+import {
+    handleIPSEAS,
+    handleIPSESUS
+} from "./handlers";
 
 import JSZip from "jszip";
-import { VacinasPECService } from "../services/reportsServices/VacinasPECService";
 
 export default class ReportController {
 
@@ -170,34 +187,34 @@ export default class ReportController {
 
 
     handleVisitaGrupoPrioritario = async (req: IReportControllerRequest, res: Response) => {
-        this.executeHandler(req, res, VisitasPrioritariasQuery, `VisitasPrioritariasACS`)
+        this.executeHandler(req, res, PriorityVisitsReportService, `VisitasPrioritariasACS`)
     }
 
     handleProdutividadeACS_PorDia = async (req: IReportControllerRequest, res: Response) => {
-        this.executeHandler(req, res, ProdutividadeACS_PorDiaQuery, `VisitasPorDiaACS`)
+        this.executeHandler(req, res, ACS_ProductivityReportService_Day, `VisitasPorDiaACS`)
     }
 
     handleProdutividadeACS_Consolidado = async (req: IReportControllerRequest, res: Response) => {
-        this.executeHandler(req, res, ProdutividadeACS_ConsolidadoQuery, `ProdutividadeACS`)
+        this.executeHandler(req, res, ACS_ProductivityReportService, `ProdutividadeACS`)
     }
 
     handleProdutividadeUBS_Consolidado = async (req: IReportControllerRequest, res: Response) => {
-        this.executeHandler(req, res, ProdutividadeUBS_ConsolidadoQuery, `ProdutividadeUBS`)
+        this.executeHandler(req, res, TeamProductivityReportService, `ProdutividadeUBS`)
     }
 
     handleCompletude = async (req: IReportControllerRequest, res: Response) => {
-        this.executeHandler(req, res, CompletudeQuery, `Completude`)
+        this.executeHandler(req, res, CompletenessReportService, `Completude`)
     }
 
     handleDuplicadosPEC = async (req: IReportControllerRequest, res: Response) => {
-        this.executeHandler(req, res, DuplicadosPECQuery, `DuplicadosPEC`)
+        this.executeHandler(req, res, DuplicatesReportService, `DuplicadosPEC`)
     }
 
     handleAcessosRetaguarda = async (req: IReportControllerRequest, res: Response) => {
-        this.executeHandler(req, res, AcessosEASService, `AcessosEAS`)
+        this.executeHandler(req, res, AccessEASReportService, `AcessosEAS`)
     }
 
     handleVacinasPEC = async (req: IReportControllerRequest, res: Response) => {
-        this.executeHandler(req, res, VacinasPECService, `VacinasPEC`)
+        this.executeHandler(req, res, VaccinesReportService, `VacinasPEC`)
     }
 }

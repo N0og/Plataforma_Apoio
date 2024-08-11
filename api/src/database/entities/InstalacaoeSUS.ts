@@ -1,7 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Municipio } from "./Municipios";
-import { Unidade } from "./Unidades";
-import { json } from "stream/consumers";
+import { Municipio, Unidade } from ".";
 
 @Entity('tb_instalacoes_esus')
 export class Instalacao_eSUS {

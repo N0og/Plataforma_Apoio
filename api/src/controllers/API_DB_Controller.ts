@@ -1,7 +1,18 @@
-import { Response, Request } from "express";
-import UpdateDBService from "../services/dbServices/UpdateDBService";
-import ProcessDBService from "../services/dbServices/ProcessDBService";
-import { ConneSUSRepository, instalacaoESUSRepository, processamentoRepository } from "../database/repository/API_DB_Repositorys";
+import {
+    Response,
+    Request
+} from "express";
+
+import {
+    UpdateDBService,
+    ProcessDBService
+} from "../services";
+
+import {
+    ConneSUSRepository,
+    processamentoRepository
+} from "../database/repository/API_DB_Repositorys";
+
 import { ConnectDBs } from "../database/init";
 import { handleIPSESUS } from "./handlers";
 import { IResultConnection } from "../interfaces";

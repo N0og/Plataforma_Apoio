@@ -1,10 +1,12 @@
 export { IAcessosEAS } from "./IAcessosEAS";
 export { ICompletudeFilters, IATT_CPF, CheckedFCI } from "./ICompletude";
-export { IExcel,  } from "./IExcel";
+export { IExcel, } from "./IExcel";
 export { IOrder } from "./IOrder";
-export { IProdutividadeACS }from "./IProdutividadeACS";
+export { IProdutividadeACS } from "./IProdutividadeACS";
 export { IFilterProdutividadeUBS, IAtendimentosUBS } from "./IProdutividadeUBS";
 export { IReportControllerRequest, IOrderError } from "./IReportController";
 export { IResultConnection, db_conn_error } from "./IResultConnection";
 export { IVisitasPrioriFiltros } from "./IVisitasPrioritarias";
 export { IVacinasPEC } from "./IVacinasPEC";
+export { IDatabaseConfig } from "./IDatabaseConfig";
+export { IConnEAS, IConneSUS } from "./IConnEntity";

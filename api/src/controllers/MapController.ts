@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
-import clientsFilterService from "../services/filterServices/clientFilterService";
 import { ConnectDBs } from "../database/init";
 import { ConnEASRepository } from "../database/repository/API_DB_Repositorys";
-import IEDService from "../services/mapsServices/IEDService";
+import { IEDCollectService } from "../services";
 
 export default class MapController {
     async executeHandler(req: Request, res: Response, serviceClass: any, body_params: any, query_params: any) {
@@ -64,6 +63,6 @@ export default class MapController {
         const body_params = req.body
         const query_params = req.query
 
-        this.executeHandler(req, res, IEDService, body_params, query_params)
+        this.executeHandler(req, res, IEDCollectService, body_params, query_params)
     }
 }

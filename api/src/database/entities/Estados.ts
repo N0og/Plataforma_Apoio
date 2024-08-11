@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany,PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
-import { Municipio } from "./Municipios";
+import { Municipio } from ".";
 
 @Entity('tb_uf')
 export class Estado{

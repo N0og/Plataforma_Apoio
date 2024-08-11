@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Unidade } from "./Unidades";
+import { Unidade } from ".";
 
 @Entity('tb_equipes_esus')
 export class Equipe {
