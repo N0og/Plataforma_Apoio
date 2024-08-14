@@ -26,13 +26,6 @@ export const SideBar = () => {
         <SideBarContainer className="side_bar_container">
             <SideBarStyled className="side_bar">
                 <SideBarItem className="side_bar_item">
-                    <ItemIcon className="item_icon"><i className="fa-solid fa-chart-simple"></i></ItemIcon>
-                    <Item className="item">
-                        <button onClick={() => { handleTogglePage(Pages.DASHBOARD_PAGE) }}></button>
-                        <span>Dashboard</span>
-                    </Item>
-                </SideBarItem>
-                <SideBarItem className="side_bar_item">
                     <ItemIcon className="item_icon"><i className="fa-solid fa-file-contract"></i></ItemIcon>
                     <Item className="item">
                         <button onClick={() => { handleTogglePage(Pages.REPORTS_PAGE) }}></button>
@@ -44,6 +37,13 @@ export const SideBar = () => {
                     <Item className="item">
                         <button onClick={() => { handleTogglePage(Pages.MAP_PAGE) }}></button>
                         <span>Mapa</span>
+                    </Item>
+                </SideBarItem>
+                <SideBarItem className="side_bar_item">
+                    <ItemIcon className="item_icon"><i className="fa-solid fa-chart-simple"></i></ItemIcon>
+                    <Item className="item">
+                        <button onClick={() => { handleTogglePage(Pages.DASHBOARD_PAGE) }}></button>
+                        <span>Dashboard</span>
                     </Item>
                 </SideBarItem>
                 <SideBarItem className="side_bar_item">
@@ -63,6 +63,7 @@ export const SideBar = () => {
             </SideBarStyled>
             <InfoSystem className="infoSystem">
                 <span>&copy; 2024 Apoio Novetech.</span>
+                <span style={{color:'var(--cor-shadow-mid)'}}>{process.env.VITE_APP_VERSION}</span>
             </InfoSystem>
         </SideBarContainer>
     );

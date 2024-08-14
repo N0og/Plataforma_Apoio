@@ -11,11 +11,14 @@ export async function handleIPSEAS(DB_CLIENT: ConnectDBs, IPSEAS: any, DB_TYPE: 
     const BD_ERROS: Array<db_conn_error> = []
     let result = []
 
+    console.log(`PEDIDO IP: ${req.ip} - ${IPSEAS.dados.db_name_eas} - Connectando... `)
     if (await DB_CLIENT.changeDB(DB_TYPE, { database: IPSEAS.dados.db_name_eas }) instanceof Error) {
+        console.log(`PEDIDO IP: ${req.ip} - ${IPSEAS.dados.db_name_eas} - Falha na conexão!... `)
         BD_ERROS.push({
             instalation_address: IPSEAS.dados.db_name_eas,
             traceback: "Falha na conexão de banco"
         });
+        console.log(`PEDIDO IP: ${req.ip} - ${IPSEAS.dados.db_name_eas} - Conectado!... `)
         return {
             expected: IPSEAS.dados.length,
             successful: successful,

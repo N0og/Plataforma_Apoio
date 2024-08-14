@@ -802,6 +802,7 @@ export class SQL_PRIORITY_VISITS{
             LEFT JOIN Regional r ON (r.Id = re.Regional_Id)
         WHERE 
             p.Ocupacao_Id =  1349 
+            and p.Ativo = 1
     `
 
     getBase(): string{

@@ -82,7 +82,7 @@ export const FilterSimpleList = styled.div`
     gap: 2px;
     background-color: var(--cor-min_grey);
     box-shadow: 0px 0px 8px rgb(144, 143, 143);
-    z-index:9999;
+    z-index:9997;
     span {
         text-align: start;
         padding: 5px;
@@ -98,7 +98,7 @@ export const FilterSimpleList = styled.div`
     }
 
     &::-webkit-scrollbar {
-    width: 0.8vw;
+    width: 10px;
     /* Largura da scrollbar */
     border-top-right-radius: 6px;
 

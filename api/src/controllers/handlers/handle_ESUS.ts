@@ -14,7 +14,7 @@ export async function handleIPSESUS(DB_CLIENT: ConnectDBs, IPSESUS: any[], DB_TY
     for (let installation of IPSESUS) {
         const installation_local_name = installation.dados.municipio;
 
-        console.log(`${installation_local_name} - Connectando: ${installation.dados.instalacao_esus}... `)
+        console.log(`PEDIDO IP: ${req.ip} - ${installation_local_name} - Connectando: ${installation.dados.instalacao_esus}... `)
 
         if (await DB_CLIENT.changeDB(DB_TYPE, {
             host: installation.dados.ip_esus,
@@ -24,7 +24,7 @@ export async function handleIPSESUS(DB_CLIENT: ConnectDBs, IPSESUS: any[], DB_TY
             password: installation.dados.db_password_esus
         }) instanceof Error) {
 
-            console.error(`${installation_local_name} - Falha na conexão: ${installation.dados.instalacao_esus}... `)
+            console.error(`PEDIDO IP: ${req.ip} - ${installation_local_name} - Falha na conexão: ${installation.dados.instalacao_esus}... `)
 
             BD_ERROS.push({
                 instalation_address: installation.dados.instalacao_esus,
@@ -33,7 +33,7 @@ export async function handleIPSESUS(DB_CLIENT: ConnectDBs, IPSESUS: any[], DB_TY
             continue;
         }
 
-        console.log(`${installation_local_name} - Conectado!: ${installation.dados.instalacao_esus}... `)
+        console.log(`PEDIDO IP: ${req.ip} - ${installation_local_name} - Conectado!: ${installation.dados.instalacao_esus}... `)
 
         let service_return = await SERVICE_INSTANCE.execute(DB_TYPE, DB_CLIENT, req.query, installation)
 

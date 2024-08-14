@@ -30,6 +30,7 @@ export const SideBarContainer = styled.div`
     opacity: 100%;
     .infoSystem {
       opacity: 100%;
+      font-size: 12px;
     }
     
     .side_bar {
@@ -169,12 +170,17 @@ export const Item = styled.div`
 `;
 
 export const InfoSystem = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   bottom: 2vw;
   overflow: hidden;
   opacity: 0%;
   transition: 0.2s;
   text-wrap: nowrap;
-  font-size: 0.8vw;
+  gap: 5px;
+  font-size: 1px;
   margin-bottom: 1vw;
 `;

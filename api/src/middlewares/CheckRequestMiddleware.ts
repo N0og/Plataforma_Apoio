@@ -31,7 +31,7 @@ export default class CheckRequestMiddleware {
         // Verifica se os parâmetros obrigatórios (dbtype, download, order) estão presentes na consulta
         const missingProps = ['dbtype', 'download', 'order'].filter(prop => !req.query.hasOwnProperty(prop));
         if (missingProps.length > 0) {
-            return res.status(400).json({ error: 'Solicitação Incorreta: Sintaxe de solicitação malformada' });
+            return res.status(400).json({ msg: 'Solicitação Incorreta: Sintaxe de solicitação malformada' });
         }
 
         // Define o repositório correto com base no tipo de banco de dados (mdb ou psql)
@@ -46,7 +46,7 @@ export default class CheckRequestMiddleware {
                 req.dbtype = "psql";
                 break;
             default:
-                return res.status(400).json({ error: 'Driver DB não compatível.' });
+                return res.status(400).json({ msg: 'Driver DB não compatível.' });
         }
 
         // Define o parâmetro download como false por padrão ou com base na consulta
@@ -54,7 +54,7 @@ export default class CheckRequestMiddleware {
 
         // Verifica se o parâmetro order foi fornecido
         if (!req.query.order) {
-            return res.status(400).json({ error: 'Nenhum pedido requisitado.' });
+            return res.status(400).json({ msg: 'Nenhum pedido requisitado.' });
         }
 
         // Processa o caso especial onde o parâmetro order é "all"
@@ -65,16 +65,16 @@ export default class CheckRequestMiddleware {
                     const municipios = await municipioRepository.find();
                     if (!municipios || municipios.length === 0) {
                         console.error("Nenhum cliente encontrado");
-                        return res.status(404).json({ error: 'Nenhum cliente encontrado.' });
+                        return res.status(404).json({ msg: 'Nenhum cliente encontrado.' });
                     }
                     // Mapeia os nomes dos municípios para o parâmetro order
                     req.order = municipios.map(municipio => municipio.no_municipio);
                 } catch (error) {
                     console.error("Falha ao buscar municípios", error);
-                    return res.status(500).json({ error: 'Erro ao processar a solicitação.' });
+                    return res.status(500).json({ msg: 'Erro ao processar a solicitação.' });
                 }
             } else {
-                return res.status(400).json({ error: 'Falha na solicitação' });
+                return res.status(400).json({ msg: 'Falha na solicitação' });
             }
         } else {
             // Se order não for "all", converte o parâmetro em um array

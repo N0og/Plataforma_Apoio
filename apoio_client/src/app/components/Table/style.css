@@ -4,21 +4,8 @@
     justify-content: start;
     align-items: center;
     width: 95%;
-    padding: 2vw 0;
+    max-height: 80vh;
     
-}
-
-.DataGridHeader{
-    background-color: rgb(241, 241, 241);
-}
-
-.DataGridContainer{
-    background-color: var(--cor-light);
-    width:100%;
-}
-
-.table_view {
-    width: 100%;
 }
 
 .buttonbar {

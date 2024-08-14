@@ -65,7 +65,6 @@ export const useMountOrder = (config: IConfigOrder, dependencys: React.Dependenc
         }
       });
     }
-    console.log(URL)
     setOrderParam(URL)
   }, dependencys)
 

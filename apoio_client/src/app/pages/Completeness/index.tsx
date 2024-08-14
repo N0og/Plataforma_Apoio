@@ -49,7 +49,7 @@ import {
 import { rootReducer } from '../../../redux/root-reducer';
 
 //Constants
-import { Alerts, CITY, DATABASES_DEFAULT, DBFILTER } from '../../constants';
+import { CITY, DATABASES_DEFAULT, DBFILTER } from '../../constants';
 //#endregion
 
 const useTypedSelector: TypedUseSelectorHook<rootReducer> = useSelector;
@@ -96,13 +96,16 @@ export const Completeness = () => {
                 'team': teamsFilter
             },
             'driver': driverFilter
-        }, [clientsFilter, unitsFilter, teamsFilter])
+        }, [driverFilter, clientsFilter, unitsFilter, teamsFilter])
 
     useEffect(() => {
         setAlertMessage(useAlertMessageEvent(control_states));
     }, [control_states])
 
     const handleSearchAction = (event: any) => {
+
+        setValues({})
+
         let useHook = (event === 'download') ? useDownload : useGetData
         const verified = useTratament({
             no_empty: [
@@ -122,9 +125,10 @@ export const Completeness = () => {
                 },
                 toggleState
             )
-                .then(resp => {
-                    setValues(resp as {})
-                    useNotifyEvent(Alerts.SUCESS, 'success')
+                .then((resp: any) => {
+                    setValues({ json: resp[Object.keys(resp)[0]].result })
+                    console.log(resp)
+                    useNotifyEvent(resp[Object.keys(resp)[0]].msg, 'info')
                 })
                 .catch(error => {
                     useNotifyEvent(error.msg, 'error')
@@ -146,9 +150,9 @@ export const Completeness = () => {
                     <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} />
                     {driverFilter.eSUS.condition === true && driverFilter.AtendSaúde.condition === false ? (
                         <>
-                        <DynamicFilter name={"INSTALAÇÕES"} filters={installationsFilter} changeFilter={setInstallationsFilter} />
-                        <DynamicFilter name={"UNIDADE"} filters={unitsFilter} changeFilter={setUnitsFilter} />
-                        <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
+                            <DynamicFilter name={"INSTALAÇÕES"} filters={installationsFilter} changeFilter={setInstallationsFilter} />
+                            <DynamicFilter name={"UNIDADE"} filters={unitsFilter} changeFilter={setUnitsFilter} />
+                            <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
                         </>
                     ) : null}
                 </GroupFilter>

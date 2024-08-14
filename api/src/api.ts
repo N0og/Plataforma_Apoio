@@ -63,5 +63,5 @@ API_DB_DataSource.initialize()
         })
     })
     .catch((error) => {
-        throw new Error(error)
+        throw new Error(`Falha ao conectar com o banco de dados da API: ${error.message}`)
     })

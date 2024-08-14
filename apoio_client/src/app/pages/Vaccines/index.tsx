@@ -43,7 +43,7 @@ import {
 import { ISimpleFilterPartition } from '../../interfaces/IFilters';
 
 //Constants
-import { DATABASES_DEFAULT, Alerts, CITY } from '../../constants';
+import { DATABASES_DEFAULT, CITY } from '../../constants';
 
 //Redux
 import {
@@ -111,6 +111,8 @@ export const Vaccines = () => {
 
     const handleSearchAction = (event: any) => {
 
+        setValues({})
+
         let useHook = (event === 'download') ? useDownload : useGetData
         const verified = useTratament({
             no_empty: [
@@ -124,14 +126,15 @@ export const Vaccines = () => {
                 OrderURL,
                 {
                     data_inicial: dataFilters[0],
-                    data_final: dataFilters[1],    
+                    data_final: dataFilters[1],
                     download: false
                 },
                 toggleState
             )
-                .then(resp => {
-                    setValues(resp as {})
-                    useNotifyEvent(Alerts.SUCESS, 'success')
+                .then((resp: any) => {
+                    setValues({ json: resp[Object.keys(resp)[0]].result })
+                    console.log(resp)
+                    useNotifyEvent(resp[Object.keys(resp)[0]].msg, 'info')
                 })
                 .catch(error => {
                     useNotifyEvent(error.msg, 'error')
@@ -151,7 +154,7 @@ export const Vaccines = () => {
             <GroupFilterContainer>
                 <GroupFilter>
                     <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} />
-                    <DynamicFilter name={"INSTALAÇÕES"} filters={installationsFilter} changeFilter={setInstallationsFilter}/>
+                    <DynamicFilter name={"INSTALAÇÕES"} filters={installationsFilter} changeFilter={setInstallationsFilter} />
                     <DynamicFilter name={"UNIDADE"} filters={unitsFilter} changeFilter={setUnitsFilter} />
                     <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
                     <DynamicFilter name={"IMUNOBIOLÓGICO"} filters={vaccinesFilter} changeFilter={setVaccinesFilter} />

@@ -41,7 +41,7 @@ import {
 } from '../../styles';
 
 //Constants
-import { Alerts, DATABASES_DEFAULT } from '../../constants';
+import { DATABASES_DEFAULT } from '../../constants';
 
 //Redux
 import {
@@ -125,11 +125,13 @@ export const TeamProductivity = () => {
                 },
                 toggleState
             )
-                .then(resp => {
-                    setValues(resp as {})
-                    useNotifyEvent(Alerts.SUCESS, 'success')
+                .then((resp:any) => {
+                    setValues({json: resp[Object.keys(resp)[0]].result})
+                    console.log(resp)
+                    useNotifyEvent(resp[Object.keys(resp)[0]].msg, 'info')
                 })
                 .catch(error => {
+                    console.log(error)
                     useNotifyEvent(error.msg, 'error')
                 })
         }

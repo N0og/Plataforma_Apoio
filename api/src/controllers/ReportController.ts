@@ -32,14 +32,14 @@ import {
     handleIPSESUS
 } from "./handlers";
 
-import JSZip from "jszip";
+import JSZip, { file } from "jszip";
 
 export default class ReportController {
 
     DB_CLIENT: ConnectDBs;
     INSTALLATIONS: any;
     ORDERS_PROCESS: IOrder;
-    ORDERS_ERRORS: IOrderError[];
+    ORDERS_ERRORS: IOrderError;
 
 
     private async executeHandler(req: IReportControllerRequest, res: Response, serviceClass: any, type: string) {
@@ -48,7 +48,7 @@ export default class ReportController {
 
             this.DB_CLIENT = new ConnectDBs();
             this.ORDERS_PROCESS = {};
-            this.ORDERS_ERRORS = [];
+            this.ORDERS_ERRORS = {};
             this.INSTALLATIONS = req.installations;
 
             const SERVICE_INSTANCE = new serviceClass();
@@ -57,22 +57,25 @@ export default class ReportController {
             const DOWNLOAD = req.download;
 
 
-            console.log(`PEDIDO IP: ${req.ip} - INÍCIO DE EXTRAÇÃO.`)
+            console.log(`PEDIDO IP: ${req.ip} - SOLICITAÇÃO RECEBIDA...`)
             for (const db_name of ORDERS!) {
 
                 let result: IResultConnection = await this.processConnection(db_name, DB_TYPE!, SERVICE_INSTANCE, req);
                 if (!result.extracted) {
-                    this.ORDERS_ERRORS.push({ order: db_name.toString(), result: result })
+                    this.ORDERS_ERRORS[db_name.toString()] = { json: result }
                 }
-                if (!(db_name.toString() in this.ORDERS_PROCESS)) {
-                    this.ORDERS_PROCESS[db_name.toString()] = { sheet: undefined, json: result.result };
-                }
-                console.log(`PEDIDO IP: ${req.ip} - EXTRAÍDO: ${db_name}.`)
 
+                else if (!(db_name.toString() in this.ORDERS_PROCESS)) {
+                    this.ORDERS_PROCESS[db_name.toString()] = { sheet: undefined, json: (result.result.length > 0 ? result: {...result, msg:'Sem Dados.'}) };
+                }
+
+                console.log(`PEDIDO IP: ${req.ip} - ${db_name}: PROCESSADO.`)
 
             }
 
-            if (ORDERS?.length == this.ORDERS_ERRORS.length) {
+            console.log(`PEDIDO IP: ${req.ip} - EM ROTA DE ENTREGA...`)
+
+            if (ORDERS?.length == Object.keys(this.ORDERS_ERRORS).length) {
                 return res.status(503).json(
                     {
                         msg: 'Houve uma falha na coleta de dados.',
@@ -80,7 +83,7 @@ export default class ReportController {
                     })
             }
 
-            console.log(`PEDIDO IP: ${req.ip} - EXTRAÇÕES REALIZADA.`)
+            console.log(`PEDIDO IP: ${req.ip} - BUSCAS REALIZADAS.`)
             if (DOWNLOAD) {
                 console.log(`PEDIDO IP: ${req.ip} - ENVIO PARA DOWNLOAD - SISTEMATIZANDO...`)
                 const ZIP = await this.generateZip();
@@ -116,6 +119,7 @@ export default class ReportController {
                     for (let MUNICIPIO of Object.keys(this.ORDERS_PROCESS)) {
                         response_json[MUNICIPIO] = this.ORDERS_PROCESS[MUNICIPIO].json
                     }
+                    response_json['ERRORS'] = this.ORDERS_ERRORS
                     res.status(200).json(response_json)
                 }
 
@@ -169,17 +173,19 @@ export default class ReportController {
         const zip = new JSZip();
 
         for (const SHEET of Object.keys(this.ORDERS_PROCESS)) {
-            if (this.ORDERS_PROCESS[SHEET].json.length === 0) return null
+            let file_name: string = SHEET;
+
+            if (this.ORDERS_PROCESS[SHEET].json.result.length === 0) {
+                this.ORDERS_PROCESS[SHEET].json.result = [{ 'FALHA': 'SEM DADOS' }]
+                file_name = `${SHEET}_SEM_DADOS`
+            }
 
             this.ORDERS_PROCESS[SHEET].sheet = new ExcelBuilder()
-            this.ORDERS_PROCESS[SHEET].sheet.insert_columns(this.ORDERS_PROCESS[SHEET].json);
-            this.ORDERS_PROCESS[SHEET].sheet.insert(this.ORDERS_PROCESS[SHEET].json);
-        }
+            this.ORDERS_PROCESS[SHEET].sheet.insert_columns(this.ORDERS_PROCESS[SHEET].json.result);
+            this.ORDERS_PROCESS[SHEET].sheet.insert(this.ORDERS_PROCESS[SHEET].json.result);
 
-
-        for (let SHEET of Object.keys(this.ORDERS_PROCESS)) {
             const worksheetBuffer: Buffer = await this.ORDERS_PROCESS[SHEET].sheet.save_worksheet();
-            zip.file(`${SHEET}.xlsx`, worksheetBuffer);
+            zip.file(`${file_name}.xlsx`, worksheetBuffer);
         }
 
         return zip

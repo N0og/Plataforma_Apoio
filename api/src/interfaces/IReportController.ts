@@ -11,6 +11,5 @@ export interface IReportControllerRequest extends Request{
 }
 
 export interface IOrderError{
-    order:string,
-    result: IResultConnection
+    [key: string]: {json: IResultConnection}
 }

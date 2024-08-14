@@ -32,7 +32,7 @@ export class ConnectDBs {
      * @param driver - O nome do banco de dados (ex: 'mdb' para MariaDB, 'psql' para PostgreSQL)
      * @returns Promise<boolean> - Retorna true se a conexão for bem-sucedida
      */
-    async connect(driver: string): Promise<boolean> {
+    async connect(driver: string): Promise<boolean | Error> {
         try {
             switch (driver) {
                 case 'mdb':
@@ -50,7 +50,7 @@ export class ConnectDBs {
             }
             return true;
         } catch (error) {
-            throw new Error(`Falha ao conectar com o banco de dados. ${(error as { message?: any }).message}`);
+            return new Error(`Falha ao conectar com o banco de dados. ${(error as { message?: any }).message}`);
         }
     }
 

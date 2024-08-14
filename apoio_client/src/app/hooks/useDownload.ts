@@ -1,22 +1,21 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { IControllersStateType } from "../interfaces/IControllerStates";
-import { useNotifyEvent } from "./useNotifyEvent";
-import { Alerts } from "../constants";
 
 
 export const useDownload = async (url: string, params: object, setLoading: (key: keyof IControllersStateType, state: boolean) => void) => {
     setLoading('extract_state', true)
-    try {
-        const response: AxiosResponse<any, any> = await axios({
+    return new Promise((resolve, reject) => {
+        axios({
             method: 'get',
             url,
-            params: {...params, download:true},
+            params: { ...params, download: true },
             responseType: 'blob'
-        })
 
-        if (response) {
+        }).then(async response => {
+            setLoading('extract_state', false);
 
-            console.log(response.request)
+
+
             const contentDisposition: string = response.headers['content-disposition'];
             let fileName = 'arquivo.zip';
 
@@ -34,16 +33,22 @@ export const useDownload = async (url: string, params: object, setLoading: (key:
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            useNotifyEvent(Alerts.SUCESS, 'success', 3000)
+            resolve(true);
 
-        } else {
-            console.error('Falha ao obter o arquivo.');
-        }
-        setLoading('extract_state', false)
-        return true;
-    } catch (error) {
-        console.error('Erro na requisição GET: ', error);
-        setLoading('extract_state', false)
-        return null;
-    }
+        })
+            .catch(async error => {
+                console.error(error);
+                setLoading('extract_state', false);
+                const contentType = error.response.headers['content-type'];
+
+                if (contentType && contentType.includes('application/json')) {
+                    const text = await error.response.data.text();
+                    const jsonResponse = JSON.parse(text);
+                    console.log(jsonResponse)
+                    reject(jsonResponse);
+                } else {
+                    reject({ msg: 'Falha na coleta de informações', error });
+                }
+            });
+    })
 };

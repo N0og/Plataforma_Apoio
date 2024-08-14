@@ -43,7 +43,7 @@ import {
 import { rootReducer } from '../../../redux/root-reducer';
 
 //Constantes
-import { Alerts, CITY, DATABASES_DEFAULT } from '../../constants';
+import { CITY, DATABASES_DEFAULT } from '../../constants';
 import { useTratament } from '../../hooks/useTratament';
 //#endregion
 
@@ -75,7 +75,7 @@ export const Duplicates = () => {
     } = useGetTeams(unitsFilter, toggleState)
 
     const [AlertMessage, setAlertMessage] = useState<JSX.Element | null>(null)
-    const [driverFilter, _setDriverFilter] = useState<ISimpleFilterPartition>(DATABASES_DEFAULT)
+    const [driverFilter, _setDriverFilter] = useState<ISimpleFilterPartition>({ ...DATABASES_DEFAULT, 'eSUS': { ...DATABASES_DEFAULT.eSUS, condition: true } })
 
     const [values, setValues] = useState({})
 
@@ -96,6 +96,9 @@ export const Duplicates = () => {
     }, [control_states])
 
     const handleSearchAction = (event: any) => {
+
+        setValues({})
+
         let useHook = (event === 'download') ? useDownload : useGetData
         const verified = useTratament({
             no_empty: [
@@ -112,9 +115,10 @@ export const Duplicates = () => {
                 },
                 toggleState
             )
-                .then(resp => {
-                    setValues(resp as {})
-                    useNotifyEvent(Alerts.SUCESS, 'success')
+                .then((resp: any) => {
+                    setValues({ json: resp[Object.keys(resp)[0]].result })
+                    console.log(resp)
+                    useNotifyEvent(resp[Object.keys(resp)[0]].msg, 'info')
                 })
                 .catch(error => {
                     useNotifyEvent(error.msg, 'error')

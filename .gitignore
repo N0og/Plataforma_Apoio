@@ -1,5 +1,7 @@
 #API
 api/.env
+api/build
+api/tsconfig.tsbuildinfo
 api/node_modules
 api/src/config/json/whitelist.json
 api/src/config/json/esus.json

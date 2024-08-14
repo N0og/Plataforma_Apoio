@@ -45,8 +45,7 @@ import {
     PRIORITY_VISITS_DEFAULT,
     DATABASES_DEFAULT,
     CONDITION,
-    CITY,
-    Alerts
+    CITY
 } from '../../constants';
 
 //Redux
@@ -111,6 +110,9 @@ export const PriorityVisits = () => {
     }, [control_states])
 
     const handleSearchAction = (event: any) => {
+
+        setValues({})
+
         let useHook = (event === 'download') ? useDownload : useGetData
         const verified = useTratament({
             no_empty: [
@@ -130,10 +132,10 @@ export const PriorityVisits = () => {
                 },
                 toggleState
             )
-                .then(resp => {
-                    if (resp)
-                    setValues(resp as {})
-                    useNotifyEvent(Alerts.SUCESS, 'success')
+                .then((resp: any) => {
+                    setValues({ json: resp[Object.keys(resp)[0]].result })
+                    console.log(resp)
+                    useNotifyEvent(resp[Object.keys(resp)[0]].msg, 'info')
                 })
                 .catch((error: any) => {
                     useNotifyEvent(error.msg, 'error')
@@ -156,13 +158,13 @@ export const PriorityVisits = () => {
                     <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} />
                     {driverFilter.eSUS.condition === true && driverFilter.AtendSaúde.condition === false ? (
                         <>
-                        <DynamicFilter name={"INSTALAÇÕES"} filters={installationsFilter} changeFilter={setInstallationsFilter} />
-                        <DynamicFilter name={"UNIDADE"} filters={unitsFilter} changeFilter={setUnitsFilter} />
-                        <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
+                            <DynamicFilter name={"INSTALAÇÕES"} filters={installationsFilter} changeFilter={setInstallationsFilter} />
+                            <DynamicFilter name={"UNIDADE"} filters={unitsFilter} changeFilter={setUnitsFilter} />
+                            <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
                         </>
                     ) : null}
                     <DateFilter changeFilter={setDataFilters} />
-                </GroupFilter>   
+                </GroupFilter>
             </GroupFilterContainer>
             <ViewPageContainer>
                 <DataTable values={values} handleButton={handleSearchAction} handleProps={'download'} />
