@@ -1,9 +1,11 @@
+
 .container_top .left_container_top{
     display: flex;
     flex-direction: row;
     justify-content: center;
+    position: absolute;
+    left: 25px;
     align-items: center;
-    width: 25%;
     height: 100%;
     @media (max-width:760px) {
         width: 100%;
@@ -18,15 +20,21 @@
     justify-content: center;
     flex-wrap: nowrap;
     height: 100%;
-    width: 100%;
     gap: 5px;
+    font-style: normal;
     h1{
-        font-size: 25px;
+        font-family: "Titillium Web", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 35px;
         color: var(--cor-black);
     }
 
     span{
-        font-size: 25px;
+        font-family: "Titillium Web", sans-serif;
+        font-weight: 600;
+        font-style: normal;
+        font-size: 35px;
         color: var(--cor-rose);
     }
 
@@ -58,14 +66,15 @@
 .container_top .right_container_top{
     display: flex;
     flex-direction: row;
+    position: absolute;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
-    width: 25%;
+    flex-wrap: no-wrap;
+    min-width: 25px;
     height: 100%;
-
+    right: 100px;
     img{
-        width: 100px;
+        width: 125px;
 
     }
 
@@ -74,28 +83,23 @@
    }
 }
 
-.container_top .right_container_top .submenu_top{
+.submenu_top{
     display: flex;
     flex-direction: row;
     justify-content: end;
+    position: absolute;
+    right: 25px;
     align-items: center;
-    width: 100%;
-    height: 100%;
-    padding-right: 5%;
+    min-width: 30px;
 }
 
-.container_top .right_container_top .submenu_top .item_container{
+.submenu_top .item_container{
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 20%;
-    height: 100%;
     .item{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 2.7vw;
-        height: 2.5vw;
+        width: 32px;
+        height: 32px;
         border-radius: 50%; 
         transition: 0.1s;
         button{
@@ -106,104 +110,17 @@
             cursor: pointer;
             background-color: var(--cor-rose);;
             color: var(--cor-light);
-            font-size:1.2vw;
-            transition: 80ms;
-            
-            opacity: 65%;
+            font-size:15px;
+            transition: 0.2s;
+            opacity: 35%;
         }
     } 
 }
 
-.container_top .right_container_top .submenu_top .item_container .item:hover{
-    width: 2.9vi;
-    height: 2.6vi;
+.submenu_top .item_container .item:hover{
     button{
-        font-size:1.4vi;
         opacity: 100%;
     }
 }
 
-.container_top .right_container_top .submenu_top .item_container .item:active{
-    width: 2.7vi;
-    height: 2.4vi;
-    button:active{
-        font-size:1.3vi;
-    }
-}
 
-
-.container_top .right_container_top .submenu_top .item_login_container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 2.2vi;
-    height: 2.0vi;
-    .item_hover{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 2.2vi;
-        height: 2.0vi;
-        opacity: 100%;
-        background-color: transparent;
-        border-radius: 25px ;
-        transition: 0.5s;
-
-        span{
-            position: absolute;
-            opacity: 0%;
-            transform: translateX(-4vw) ;
-            user-select: none;
-            cursor: pointer;
-            transition: 0.18s;
-            font-size:0.7vi;
-            font-family: 'Arial';
-        }
-
-        .item_login{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 2.2vi;
-            height: 2.0vi;
-            border-radius: 50%; 
-            transition: all 0.1s;
-
-            button{
-                width: 100%;
-                height: 100%;
-                border-radius: 50%;
-                border: none;
-                cursor: pointer;
-                font-size:1vi;
-                transition: 0.2s;
-                background-color: var(--cor-rose);;
-                color: #ffff;
-                opacity: 65%;
-            }
-        }
-    }
-}
-
-.container_top .right_container_top .submenu_top .item_login_container .item_hover:hover{
-    padding-left: 5.5vw; 
-    margin-left: -5.5vw; 
-   
-    height: 2.0vi;
-    opacity: 100%;
-    background-color:rgb(237, 237, 237);
-    span{
-        opacity: 100%;
-    }
-
-    .item_login{
-        button{
-            opacity: 100%;
-        }
-    }
-}
-
-
-.container_top .right_container_top .submenu_top .item_login_container .item_hover .item_login button:active{
-    font-size:1vi;
-}

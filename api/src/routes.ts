@@ -5,6 +5,7 @@ import CheckRequestMiddleware from "./middlewares/CheckRequestMiddleware";
 import FiltersController from "./controllers/FiltersController";
 import MapController from "./controllers/MapController";
 import { ExtractRulesMiddleware } from "./middlewares/ExtractRulesMiddleware";
+import UserController from "./controllers/UserController";
 
 // Criação do roteador Express
 export const router = Router();
@@ -31,6 +32,8 @@ router.get('/api/v1/reports/DUPLICATES', new CheckRequestMiddleware().execute, n
 
 router.get('/api/v1/reports/AcessosEAS', new CheckRequestMiddleware().execute, new ExtractRulesMiddleware().execute, new ReportController().handleAcessosRetaguarda);
 
+router.get('/api/v1/reports/PROD%20ORAL%20CARE', new CheckRequestMiddleware().execute, new ExtractRulesMiddleware().execute, new ReportController().handleProdOralCare);
+
 //#endregion
 
 //#region Database
@@ -38,7 +41,7 @@ router.get('/api/v1/reports/AcessosEAS', new CheckRequestMiddleware().execute, n
 // Rotas relacionadas a operações no banco de dados
 router.post('/api/v1/db/update', new API_DB_Controller().handleUpdateDb);
 router.post('/api/v1/db/process', new API_DB_Controller().handleProcessDb);
-
+router.get('/api/v1/checkConnections', new API_DB_Controller().handleCheckConnections);
 //#endregion
 
 //#region Filtros
@@ -56,5 +59,18 @@ router.get('/api/v1/filters/imunos', new FiltersController().handlerImunosFilter
 
 // Rota relacionada ao mapa IED
 router.get('/api/v1/maps/ied', new MapController().handlerIED);
+
+//#endregion
+
+//#region Usuários
+
+// Rotas relacionadas a Usurios
+router.post('/api/v1/auth/login', new UserController().handleLogin); 
+
+router.post('/api/v1/auth/register', new UserController().handleRegister); 
+
+router.put('/api/v1/profile/update',  new UserController().handleUpdate); 
+
+router.post('/api/v1/profile/updatePassword',new UserController().handleUpdatePassword); 
 
 //#endregion

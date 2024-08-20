@@ -20,7 +20,8 @@ import {
     useGetUnits,
     useGetTeams,
     useGetData,
-    useNotifyEvent
+    useNotifyEvent,
+    useTypedSelector
 } from '../../hooks';
 //
 import {
@@ -44,24 +45,27 @@ import {
 import {
     PRIORITY_VISITS_DEFAULT,
     DATABASES_DEFAULT,
-    CONDITION,
-    CITY
+    CITY,
+    ModalActions
 } from '../../constants';
 
 //Redux
 import {
-    TypedUseSelectorHook,
-    useSelector
+    useDispatch
 } from 'react-redux';
 //
-import { rootReducer } from '../../../redux/root-reducer';
 import { useTratament } from '../../hooks/useTratament';
+import { useCheckConnections } from '../../hooks/useCheckConnections';
+import { Modal } from '../../components/Modal';
 //#endregion
 
-const useTypedSelector: TypedUseSelectorHook<rootReducer> = useSelector;
 
 export const PriorityVisits = () => {
+    const dispatch = useDispatch()
+
     const { currentPage } = useTypedSelector(rootReducer => rootReducer.pageReducer);
+
+    const modalState = useTypedSelector(rootReducer => rootReducer.modalReducer);
 
     const {
         control_states,
@@ -109,20 +113,42 @@ export const PriorityVisits = () => {
         setAlertMessage(useAlertMessageEvent(control_states));
     }, [control_states])
 
-    const handleSearchAction = (event: any) => {
+    const handleSearchAction = async (event: any) => {
 
         setValues({})
 
         let useHook = (event === 'download') ? useDownload : useGetData
+
         const verified = useTratament({
             no_empty: [
-                { filter: clientsFilter, enums: CITY },
-                { filter: condicoesFilter, enums: CONDITION }
+                { filter: clientsFilter, enums: CITY }
             ]
         }
             , toggleAllFalse)
 
         if (verified) {
+
+            const shouldOpenModal = driverFilter.eSUS.condition === true ? await useCheckConnections(clientsFilter, toggleState) : null;
+
+            if (shouldOpenModal && Object.keys(shouldOpenModal.result).length > 0) {
+                dispatch({ type: ModalActions.VALUE, payload: shouldOpenModal.result })
+
+                dispatch({ type: ModalActions.OPEN });
+
+                const confirmed = await new Promise<boolean>((resolve) => {
+                    const handleModalClose = (confirm: boolean) => {
+                        dispatch({ type: ModalActions.CLOSE });
+                        resolve(confirm);
+                    };
+
+                    dispatch({
+                        type: ModalActions.CONFIRM,
+                        payload: handleModalClose,
+                    });
+                });
+
+                if (!confirmed) return;
+            }
             useHook(
                 OrderURL,
                 {
@@ -167,6 +193,7 @@ export const PriorityVisits = () => {
                 </GroupFilter>
             </GroupFilterContainer>
             <ViewPageContainer>
+                <Modal isOpen={modalState.isOpen} confirmCallback={modalState.confirmCallback} />
                 <DataTable values={values} handleButton={handleSearchAction} handleProps={'download'} />
             </ViewPageContainer>
         </ReportContainer>

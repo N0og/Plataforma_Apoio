@@ -1,14 +1,13 @@
 import './Main.css'
 import { TopMenu, SideBar } from "../components"
 import { renderPage } from '../components'
-import { useSelector, TypedUseSelectorHook} from 'react-redux'
-import { rootReducer } from '../../redux/root-reducer'
+import { useTypedSelector } from '../hooks'
+
 
 
 export const Main = () => {
-
-    const useTypedSelector: TypedUseSelectorHook<rootReducer> = useSelector;
-
+   
+   
     const {currentPage} = useTypedSelector(rootReducer => rootReducer.pageReducer);
 
     return (

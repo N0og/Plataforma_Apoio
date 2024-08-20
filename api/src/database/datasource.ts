@@ -14,6 +14,7 @@ export interface DatabaseConfig {
     database?: string; // Nome do banco de dados
     password?: string; // Senha para autenticação no banco de dados
     port?: number; // Porta na qual o banco de dados está escutando
+    connectionTimeoutMillis?: number; // Tempo limite de conexão em milissegundos
 }
 
 // Classe que implementa as configurações para conectar a um banco de dados PostgreSQL
@@ -23,7 +24,7 @@ export class ConfigPostgresDatabase implements PGConfig, DatabaseConfig {
     database: string = "esus"; // Nome padrão do banco de dados
     password: string; // Senha para autenticação no PostgreSQL
     port: number; // Porta de conexão com o PostgreSQL
-    connectionTimeoutMillis = 2000; // Tempo limite de conexão em milissegundos
+    connectionTimeoutMillis: number = 1000; // Tempo limite de conexão em milissegundos
 
     /**
      * Método para alterar as configurações do banco de dados PostgreSQL.
@@ -80,6 +81,6 @@ export const ConfigAPIDatabase: DataSourceOptions = {
     database: process.env.APIDBNAME, // Nome do banco de dados PostgreSQL, carregado das variáveis de ambiente
     entities: [`${MAIN_PATH}/database/entities/*.{ts,js}`], // Caminho para as entidades mapeadas pelo TypeORM
     migrations: [`${MAIN_PATH}/database/migrations/*.{ts,js}`], // Caminho para as migrações do banco de dados
-    synchronize: true, // Habilita a sincronização automática do esquema do banco de dados com as entidades
+    synchronize: false, // Habilita a sincronização automática do esquema do banco de dados com as entidades
     logging: false // Desativa o log de queries e operações realizadas pelo TypeORM
 };

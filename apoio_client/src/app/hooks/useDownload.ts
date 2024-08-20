@@ -9,7 +9,10 @@ export const useDownload = async (url: string, params: object, setLoading: (key:
             method: 'get',
             url,
             params: { ...params, download: true },
-            responseType: 'blob'
+            responseType: 'blob',
+            headers:{
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
 
         }).then(async response => {
             setLoading('extract_state', false);

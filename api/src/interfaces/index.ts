@@ -10,3 +10,4 @@ export { IVisitasPrioriFiltros } from "./IVisitasPrioritarias";
 export { IVacinasPEC } from "./IVacinasPEC";
 export { IDatabaseConfig } from "./IDatabaseConfig";
 export { IConnEAS, IConneSUS } from "./IConnEntity";
+export { IOralCareReport } from "./IOralCareReport";

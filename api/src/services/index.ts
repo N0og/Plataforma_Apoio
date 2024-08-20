@@ -13,3 +13,8 @@ export { UpdateDBService } from "./UpdateDBService";
 export { VaccinesReportService } from "./VaccinesReportService";
 export { PriorityVisitsReportService } from "./PriorityVisitsReportService";
 export { TeamProductivityReportService } from "./TeamProductivityReportService";
+export { LoginService } from "./LoginUserService";
+export { RefreshTokenService } from "./RefreshTokenService";
+export { RegisterService } from "./RegisterUserService";
+export { UpdatePasswordService } from "./UpdatePasswordService";
+export { UpdateUserService } from "./UpdateUserService";

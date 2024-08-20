@@ -1,4 +1,6 @@
-:root{
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
+
+:root {
     --cor-light: #fff;
     --cor-rose: #248bbb;
     --cor-rose-mid: #2e5477;
@@ -9,4 +11,9 @@
     --cor-min_grey: rgb(242, 242, 242);
     --cor_black: #000;
     --toastify-icon-color-error: var(--cor-rose);
+}
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
 }

@@ -25,7 +25,8 @@ export const BackButtonContainer = styled.div`
         span{
             opacity: 0%;
             padding-left: 20px;
-            font-size: 12px;
+            text-align: center;
+            font-size: 14px;
             color:black;
         }
     }

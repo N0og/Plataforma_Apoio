@@ -10,21 +10,35 @@ export class SQL_DUPLICATES_PEC{
             tc.no_sexo as "SEXO",
             tc.no_mae as "NOME DA MAE",
             tc.no_pai as "NOME DO PAI",
+            tc.dt_atualizado as "DATA DA FICHA",
+            fci.ds_dim_tipo_saida_cadastro as "TIPO DE SAIDA",
             fci.nu_micro_area as "MICRO AREA",
             tc.st_ativo as "ATIVO",
             tc.st_unificado as "UNIFICADO",
-            tdus.nu_cnes as "CNES",
-            tdus.no_unidade_saude as "UNIDADE DE SAUDE",
+            case
+                when tdus.nu_cnes is not null then tdus.nu_cnes
+                when (tdus.nu_cnes is null and tdusCDS.nu_cnes is null) then 'SEM CNES'
+                else tdusCDS.nu_cnes
+            end::VARCHAR(50) as "CNES",
+            case
+                when tdus.nu_cnes is not null then tdus.no_unidade_saude 
+                when (tdus.nu_cnes is null and tdusCDS.nu_cnes is null) then 'SEM CNES'
+                else tdusCDS.no_unidade_saude 
+            end::VARCHAR(50) as "UNIDADE DE SAUDE",
             case 
                 when fci.co_seq_fat_cad_individual is null then 'MODULO CIDADAO'
                 else 'MODULO CDS'
             end as "ORIGEM DUPLICADO",
             case
-                when
-                    tde.no_equipe is null then 'SEM EQUIPE'
-                else tde.nu_ine
+                when tde.no_equipe is not null then tde.nu_ine
+                when (tde.no_equipe is null and tdeCDS.no_equipe is null) then 'SEM EQUIPE'
+                else tdeCDS.nu_ine
             end::VARCHAR(50) as "INE",
-            tde.no_equipe as "EQUIPE",
+            case
+                when tde.no_equipe is not null then tde.no_equipe
+                when (tde.no_equipe is null and tdeCDS.no_equipe is null) then 'SEM EQUIPE'
+                else tdeCDS.no_equipe
+            end::VARCHAR(50) as "EQUIPE",
             tdp.no_profissional as "PROFISSIONAL"
         from 
             tb_cidadao tc 
@@ -32,7 +46,8 @@ export class SQL_DUPLICATES_PEC{
             tb_fat_cidadao_pec tfcp 
                 on tfcp.co_cidadao = tc.co_seq_cidadao 
         left join (
-            select tfci.*
+            select tfci.*,
+            	tdtsc.ds_dim_tipo_saida_cadastro
                 from 
                     tb_fat_cad_individual tfci 
                 inner join
@@ -41,6 +56,8 @@ export class SQL_DUPLICATES_PEC{
                 left join 
                     tb_cds_cad_individual tcci 
                         on right(tcci.co_unico_ficha_origem, 36)  = right(tfc.nu_uuid_ficha_origem , 36)
+                left join
+        			tb_dim_tipo_saida_cadastro tdtsc on tdtsc.co_seq_dim_tipo_saida_cadastro = tfci.co_dim_tipo_saida_cadastro
                 where 
                     tfc.co_dim_tempo_validade > cast(TO_CHAR(CURRENT_DATE, 'yyyymmdd') as INTEGER)
                     and tcci.st_ficha_inativa = 0
@@ -48,6 +65,10 @@ export class SQL_DUPLICATES_PEC{
                     and tcci.st_versao_atual = 1
                     and tfc.co_fat_cidadao_raiz = tfc.co_seq_fat_cidadao
                     ) as fci on fci.co_fat_cidadao_pec = tfcp.co_seq_fat_cidadao_pec
+        left join 
+            tb_dim_equipe tdeCDS on tdeCDS.co_seq_dim_equipe = fci.co_dim_equipe 
+        left join 
+            tb_dim_unidade_saude tdusCDS on tdusCDS.co_seq_dim_unidade_saude = fci.co_dim_unidade_saude 
         left join 
             tb_dim_equipe tde on tde.co_seq_dim_equipe = tfcp.co_dim_equipe_vinc 
         left join 

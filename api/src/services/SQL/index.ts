@@ -6,3 +6,4 @@ export { SQL_PROD_UBS } from "./SQLProdUBS";
 export { SQL_ACCESS_EAS } from "./SQLAccessEAS";
 export { SQL_PRIORITY_VISITS } from "./SQLPriorityVisits";
 export { SQL_VACCINES } from "./SQLVaccines";
+export { SQL_PROD_ORAL_CARE } from "./SQLProdOralCare";

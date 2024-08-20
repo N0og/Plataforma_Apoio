@@ -9,3 +9,16 @@ export enum AlertsActions {
     WAIT = "alerts/wait",
     RESET = "alerts/reset"
 }
+
+export enum ModalActions {
+    OPEN = "modal/open",
+    CLOSE = "modal/close",
+    CONFIRM = "modal/confirm",
+    VALUE = "modal/value"
+}
+
+export enum UserActions {
+    LOGIN = "user/login",
+    LOGOUT = "user/logout",
+    CHECK = "user/check"
+}

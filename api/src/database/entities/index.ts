@@ -7,3 +7,5 @@ export { Municipio } from "./Municipios";
 export { Processamento } from "./Processamento";
 export { Unidade } from "./Unidades";
 export { ConnEAS, ConneSUS } from "./Conn";
+export { User } from './User'
+export { UserTokens } from "./UserTokens";

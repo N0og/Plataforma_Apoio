@@ -1,47 +1,24 @@
+import { useDispatch } from "react-redux"
+import { UserActions } from "../../../constants"
 
-import '@fortawesome/fontawesome-free/css/all.css';
-import { useState } from 'react';
+export const SubMenu = () => {
 
-export const SubMenu:React.FC<{loggedState:boolean}> = ({ loggedState }) => {
+    const dispatch = useDispatch()
 
-    const [devopt, _setDevopt] = useState(false)
-    const [isHovered, setIsHovered] = useState(false);
-
-    if(devopt){
-        if (loggedState){
-            return(
-                <div className="submenu_top">
-                    <div className="item_container">
-                        <div className="item">
-                            <button><i className="fa-solid fa-user"></i></button>
-                        </div>
-                    </div>
-                    <div className="item_container">
-                        <div className="item">
-                            <button><i className="fa-solid fa-right-to-bracket"></i></button>
-                        </div>
-                    </div>
-                </div>
-            )
-        }
-
-        else{
-                return(
-                    <div className="submenu_top">
-                        <div className="item_login_container">
-                            <div className="item_hover">
-                                <div className="item_login">
-                                    <span>Login</span> 
-                                    <button
-                                    onMouseEnter={() => setIsHovered(true)} 
-                                    onMouseLeave={() => setIsHovered(false)}
-                                    ><i className={isHovered ? "fa-solid fa-door-open" : "fa-solid fa-door-closed"}></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )
-        }
+    const handleclick = () => {
+        dispatch({
+            type: UserActions.LOGOUT
+        })
     }
-    
+
+    return (
+        <div className="submenu_top">
+            <div className="item_container">
+                <div className="item">
+                    <button onClick={handleclick}><i className="fa-solid fa-right-to-bracket"></i></button>
+                </div>
+            </div>
+        </div>
+    )
+
 }

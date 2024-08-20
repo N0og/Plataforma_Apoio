@@ -4,4 +4,5 @@ export interface IDatabaseConfig {
     database?: string;
     password?: string;
     port?: number;
+    connectionTimeoutMillis?: number;
 }

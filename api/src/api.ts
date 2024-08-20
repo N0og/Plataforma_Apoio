@@ -19,6 +19,7 @@ import { router } from './routes'
 import { API_DB_DataSource } from './database/init'
 import cors from 'cors'
 import { JSONLoader } from './utils'
+import { AuthTokenMiddleware } from './middlewares/AuthTokenMiddleware'
 
 // Carrega as variáveis de ambiente do arquivo .env para o process.env.
 DotEnvConfig()
@@ -28,6 +29,7 @@ const api = express()
 
 // Configura a API para utilizar JSON como formato de entrada/saída.
 api.use(express.json())
+
 
 /**
  * Configura o middleware CORS para controlar o acesso à API.
@@ -45,6 +47,9 @@ api.use(cors({
     allowedHeaders: 'Content-Type, Authorization',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
 }))
+
+// Aplica o middleware AUTHTOKEN que verifica se o usuário está autenticado.
+api.use(new AuthTokenMiddleware().handlerAuth)
 
 // Aplica as rotas definidas no arquivo router.
 api.use(router)

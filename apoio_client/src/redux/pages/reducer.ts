@@ -3,10 +3,17 @@ import {
     Pages
 } from "../../app/constants";
 
-const initialState = {
+// Defina a interface para o estado do reducer
+interface PageState {
+    currentPage: Pages;
+    previousPage: Pages[];
+  }
+  
+  // Estado inicial com tipagem explícita
+  const initialState: PageState = {
     currentPage: Pages.REPORTS_PAGE,
     previousPage: [],
-};
+  };
 
 const pageReducer = (state = initialState, action: any) => {
 

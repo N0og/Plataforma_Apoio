@@ -13,3 +13,4 @@ export { Loading } from "./Loading";
 export { BackButton } from "./BackButton";
 export { SearchButton } from "./SearchButton";
 export { DataTable } from "./Table";
+export { Modal } from "./Modal";

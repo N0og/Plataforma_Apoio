@@ -20,7 +20,8 @@ import {
     useAlertMessageEvent,
     useNotifyEvent,
     useGetData,
-    useGetInstallations
+    useGetInstallations,
+    useTypedSelector
 } from '../../hooks';
 //
 import {
@@ -41,23 +42,26 @@ import {
 } from '../../styles';
 
 //Constants
-import { DATABASES_DEFAULT } from '../../constants';
+import { DATABASES_DEFAULT, ModalActions } from '../../constants';
 
 //Redux
-import {
-    TypedUseSelectorHook,
-    useSelector
-} from 'react-redux';
+
 //
-import { rootReducer } from '../../../redux/root-reducer';
 import { CITY } from '../../constants/alertsEnum';
 import { useTratament } from '../../hooks/useTratament';
+import { Modal } from '../../components/Modal';
+import { useDispatch } from 'react-redux';
+import { useCheckConnections } from '../../hooks/useCheckConnections';
 //#endregion
 
-const useTypedSelector: TypedUseSelectorHook<rootReducer> = useSelector;
 
 export const TeamProductivity = () => {
+
+    const dispatch = useDispatch()
+
     const { currentPage } = useTypedSelector(rootReducer => rootReducer.pageReducer);
+
+    const modalState = useTypedSelector(rootReducer => rootReducer.modalReducer);
 
     const {
         control_states,
@@ -103,11 +107,12 @@ export const TeamProductivity = () => {
         setAlertMessage(useAlertMessageEvent(control_states));
     }, [control_states])
 
-    const handleSearchAction = (event: any) => {
+    const handleSearchAction = async (event: any) => {
 
         setValues({})
 
         let useHook = (event === 'download') ? useDownload : useGetData
+        
         const verified = useTratament({
             no_empty: [
                 { filter: clientsFilter, enums: CITY }
@@ -116,17 +121,40 @@ export const TeamProductivity = () => {
             , toggleAllFalse)
 
         if (verified) {
+
+            const shouldOpenModal = driverFilter.eSUS.condition === true ? await useCheckConnections(clientsFilter, toggleState) : null;
+
+            if (shouldOpenModal && Object.keys(shouldOpenModal.result).length > 0) {
+                dispatch({type: ModalActions.VALUE, payload:shouldOpenModal.result})
+
+                dispatch({ type: ModalActions.OPEN });
+
+                const confirmed = await new Promise<boolean>((resolve) => {
+                    const handleModalClose = (confirm: boolean) => {
+                        dispatch({ type: ModalActions.CLOSE });
+                        resolve(confirm);
+                    };
+
+                    dispatch({
+                        type: ModalActions.CONFIRM,
+                        payload: handleModalClose,
+                    });
+                });
+
+                if (!confirmed) return;
+            }
+
             useHook(
                 OrderURL,
                 {
                     data_inicial: dataFilters[0],
-                    data_final: dataFilters[1],    
+                    data_final: dataFilters[1],
                     download: false
                 },
                 toggleState
             )
-                .then((resp:any) => {
-                    setValues({json: resp[Object.keys(resp)[0]].result})
+                .then((resp: any) => {
+                    setValues({ json: resp[Object.keys(resp)[0]].result })
                     console.log(resp)
                     useNotifyEvent(resp[Object.keys(resp)[0]].msg, 'info')
                 })
@@ -156,6 +184,7 @@ export const TeamProductivity = () => {
                 </GroupFilter>
             </GroupFilterContainer>
             <ViewPageContainer>
+                <Modal isOpen={modalState.isOpen} confirmCallback={modalState.confirmCallback} />
                 <DataTable values={values} handleButton={handleSearchAction} handleProps={'download'} />
             </ViewPageContainer>
         </ReportContainer>

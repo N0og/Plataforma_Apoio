@@ -22,7 +22,8 @@ import {
     useGetData,
     useNotifyEvent,
     useGetVaccines,
-    useGetInstallations
+    useGetInstallations,
+    useTypedSelector
 } from '../../hooks';
 //
 import {
@@ -43,27 +44,32 @@ import {
 import { ISimpleFilterPartition } from '../../interfaces/IFilters';
 
 //Constants
-import { DATABASES_DEFAULT, CITY } from '../../constants';
+import { DATABASES_DEFAULT, CITY, ModalActions } from '../../constants';
 
 //Redux
 import {
-    TypedUseSelectorHook,
-    useSelector
+    useDispatch
 } from 'react-redux';
-import { rootReducer } from '../../../redux/root-reducer';
 import { useTratament } from '../../hooks/useTratament';
+import { useCheckConnections } from '../../hooks/useCheckConnections';
+import { Modal } from '../../components/Modal';
 //#endregion
 
-const useTypedSelector: TypedUseSelectorHook<rootReducer> = useSelector;
+
 
 export const Vaccines = () => {
+    const dispatch = useDispatch()
+
     const { currentPage } = useTypedSelector(rootReducer => rootReducer.pageReducer);
+
+    const modalState = useTypedSelector(rootReducer => rootReducer.modalReducer);
 
     const {
         control_states,
         toggleState,
         toggleAllFalse
     } = useStateController()
+
     const {
         clientsFilter,
         setClientFilter
@@ -109,11 +115,12 @@ export const Vaccines = () => {
         setAlertMessage(useAlertMessageEvent(control_states));
     }, [control_states])
 
-    const handleSearchAction = (event: any) => {
+    const handleSearchAction = async (event: any) => {
 
         setValues({})
 
         let useHook = (event === 'download') ? useDownload : useGetData
+
         const verified = useTratament({
             no_empty: [
                 { filter: clientsFilter, enums: CITY }
@@ -122,6 +129,29 @@ export const Vaccines = () => {
             , toggleAllFalse)
 
         if (verified) {
+
+            const shouldOpenModal = driverFilter.eSUS.condition === true ? await useCheckConnections(clientsFilter, toggleState) : null;
+
+            if (shouldOpenModal && Object.keys(shouldOpenModal.result).length > 0) {
+                dispatch({ type: ModalActions.VALUE, payload: shouldOpenModal.result })
+
+                dispatch({ type: ModalActions.OPEN });
+
+                const confirmed = await new Promise<boolean>((resolve) => {
+                    const handleModalClose = (confirm: boolean) => {
+                        dispatch({ type: ModalActions.CLOSE });
+                        resolve(confirm);
+                    };
+
+                    dispatch({
+                        type: ModalActions.CONFIRM,
+                        payload: handleModalClose,
+                    });
+                });
+
+                if (!confirmed) return;
+            }
+
             useHook(
                 OrderURL,
                 {
@@ -163,6 +193,7 @@ export const Vaccines = () => {
                 </GroupFilter>
             </GroupFilterContainer>
             <ViewPageContainer>
+                <Modal isOpen={modalState.isOpen} confirmCallback={modalState.confirmCallback} />
                 <DataTable values={values} handleButton={handleSearchAction} handleProps={'download'} />
             </ViewPageContainer>
         </ReportContainer>

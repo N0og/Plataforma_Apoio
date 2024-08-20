@@ -9,7 +9,9 @@ import {
     Equipe,
     Processamento,
     Unidade,
-    Imunobiologico
+    Imunobiologico,
+    User,
+    UserTokens
 } from "../entities"; // Importa as entidades
 
 import { API_DB_DataSource } from "../init"; // Importa o DataSource configurado para o banco de dados
@@ -37,3 +39,5 @@ export const estadoRepository = createRepository(Estado); // Repositório para a
 export const ConneSUSRepository = createRepository(ConneSUS); // Repositório para a entidade ConneSUS
 export const ConnEASRepository = createRepository(ConnEAS); // Repositório para a entidade ConnEAS
 export const ImunoseSUSRepository = createRepository(Imunobiologico); // Repositório para a entidade Imunobiologico
+export const UserRepository = createRepository(User);  // Repositório para a entidade de Usuários
+export const UserTokensRepository = createRepository(UserTokens);  // Repositório para a entidade de Tokens (Refresh Token)

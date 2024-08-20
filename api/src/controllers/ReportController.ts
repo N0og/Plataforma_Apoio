@@ -33,6 +33,7 @@ import {
 } from "./handlers";
 
 import JSZip, { file } from "jszip";
+import { OralCareReportService } from "../services/OralCareReportService";
 
 export default class ReportController {
 
@@ -86,7 +87,7 @@ export default class ReportController {
             console.log(`PEDIDO IP: ${req.ip} - BUSCAS REALIZADAS.`)
             if (DOWNLOAD) {
                 console.log(`PEDIDO IP: ${req.ip} - ENVIO PARA DOWNLOAD - SISTEMATIZANDO...`)
-                const ZIP = await this.generateZip();
+                const ZIP = await this.generateZip(type);
 
                 if (!ZIP) {
                     return res.status(204).json(
@@ -103,7 +104,7 @@ export default class ReportController {
                 });
 
                 res.set('Content-Type', 'application/zip');
-                res.set('Content-Disposition', `attachment; filename="${type}${new Date().toLocaleDateString('pt-BR')}.zip"`);
+                res.set('Content-Disposition', `attachment; filename="${type}${new Date().toLocaleDateString('pt-BR').replace(/\//g, "_")}.zip"`);
                 res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
                 ZIP_BUFFER.pipe(res)
             }
@@ -169,7 +170,7 @@ export default class ReportController {
     }
 
 
-    async generateZip() {
+    async generateZip(type:any) {
         const zip = new JSZip();
 
         for (const SHEET of Object.keys(this.ORDERS_PROCESS)) {
@@ -185,7 +186,7 @@ export default class ReportController {
             this.ORDERS_PROCESS[SHEET].sheet.insert(this.ORDERS_PROCESS[SHEET].json.result);
 
             const worksheetBuffer: Buffer = await this.ORDERS_PROCESS[SHEET].sheet.save_worksheet();
-            zip.file(`${file_name}.xlsx`, worksheetBuffer);
+            zip.file(`${file_name}_${type}${new Date().toLocaleDateString('pt-BR').replace(/\//g, "_")}.xlsx`, worksheetBuffer);
         }
 
         return zip
@@ -222,5 +223,9 @@ export default class ReportController {
 
     handleVacinasPEC = async (req: IReportControllerRequest, res: Response) => {
         this.executeHandler(req, res, VaccinesReportService, `VacinasPEC`)
+    }
+
+    handleProdOralCare = async (req: IReportControllerRequest, res: Response) => {
+        this.executeHandler(req, res, OralCareReportService, `CuidadosBucais`)
     }
 }

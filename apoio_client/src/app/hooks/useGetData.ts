@@ -11,6 +11,7 @@ export const useGetData = (url: string, params: object, setLoading: (key: keyof 
             params,
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         })
         .then(response => {

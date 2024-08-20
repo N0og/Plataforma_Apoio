@@ -7,7 +7,7 @@ import {
 
 import { useNotifyEvent } from "../../../hooks/useNotifyEvent";
 import { ISimpleFilterPartition } from "../../../interfaces/IFilters";
-
+import '@fortawesome/fontawesome-free/css/all.css';
 import {
   SelectAllCheckBox,
   OptionCheckBox,

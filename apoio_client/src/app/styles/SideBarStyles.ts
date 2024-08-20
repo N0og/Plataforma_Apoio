@@ -26,7 +26,7 @@ export const SideBarContainer = styled.div`
     height: 100vh;
     border-radius: 0;
     background-color: var(--cor-light);
-    /*box-shadow: 0px 15px 8px 0px rgb(116, 114, 114);*/
+    box-shadow: 0px 0px 3px 0px rgb(212, 212, 212);
     opacity: 100%;
     .infoSystem {
       opacity: 100%;
