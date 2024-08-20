@@ -52,7 +52,7 @@ export const CardsContainer = styled.div`
     align-items: center;
     flex-wrap: wrap;
     padding:45px;
-    width: 100%;
+    width: calc(250px * 4);
     gap: 25px;
     
     @media (max-width:760px){

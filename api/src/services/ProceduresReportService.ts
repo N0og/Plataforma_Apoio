@@ -1,14 +1,14 @@
 import { ExecuteSQL } from "../database/execute";
 import { ConnectDBs } from "../database/init";
-import { IOralCareReport } from "../interfaces";
+import { IProceduresReport } from "../interfaces";
 import { DynamicParameters } from "../utils";
-import { SQL_PROD_ORAL_CARE } from "./SQL";
+import { SQL_PROCEDURES } from "./SQL";
 
-export class OralCareReportService{
-    async execute (dbtype: string, dbClient: ConnectDBs, filtros_params: IOralCareReport){
+export class ProceduresReportService{
+    async execute (dbtype: string, dbClient: ConnectDBs, filtros_params: IProceduresReport){
         const DYNAMIC_PARAMETERS = new DynamicParameters()
 
-        const SQL = new SQL_PROD_ORAL_CARE()
+        const SQL = new SQL_PROCEDURES()
 
         let SQL_BASE = SQL.getBase()
 
@@ -28,20 +28,16 @@ export class OralCareReportService{
 
         //Filtros de consulta dinâmica.
         const DYNAMIC_FILTER_MAP = {
-            escovacao_supervisionada: SQL.getEscovSuper.bind(SQL),
-            tratamento_concluido: SQL.getTratConcluido.bind(SQL),
-            curativo_demora: SQL.getCurativoDem.bind(SQL),
-            aplicacao_fluor: SQL.getFluor.bind(SQL),
-            orientacao_saude: SQL.getOrientacao.bind(SQL),
-            profilaxia: SQL.getProfilaxia.bind(SQL),
-            exodontia_d: SQL.getExodontiaDeciduos.bind(SQL),
-            exodontia_p: SQL.getExodontiaPermanente.bind(SQL),
-            tra: SQL.getTra.bind(SQL)
+            citologico: SQL.getCitologico.bind(SQL),
+            rastreamento_cito: SQL.getRastreamentoMicroFlora.bind(SQL),
+            rastreamento_mama: SQL.getRastreamentoMama.bind(SQL),
+            pre_natal_parceiro: SQL.getPreNatal.bind(SQL),
+            visita_domiciliar: SQL.getVisitaDomiciliar.bind(SQL),
         };
 
-        if (filtros_params.cares) {
-            const cares = Array.isArray(filtros_params.cares) ? filtros_params.cares : Array(filtros_params.cares) as string[]
-            for (const condition of cares) {
+        if (filtros_params.procedures) {
+            const procedures = Array.isArray(filtros_params.procedures) ? filtros_params.procedures : Array(filtros_params.procedures) as string[]
+            for (const condition of procedures) {
                 if (condition && DYNAMIC_FILTER_MAP[condition]) {
                     let dynamic_select: {select: string, from: string} = DYNAMIC_FILTER_MAP[condition]();
                     SQL_BASE += dynamic_select.select

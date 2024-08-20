@@ -24,7 +24,8 @@ import {
     DuplicatesReportService,
     CompletenessReportService,
     AccessEASReportService,
-    VaccinesReportService
+    VaccinesReportService,
+    ProceduresReportService
 } from "../services";
 
 import {
@@ -227,5 +228,9 @@ export default class ReportController {
 
     handleProdOralCare = async (req: IReportControllerRequest, res: Response) => {
         this.executeHandler(req, res, OralCareReportService, `CuidadosBucais`)
+    }
+
+    handleProcedures = async (req: IReportControllerRequest, res: Response) => {
+        this.executeHandler(req, res, ProceduresReportService, `CuidadosIndividuais`)
     }
 }

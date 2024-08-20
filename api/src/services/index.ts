@@ -18,3 +18,5 @@ export { RefreshTokenService } from "./RefreshTokenService";
 export { RegisterService } from "./RegisterUserService";
 export { UpdatePasswordService } from "./UpdatePasswordService";
 export { UpdateUserService } from "./UpdateUserService";
+export { OralCareReportService } from "./OralCareReportService";
+export { ProceduresReportService } from "./ProceduresReportService";

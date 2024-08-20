@@ -11,3 +11,5 @@ export { IVacinasPEC } from "./IVacinasPEC";
 export { IDatabaseConfig } from "./IDatabaseConfig";
 export { IConnEAS, IConneSUS } from "./IConnEntity";
 export { IOralCareReport } from "./IOralCareReport";
+export { IProceduresReport } from "./IProceduresReport";
+export { IGenericFilterPEC } from "./IGenericFilterPEC";

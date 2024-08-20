@@ -56,7 +56,7 @@ export class SQL_PROD_ORAL_CARE {
             where 
                 (tfao.ds_filtro_procedimentos like '%0307030040%' or tfao.ds_filtro_procedimentos like '%ABPO016%')
         ),
-        exodontia as (
+        exodontia_deciduos as (
             select 
                 tfao.co_seq_fat_atd_odnt as cod,
                 tfao.co_dim_profissional_1,
@@ -65,7 +65,18 @@ export class SQL_PROD_ORAL_CARE {
             from
                 tb_fat_atendimento_odonto tfao 
             where 
-                (tfao.ds_filtro_procedimentos like '%0414020120%' or tfao.ds_filtro_procedimentos like '%ABPO011%' or tfao.ds_filtro_procedimentos like '%0414020138%' or tfao.ds_filtro_procedimentos like '%ABPO012%')
+                (tfao.ds_filtro_procedimentos like '%0414020120%' or tfao.ds_filtro_procedimentos like '%ABPO011%')
+        ),
+        exodontia_permanente as (
+            select 
+                tfao.co_seq_fat_atd_odnt as cod,
+                tfao.co_dim_profissional_1,
+                tfao.co_dim_unidade_saude_1,
+                tfao.co_dim_cbo_1
+            from
+                tb_fat_atendimento_odonto tfao 
+            where 
+                (tfao.ds_filtro_procedimentos like '%0414020138%' or tfao.ds_filtro_procedimentos like '%ABPO012%')
         ),
         tra as (
             select 
@@ -105,6 +116,9 @@ export class SQL_PROD_ORAL_CARE {
             1=1
     `
 
+    private SQL_DYNAMIC_WHERE = `
+    `
+
     private SQL_END = `
         group by
             tdus.nu_cnes,
@@ -117,77 +131,105 @@ export class SQL_PROD_ORAL_CARE {
             tdus.no_unidade_saude asc
     `
 
-    private SQL_ESCOVACAO_SUPER = {
-        select: `
-        ,
-        (select 
-                count(*)
-            from tb_fat_atividade_coletiva tfac 
-            left join tb_dim_unidade_saude tdus2 on tdus2.co_seq_dim_unidade_saude = tfac.co_dim_unidade_saude 
-            left join tb_dim_profissional tdp2 on tdp2.co_seq_dim_profissional = tfac.co_dim_profissional 
-            where 
-                tfac.ds_filtro_pratica_em_saude like '%|9|%'
-                and tdp2.no_profissional = tdp.no_profissional 
-                and tdus2.nu_cnes = tdus.nu_cnes
-        ) as "ESCOVAÇÃO SUPERVISIONADA"
-    `,
-        from: ''
+    private SQL_ESCOVACAO_SUPER() {
+        return {
+            select: `
+                ,
+                (select 
+                        count(*)
+                    from tb_fat_atividade_coletiva tfac 
+                    left join tb_dim_unidade_saude tdus2 on tdus2.co_seq_dim_unidade_saude = tfac.co_dim_unidade_saude 
+                    left join tb_dim_profissional tdp2 on tdp2.co_seq_dim_profissional = tfac.co_dim_profissional 
+                    left join tb_dim_tempo tdt on tdt.co_seq_dim_tempo = tfac.co_dim_tempo
+                    where 
+                        tfac.ds_filtro_pratica_em_saude like '%|9|%'
+                        and tdp2.no_profissional = tdp.no_profissional 
+                        and tdus2.nu_cnes = tdus.nu_cnes
+                        ${this.SQL_DYNAMIC_WHERE}
+                ) as "ESCOVAÇÃO SUPERVISIONADA"
+            `,
+            from: ''
+        }
     }
 
-    private SQL_TRATAMENTO_CONCLUIDO = {
-        select: `, count(tc.cod) as "QTD. TRATAMENTO CONCLUÍDOO"`,
-        from: `
-            left join trat_concluido tc
-                on tc.cod = tfao.co_seq_fat_atd_odnt and tc.co_dim_profissional_1 = tfao.co_dim_profissional_1 and tc.co_dim_cbo_1 = tfao.co_dim_cbo_1 and tc.co_dim_unidade_saude_1 = tfao.co_dim_unidade_saude_1
-         `
+    private SQL_TRATAMENTO_CONCLUIDO() {
+        return {
+            select: `, count(tc.cod) as "QTD. TRATAMENTO CONCLUÍDOO"`,
+            from: `
+                left join trat_concluido tc
+                    on tc.cod = tfao.co_seq_fat_atd_odnt and tc.co_dim_profissional_1 = tfao.co_dim_profissional_1 and tc.co_dim_cbo_1 = tfao.co_dim_cbo_1 and tc.co_dim_unidade_saude_1 = tfao.co_dim_unidade_saude_1
+            `
+        }
     }
 
-    private SQL_CURATIVO_DEMORA = {
-        select: `, count(cd.cod) as "QTD. CURATIVO DE DEMORA"`,
-        from: `
-            left join curativo_demora cd
-                on cd.cod = tfao.co_seq_fat_atd_odnt and cd.co_dim_profissional_1 = tfao.co_dim_profissional_1 and cd.co_dim_cbo_1 = tfao.co_dim_cbo_1 and cd.co_dim_unidade_saude_1 = tfao.co_dim_unidade_saude_1  
-         `
+    private SQL_CURATIVO_DEMORA() {
+        return {
+            select: `, count(cd.cod) as "QTD. CURATIVO DE DEMORA"`,
+            from: `
+                left join curativo_demora cd
+                    on cd.cod = tfao.co_seq_fat_atd_odnt and cd.co_dim_profissional_1 = tfao.co_dim_profissional_1 and cd.co_dim_cbo_1 = tfao.co_dim_cbo_1 and cd.co_dim_unidade_saude_1 = tfao.co_dim_unidade_saude_1  
+            `
+        }
     }
 
-    private SQL_APLICACAO_FLUOR = {
-        select: `, count(f.cod) as "QTD. APLICAÇÃO DE FLUOR"`,
-        from: `
-            left join fluor f
-                on f.cod = tfao.co_seq_fat_atd_odnt and cd.co_dim_profissional_1 = tfao.co_dim_profissional_1 and f.co_dim_cbo_1 = tfao.co_dim_cbo_1 and f.co_dim_unidade_saude_1 = tfao.co_dim_unidade_saude_1 
-         `
+    private SQL_APLICACAO_FLUOR() {
+        return {
+            select: `, count(f.cod) as "QTD. APLICAÇÃO DE FLUOR"`,
+            from: `
+                left join fluor f
+                    on f.cod = tfao.co_seq_fat_atd_odnt and cd.co_dim_profissional_1 = tfao.co_dim_profissional_1 and f.co_dim_cbo_1 = tfao.co_dim_cbo_1 and f.co_dim_unidade_saude_1 = tfao.co_dim_unidade_saude_1 
+            `
+        }
     }
 
-    private SQL_ORIENTACAO_SAUDE = {
-        select: `, count(ori.cod) as "QTD. ORIENTAÇÃO DE HIGIENE BUCAL"`,
-        from: `
-            left join orientacao ori
-                on ori.cod = tfao.co_seq_fat_atd_odnt and ori.co_dim_profissional_1 = tfao.co_dim_profissional_1 and ori.co_dim_cbo_1 = tfao.co_dim_cbo_1 and ori.co_dim_unidade_saude_1 = tfao.co_dim_unidade_saude_1 
-         `
+    private SQL_ORIENTACAO_SAUDE() {
+        return {
+            select: `, count(ori.cod) as "QTD. ORIENTAÇÃO DE HIGIENE BUCAL"`,
+            from: `
+                left join orientacao ori
+                    on ori.cod = tfao.co_seq_fat_atd_odnt and ori.co_dim_profissional_1 = tfao.co_dim_profissional_1 and ori.co_dim_cbo_1 = tfao.co_dim_cbo_1 and ori.co_dim_unidade_saude_1 = tfao.co_dim_unidade_saude_1 
+            `
+        }
     }
 
-    private SQL_PROFILAXIA = {
-        select: `, count(p.cod) as "QTD. PROFILAXIA"`,
-        from: `
-            left join profilaxia p
-                on p.cod = tfao.co_seq_fat_atd_odnt and p.co_dim_profissional_1 = tfao.co_dim_profissional_1 and p.co_dim_cbo_1 = tfao.co_dim_cbo_1 and p.co_dim_unidade_saude_1 = tfao.co_dim_unidade_saude_1 
-         `
+    private SQL_PROFILAXIA() {
+        return {
+            select: `, count(p.cod) as "QTD. PROFILAXIA"`,
+            from: `
+                left join profilaxia p
+                    on p.cod = tfao.co_seq_fat_atd_odnt and p.co_dim_profissional_1 = tfao.co_dim_profissional_1 and p.co_dim_cbo_1 = tfao.co_dim_cbo_1 and p.co_dim_unidade_saude_1 = tfao.co_dim_unidade_saude_1 
+            `
+        }
     }
 
-    private SQL_EXODONTIA = {
-        select: `, count(exo.cod) as "QTD. EXODONTIA"`,
-        from: `
-            left join exodontia exo
-                on exo.cod = tfao.co_seq_fat_atd_odnt and exo.co_dim_profissional_1 = tfao.co_dim_profissional_1 and exo.co_dim_cbo_1 = tfao.co_dim_cbo_1 and exo.co_dim_unidade_saude_1 = tfao.co_dim_unidade_saude_1 
-         `
+    private SQL_EXODONTIA_DECIDUOS() {
+        return {
+            select: `, count(exo_d.cod) as "QTD. EXODONTIA D. DECIDUOS"`,
+            from: `
+                left join exodontia_deciduos exo_d
+                    on exo_d.cod = tfao.co_seq_fat_atd_odnt and exo_d.co_dim_profissional_1 = tfao.co_dim_profissional_1 and exo_d.co_dim_cbo_1 = tfao.co_dim_cbo_1 and exo_d.co_dim_unidade_saude_1 = tfao.co_dim_unidade_saude_1 
+            `
+        }
     }
 
-    private SQL_TRA = {
-        select: `, count(tra.cod) as "QTD. TRA/ART"`,
-        from: `
-            left join tra
-                on tra.cod = tfao.co_seq_fat_atd_odnt and tra.co_dim_profissional_1 = tfao.co_dim_profissional_1 and tra.co_dim_cbo_1 = tfao.co_dim_cbo_1 and tra.co_dim_unidade_saude_1 = tfao.co_dim_unidade_saude_1 
-         `
+    private SQL_EXODONTIA_PERMANENTE() {
+        return {
+            select: `, count(exo_p.cod) as "QTD. EXODONTIA D. PERMANENTE"`,
+            from: `
+                left join exodontia_permanente exo_p
+                    on exo_p.cod = tfao.co_seq_fat_atd_odnt and exo_p.co_dim_profissional_1 = tfao.co_dim_profissional_1 and exo_p.co_dim_cbo_1 = tfao.co_dim_cbo_1 and exo_p.co_dim_unidade_saude_1 = tfao.co_dim_unidade_saude_1 
+            `
+        }
+    }
+
+    private SQL_TRA() {
+        return {
+            select: `, count(tra.cod) as "QTD. TRA/ART"`,
+            from: `
+                left join tra
+                    on tra.cod = tfao.co_seq_fat_atd_odnt and tra.co_dim_profissional_1 = tfao.co_dim_profissional_1 and tra.co_dim_cbo_1 = tfao.co_dim_cbo_1 and tra.co_dim_unidade_saude_1 = tfao.co_dim_unidade_saude_1 
+            `
+        }
     }
 
     getBase() {
@@ -207,34 +249,41 @@ export class SQL_PROD_ORAL_CARE {
     }
 
     getEscovSuper() {
-        return this.SQL_ESCOVACAO_SUPER
+        return this.SQL_ESCOVACAO_SUPER()
     }
 
     getTratConcluido() {
-        return this.SQL_TRATAMENTO_CONCLUIDO
+        return this.SQL_TRATAMENTO_CONCLUIDO()
     }
 
     getCurativoDem() {
-        return this.SQL_CURATIVO_DEMORA
+        return this.SQL_CURATIVO_DEMORA()
     }
 
     getFluor() {
-        return this.SQL_APLICACAO_FLUOR
+        return this.SQL_APLICACAO_FLUOR()
     }
 
     getOrientacao() {
-        return this.SQL_ORIENTACAO_SAUDE
+        return this.SQL_ORIENTACAO_SAUDE()
     }
 
     getProfilaxia() {
-        return this.SQL_PROFILAXIA
+        return this.SQL_PROFILAXIA()
     }
 
-    getExodontia() {
-        return this.SQL_EXODONTIA
+    getExodontiaDeciduos() {
+        return this.SQL_EXODONTIA_DECIDUOS()
+    }
+    getExodontiaPermanente() {
+        return this.SQL_EXODONTIA_PERMANENTE()
     }
 
     getTra() {
-        return this.SQL_TRA
+        return this.SQL_TRA()
+    }
+
+    setDynamicWhere(clause: string) {
+        this.SQL_DYNAMIC_WHERE += clause
     }
 }

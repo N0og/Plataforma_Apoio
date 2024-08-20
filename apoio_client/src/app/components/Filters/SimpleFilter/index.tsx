@@ -66,7 +66,7 @@ export const SimpleFilter: React.FC<{
 
         for (let key in prevFilters) {
           if (prevFilters.hasOwnProperty(key)) {
-            newFilters[key] = { ...newFilters[key], condition: !allTrue };
+            newFilters[key] = { ...prevFilters[key], condition: !allTrue };
           }
         }
         return newFilters;

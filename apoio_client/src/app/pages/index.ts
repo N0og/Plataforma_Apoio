@@ -8,3 +8,5 @@ export { Duplicates } from "./Duplicates";
 export { PriorityVisits } from "./PriorityVisits";
 export { Completeness } from "./Completeness";
 export { Vaccines } from "./Vaccines";
+export { OralCare } from "./OralCare";
+export { Procedures } from "./Procedures";

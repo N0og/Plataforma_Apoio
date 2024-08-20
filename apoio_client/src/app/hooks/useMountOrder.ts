@@ -50,18 +50,20 @@ export const useMountOrder = (config: IConfigOrder, dependencys: React.Dependenc
     if (Object.keys(config.params).length > 0) {
 
       Object.entries(config.params).forEach(([FilterTitle, FilterObject]) => {
-        if (isSimpleFilterPartition(FilterObject)) {
-          URL += Object.entries(FilterObject)
-            .filter(([_innerKey, innerInnerValue]: [string, any]) => innerInnerValue.condition === true)
-            .map(([_innerKey, innerInnerValue]: [string, any]) => `&${FilterTitle}=${innerInnerValue.value}`)
-            .join('')
-        } else {
-          URL += Object.entries(FilterObject)
-            .flatMap(([_containerKey, containerValue]) =>
-              Object.entries(containerValue)
-                .filter(([_key, value]: [string, any]) => value.condition === true)
-                .map(([_key, value]: [string, any]) => `&${FilterTitle}=${value.value}`)
-            ).join('')
+        if (Object.keys(FilterObject).length > 0) {
+          if (isSimpleFilterPartition(FilterObject)) {
+            URL += Object.entries(FilterObject)
+              .filter(([_innerKey, innerInnerValue]: [string, any]) => innerInnerValue.condition === true)
+              .map(([_innerKey, innerInnerValue]: [string, any]) => `&${FilterTitle}=${innerInnerValue.value}`)
+              .join('')
+          } else {
+            URL += Object.entries(FilterObject)
+              .flatMap(([_containerKey, containerValue]) =>
+                Object.entries(containerValue)
+                  .filter(([_key, value]: [string, any]) => value.condition === true)
+                  .map(([_key, value]: [string, any]) => `&${FilterTitle}=${value.value}`)
+              ).join('')
+          }
         }
       });
     }

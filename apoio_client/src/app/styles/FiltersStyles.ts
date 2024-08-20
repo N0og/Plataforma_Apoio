@@ -403,6 +403,7 @@ export const FilterDataCalendar = styled.div`
     width: 150px;
     height: 15px;
     background-color: transparent;
+    z-index: 9997;
 
     /* Estilo dos campos de data */
     .inicioSelect,

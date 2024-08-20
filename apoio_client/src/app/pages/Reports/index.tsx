@@ -32,8 +32,8 @@ export const Reports = () => {
                     {/*<Card icon={'fa-solid fa-hospital-user'} title="Vínculo e Acompanhamento" page={Pages.HELP_PAGE} />*/}
                     <Card icon={'fa-solid fa-server'} title="Versionamento PEC" page={Pages.HELP_PAGE} />
                     <Card icon={'fa-solid fa-house-medical-circle-xmark'} title="Atendimentos Não Finalizados" page={Pages.HELP_PAGE} />
-                    <Card icon={'fa-solid fa-tooth'} title="Saúde Bucal" page={Pages.HELP_PAGE} />
-                    <Card icon={'fa-solid fa-hands-holding-child'} title="Procedimentos" page={Pages.HELP_PAGE} />
+                    <Card icon={'fa-solid fa-tooth'} title="Saúde Bucal" page={Pages.ORAL_CARE_PAGE} />
+                    <Card icon={'fa-solid fa-hands-holding-child'} title="Procedimentos" page={Pages.PROCEDURES} />
                 </CardsContainer>
             </ContentContainer>
         </RelatoriosPageContainer>

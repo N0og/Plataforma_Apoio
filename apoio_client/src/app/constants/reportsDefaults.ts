@@ -33,3 +33,24 @@ export const DATABASES_DEFAULT = {
     'eSUS': { value: Databases.PSQL, condition: false },
     'AtendSaúde': { value: Databases.MDB, condition: false }
 } 
+
+export const ORAL_CARE_DEFAULT = {
+    'ESCOVAÇÃO SUPERVISIONADA': { value: 'escovacao_supervisionada', condition: false },
+    'TRATAMENTO CONCLUÍDO': { value: 'tratamento_concluido', condition: false },
+    'CURATIVO DE DEMORA': { value: 'curativo_demora', condition: false },
+    'APLICAÇÃO TÓPICA DE FLUOR': { value: 'aplicacao_fluor', condition: false },
+    'ORIENTAÇÃO DE HIGIENE BUCAL': { value: 'orientacao_saude', condition: false },
+    'PROFILAXIA': { value: 'profilaxia', condition: false },
+    'EXODONTIA - PERMANENTE': { value: 'exodontia_p', condition: false },
+    'EXODONTIA - DECIDUOS': { value: 'exodontia_d', condition: false },
+    'TRA / ART': { value: 'tra', condition: false },
+} 
+
+export const PROCEDURES_DEFAULT = {
+    'CITOLÓGICO': { value: 'citologico', condition: false },
+    'RASTREAMENTO DE MICROFLORA': { value: 'rastreamento_cito', condition: false },
+    'RASTREAMENTO CÂNCER DE MAMA': { value: 'rastreamento_mama', condition: false },
+    'PRÉ-NATAL DO PARCEIRO': { value: 'pre_natal_parceiro', condition: false },
+    'VISITA DOMICILIAR': { value: 'visita_domiciliar', condition: false },
+   
+} 

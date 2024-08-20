@@ -34,6 +34,8 @@ router.get('/api/v1/reports/AcessosEAS', new CheckRequestMiddleware().execute, n
 
 router.get('/api/v1/reports/PROD%20ORAL%20CARE', new CheckRequestMiddleware().execute, new ExtractRulesMiddleware().execute, new ReportController().handleProdOralCare);
 
+router.get('/api/v1/reports/PROCEDURES', new CheckRequestMiddleware().execute, new ExtractRulesMiddleware().execute, new ReportController().handleProcedures);
+
 //#endregion
 
 //#region Database

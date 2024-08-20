@@ -118,6 +118,8 @@ export const ImageLogoContainer = styled.div`
     right: 10rem;
     opacity: 90%;
     img {
+        width: 100%;
+        max-height: 100vh;
         filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.5));
     }
 

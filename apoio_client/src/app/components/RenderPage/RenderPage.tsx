@@ -8,7 +8,9 @@ import {
     Duplicates,
     PriorityVisits,
     Completeness,
-    Vaccines
+    Vaccines,
+    OralCare,
+    Procedures
 } from "../../pages";
 import { Pages } from '../../constants/';
 import React from "react";
@@ -25,7 +27,9 @@ export function renderPage({ currentPage }: { currentPage: Pages }) {
         [Pages.DUPLICATES_PAGE]: Duplicates,
         [Pages.PRIORITY_VISITS_PAGE]: PriorityVisits,
         [Pages.COMPLETENESS]: Completeness,
-        [Pages.VACCINES]: Vaccines
+        [Pages.VACCINES]: Vaccines,
+        [Pages.ORAL_CARE_PAGE]: OralCare,
+        [Pages.PROCEDURES]: Procedures
     };
     const PageComponent = pages[currentPage];
     return <PageComponent currentPage={currentPage} />;
