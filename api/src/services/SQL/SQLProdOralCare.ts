@@ -177,7 +177,7 @@ export class SQL_PROD_ORAL_CARE {
             select: `, count(f.cod) as "QTD. APLICAÇÃO DE FLUOR"`,
             from: `
                 left join fluor f
-                    on f.cod = tfao.co_seq_fat_atd_odnt and cd.co_dim_profissional_1 = tfao.co_dim_profissional_1 and f.co_dim_cbo_1 = tfao.co_dim_cbo_1 and f.co_dim_unidade_saude_1 = tfao.co_dim_unidade_saude_1 
+                    on f.cod = tfao.co_seq_fat_atd_odnt and f.co_dim_profissional_1 = tfao.co_dim_profissional_1 and f.co_dim_cbo_1 = tfao.co_dim_cbo_1 and f.co_dim_unidade_saude_1 = tfao.co_dim_unidade_saude_1 
             `
         }
     }
