@@ -37,6 +37,7 @@ import {
     GroupFilterContainer,
     ReportContainer,
     TitlePageContainer,
+    ViewContainer,
     ViewPageContainer
 } from '../../styles';
 
@@ -181,21 +182,23 @@ export const Vaccines = () => {
                     <h4>IMUNIZAÇÃO</h4>
                 </div>
             </TitlePageContainer>
-            <GroupFilterContainer>
-                <GroupFilter>
-                    <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} />
-                    <DynamicFilter name={"INSTALAÇÕES"} filters={installationsFilter} changeFilter={setInstallationsFilter} />
-                    <DynamicFilter name={"UNIDADE"} filters={unitsFilter} changeFilter={setUnitsFilter} />
-                    <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
-                    <DynamicFilter name={"IMUNOBIOLÓGICO"} filters={vaccinesFilter} changeFilter={setVaccinesFilter} />
-                    <AgeFilter name={"IDADE"} />
-                    <DateFilter changeFilter={setDataFilters} />
-                </GroupFilter>
-            </GroupFilterContainer>
-            <ViewPageContainer>
-                <Modal isOpen={modalState.isOpen} confirmCallback={modalState.confirmCallback} />
-                <DataTable values={values} handleButton={handleSearchAction} handleProps={'download'} />
-            </ViewPageContainer>
+            <ViewContainer>
+                <GroupFilterContainer>
+                    <GroupFilter>
+                        <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} search={true}/>
+                        <DynamicFilter name={"INSTALAÇÕES"} filters={installationsFilter} changeFilter={setInstallationsFilter} />
+                        <DynamicFilter name={"UNIDADE"} filters={unitsFilter} changeFilter={setUnitsFilter} />
+                        <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
+                        <SimpleFilter name={"IMUNOBIOLÓGICO"} filters={vaccinesFilter} changeFilter={setVaccinesFilter} search={true}/>
+                        <AgeFilter name={"IDADE"} />
+                        <DateFilter changeFilter={setDataFilters} />
+                    </GroupFilter>
+                </GroupFilterContainer>
+                <ViewPageContainer>
+                    <Modal isOpen={modalState.isOpen} confirmCallback={modalState.confirmCallback} />
+                    <DataTable values={values} handleButton={handleSearchAction} handleProps={'download'} />
+                </ViewPageContainer>
+            </ViewContainer>
         </ReportContainer>
     )
 }

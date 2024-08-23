@@ -154,7 +154,7 @@ export class SQL_PROD_ORAL_CARE {
 
     private SQL_TRATAMENTO_CONCLUIDO() {
         return {
-            select: `, count(tc.cod) as "QTD. TRATAMENTO CONCLUÍDOO"`,
+            select: `, count(tc.cod) as "QTD. TRATAMENTO CONCLUÍDO"`,
             from: `
                 left join trat_concluido tc
                     on tc.cod = tfao.co_seq_fat_atd_odnt and tc.co_dim_profissional_1 = tfao.co_dim_profissional_1 and tc.co_dim_cbo_1 = tfao.co_dim_cbo_1 and tc.co_dim_unidade_saude_1 = tfao.co_dim_unidade_saude_1

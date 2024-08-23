@@ -24,6 +24,22 @@ export const FilterContainer = styled.div`
 
 `
 
+export const FilterSearch = styled.div`
+    width: 100%;
+    height: 100%;
+    background-color: var(--cor-min_grey);
+    input{
+        max-width: 100%;
+        height: 100%;
+        border: none;
+        outline: none;
+        padding: 0 10px;
+        background-color: var(--cor-min_grey);
+        
+    }
+
+`
+
 export const FilterIcon = styled.div`
     display: flex;
     justify-content: center;
@@ -267,6 +283,7 @@ export const OptionCheckBox = styled.label`
 
 export const FilterListOption = styled.div`
     padding-left: 5px;
+    box-shadow: 0px 1px 0px 0px rgb(212, 212, 212);
 
     label {
         display: flex;
@@ -274,6 +291,7 @@ export const FilterListOption = styled.div`
         align-items: center;
         flex-direction: row;
         font-size: 12px;
+        
 
         input {
             width: 10%;
@@ -282,6 +300,7 @@ export const FilterListOption = styled.div`
             appearance: none;
             position: absolute;
             background-color: transparent;
+            
         }
 
         input[type="checkbox"]:checked+.custom-checkbox::after {
@@ -400,10 +419,11 @@ export const FilterDataCalendar = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
     width: 150px;
     height: 15px;
     background-color: transparent;
-    z-index: 9997;
+    z-index: 9996;
 
     /* Estilo dos campos de data */
     .inicioSelect,

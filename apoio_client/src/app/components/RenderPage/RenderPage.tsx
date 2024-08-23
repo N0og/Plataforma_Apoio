@@ -10,7 +10,8 @@ import {
     Completeness,
     Vaccines,
     OralCare,
-    Procedures
+    Procedures,
+    NotFinished
 } from "../../pages";
 import { Pages } from '../../constants/';
 import React from "react";
@@ -29,7 +30,8 @@ export function renderPage({ currentPage }: { currentPage: Pages }) {
         [Pages.COMPLETENESS]: Completeness,
         [Pages.VACCINES]: Vaccines,
         [Pages.ORAL_CARE_PAGE]: OralCare,
-        [Pages.PROCEDURES]: Procedures
+        [Pages.PROCEDURES]: Procedures,
+        [Pages.NOT_FINISHED]: NotFinished
     };
     const PageComponent = pages[currentPage];
     return <PageComponent currentPage={currentPage} />;

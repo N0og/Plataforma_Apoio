@@ -10,7 +10,7 @@
     --cor-shadow-mid: rgb(198, 186, 186);
     --cor-min_grey: rgb(242, 242, 242);
     --cor_black: #000;
-    --toastify-icon-color-error: var(--cor-rose);
+    --toastify-icon-color-error: var(--cor-rose) !important;
 }
 
 input[type="password"]::-ms-reveal,

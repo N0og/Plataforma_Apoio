@@ -10,8 +10,10 @@ export class VaccinesFilterService {
             return { [imuno]: { value: item.co_imuno_esus, condition: false } }
         })
 
-        const imunos_list = [{ "IMUNOBIOLÓGICOS": modifiedImunos.reduce((obj1, obj2) => ({ ...obj1, ...obj2 }), {}) }]
+        //const imunos_list = [{ "IMUNOBIOLÓGICOS": modifiedImunos.reduce((obj1, obj2) => ({ ...obj1, ...obj2 }), {}) }]
 
-        return imunos_list.reduce((obj1, obj2) => ({ ...obj1, ...obj2 }), {})
+        //return imunos_list.reduce((obj1, obj2) => ({ ...obj1, ...obj2 }), {})
+
+        return modifiedImunos.reduce((obj1, obj2) => ({ ...obj1, ...obj2 }), {})
     }
 }

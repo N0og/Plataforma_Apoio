@@ -13,3 +13,4 @@ export { IConnEAS, IConneSUS } from "./IConnEntity";
 export { IOralCareReport } from "./IOralCareReport";
 export { IProceduresReport } from "./IProceduresReport";
 export { IGenericFilterPEC } from "./IGenericFilterPEC";
+export { INotFinishedReport } from "./INotFinishedReport";

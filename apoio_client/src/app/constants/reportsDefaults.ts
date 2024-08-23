@@ -54,3 +54,8 @@ export const PROCEDURES_DEFAULT = {
     'VISITA DOMICILIAR': { value: 'visita_domiciliar', condition: false },
    
 } 
+
+export const GENERIC_BOOL_DEFAULT = {
+    'SIM': {value: 1, condition: false},
+    'NÃO': {value: 0, condition: false}
+}

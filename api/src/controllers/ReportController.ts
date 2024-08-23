@@ -35,6 +35,7 @@ import {
 
 import JSZip, { file } from "jszip";
 import { OralCareReportService } from "../services/OralCareReportService";
+import { NotFinishedReportService } from "../services/NotFinishedReportService";
 
 export default class ReportController {
 
@@ -232,5 +233,9 @@ export default class ReportController {
 
     handleProcedures = async (req: IReportControllerRequest, res: Response) => {
         this.executeHandler(req, res, ProceduresReportService, `CuidadosIndividuais`)
+    }
+
+    handleNotFinished = async (req: IReportControllerRequest, res: Response) => {
+        this.executeHandler(req, res, NotFinishedReportService, `NaoFinalizados`)
     }
 }

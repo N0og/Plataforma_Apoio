@@ -38,6 +38,7 @@ import {
     GroupFilterContainer,
     ReportContainer,
     TitlePageContainer,
+    ViewContainer,
     ViewPageContainer
 } from '../../styles';
 
@@ -169,23 +170,25 @@ export const Completeness = () => {
                     <h4>COMPLETUDE DE CADASTROS</h4>
                 </div>
             </TitlePageContainer>
-            <GroupFilterContainer>
-                <GroupFilter>
-                    <SimpleFilter name={"FONTE"} filters={driverFilter} changeFilter={setDriverFilter} />
-                    <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} />
-                    {driverFilter.eSUS.condition === true && driverFilter.AtendSaúde.condition === false ? (
-                        <>
-                            <DynamicFilter name={"INSTALAÇÕES"} filters={installationsFilter} changeFilter={setInstallationsFilter} />
-                            <DynamicFilter name={"UNIDADE"} filters={unitsFilter} changeFilter={setUnitsFilter} />
-                            <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
-                        </>
-                    ) : null}
-                </GroupFilter>
-            </GroupFilterContainer>
-            <ViewPageContainer>
-                <Modal isOpen={modalState.isOpen} confirmCallback={modalState.confirmCallback} />
-                <DataTable values={values} handleButton={handleSearchAction} handleProps={'download'} />
-            </ViewPageContainer>
+            <ViewContainer>
+                <GroupFilterContainer>
+                    <GroupFilter>
+                        <SimpleFilter name={"FONTE"} filters={driverFilter} changeFilter={setDriverFilter} />
+                        <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} search={true}/>
+                        {driverFilter.eSUS.condition === true && driverFilter.AtendSaúde.condition === false ? (
+                            <>
+                                <DynamicFilter name={"INSTALAÇÕES"} filters={installationsFilter} changeFilter={setInstallationsFilter} />
+                                <DynamicFilter name={"UNIDADE"} filters={unitsFilter} changeFilter={setUnitsFilter} />
+                                <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
+                            </>
+                        ) : null}
+                    </GroupFilter>
+                </GroupFilterContainer>
+                <ViewPageContainer>
+                    <Modal isOpen={modalState.isOpen} confirmCallback={modalState.confirmCallback} />
+                    <DataTable values={values} handleButton={handleSearchAction} handleProps={'download'} />
+                </ViewPageContainer>
+            </ViewContainer>
         </ReportContainer>
     )
 }

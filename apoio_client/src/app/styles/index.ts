@@ -14,7 +14,8 @@ export {
     FilterAgeOption,
     FilterAgeClosed,
     FilterDataContainer,
-    FilterDynamicList
+    FilterDynamicList,
+    FilterSearch
 } from "./FiltersStyles";
 
 
@@ -23,7 +24,8 @@ export {
     TitlePageContainer,
     GroupFilterContainer,
     GroupFilter,
-    ViewPageContainer
+    ViewPageContainer,
+    ViewContainer
 } from './ReportViewPageStyles'
 
 export {

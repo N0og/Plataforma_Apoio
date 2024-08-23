@@ -8,7 +8,7 @@ export const TableContainer = styled.div`
     align-items: center;
     width: 95%;
     min-height: 180px;
-    max-height: 82vh;
+    max-height: 75vh;
 `
 
 

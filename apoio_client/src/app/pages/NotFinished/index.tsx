@@ -43,12 +43,12 @@ import {
 } from '../../styles';
 
 //Constants
-import { DATABASES_DEFAULT, ModalActions, PROCEDURES_DEFAULT } from '../../constants';
+import { DATABASES_DEFAULT, GENERIC_BOOL_DEFAULT, ModalActions } from '../../constants';
 
 //Redux
 
 //
-import { CITY } from '../../constants/alertsEnum';
+import { CITY, GENERIC_BOOL } from '../../constants/alertsEnum';
 import { useTratament } from '../../hooks/useTratament';
 import { Modal } from '../../components/Modal';
 import { useDispatch } from 'react-redux';
@@ -56,7 +56,7 @@ import { useCheckConnections } from '../../hooks/useCheckConnections';
 //#endregion
 
 
-export const Procedures = () => {
+export const NotFinished = () => {
 
     const dispatch = useDispatch()
 
@@ -87,7 +87,8 @@ export const Procedures = () => {
     } = useGetTeams(unitsFilter, toggleState)
 
     const [dataFilters, setDataFilters] = useState<Array<string>>([]);
-    const [proceduresFilter, setProceduresFilter] = useState<ISimpleFilterPartition>(PROCEDURES_DEFAULT)
+    const [scheduleFilter, setScheduleFilter] = useState<ISimpleFilterPartition>(GENERIC_BOOL_DEFAULT)
+    const [lateFilter, setLateFilter] = useState<ISimpleFilterPartition>(GENERIC_BOOL_DEFAULT)
     const [AlertMessage, setAlertMessage] = useState<JSX.Element | null>(null)
     const [driverFilter, _setDriverFilter] = useState<ISimpleFilterPartition>({ ...DATABASES_DEFAULT, 'eSUS': { ...DATABASES_DEFAULT.eSUS, condition: true } })
 
@@ -101,10 +102,11 @@ export const Procedures = () => {
                 'unit': unitsFilter,
                 'installations': installationsFilter,
                 'team': teamsFilter,
-                'procedures': proceduresFilter
+                'late': lateFilter,
+                'schedule': scheduleFilter
             },
             'driver': driverFilter
-        }, [clientsFilter, proceduresFilter, unitsFilter, teamsFilter])
+        }, [clientsFilter, lateFilter, scheduleFilter, unitsFilter, teamsFilter])
 
     useEffect(() => {
         setAlertMessage(useAlertMessageEvent(control_states));
@@ -119,6 +121,11 @@ export const Procedures = () => {
         const verified = useTratament({
             no_empty: [
                 { filter: clientsFilter, enums: CITY }
+            ]
+            ,
+            only_one: [
+                { filter: scheduleFilter, enums: GENERIC_BOOL },
+                { filter: lateFilter, enums: GENERIC_BOOL }
             ]
         }
             , toggleAllFalse)
@@ -171,18 +178,19 @@ export const Procedures = () => {
     return (
         <ReportContainer>
             <TitlePageContainer>
-                <BackButton />
-                <div className='title_container'>
-                    <h4>PROCEDIMENTOS</h4>
-                </div>
-                {AlertMessage}
-            </TitlePageContainer>
+                    <BackButton />
+                    <div className='title_container'>
+                        <h4>NÃO FINALIZADOS</h4>
+                    </div>
+                    {AlertMessage}
+                </TitlePageContainer>
             <ViewContainer>
                 <GroupFilterContainer>
                     <GroupFilter>
-                        <SimpleFilter name={"PROCEDIMENTOS"} filters={proceduresFilter} changeFilter={setProceduresFilter} search={true}/>
+                        <SimpleFilter name={"DO TARDIO?"} filters={lateFilter} changeFilter={setLateFilter} />
+                        <SimpleFilter name={"DA AGENDA?"} filters={scheduleFilter} changeFilter={setScheduleFilter} />
                         <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} search={true}/>
-                        <DynamicFilter name={"INSTALAÇÕES"} filters={installationsFilter} changeFilter={setInstallationsFilter} />
+                        <DynamicFilter name={"INSTALAÇÕES"} filters={installationsFilter} changeFilter={setInstallationsFilter}/>
                         <DynamicFilter name={"UNIDADE"} filters={unitsFilter} changeFilter={setUnitsFilter} />
                         <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
                         <DateFilter changeFilter={setDataFilters} />

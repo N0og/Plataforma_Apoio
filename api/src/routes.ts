@@ -36,6 +36,8 @@ router.get('/api/v1/reports/PROD%20ORAL%20CARE', new CheckRequestMiddleware().ex
 
 router.get('/api/v1/reports/PROCEDURES', new CheckRequestMiddleware().execute, new ExtractRulesMiddleware().execute, new ReportController().handleProcedures);
 
+router.get('/api/v1/reports/NOTFINISHED', new CheckRequestMiddleware().execute, new ExtractRulesMiddleware().execute, new ReportController().handleNotFinished);
+
 //#endregion
 
 //#region Database

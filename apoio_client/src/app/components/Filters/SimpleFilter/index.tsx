@@ -18,23 +18,27 @@ import {
   FilterIcon,
   FilterSimpleList,
   FilterSimpleListClosed,
-  FilterListOption
+  FilterListOption,
+  FilterSearch
 } from "../../../styles";
 
 export const SimpleFilter: React.FC<{
   name: string,
   filters: ISimpleFilterPartition,
   changeFilter: React.Dispatch<SetStateAction<ISimpleFilterPartition>>,
-  deactivated?: boolean
+  deactivated?: boolean,
+  search?: boolean
 }> = ({
   name,
   filters,
   changeFilter,
-  deactivated
+  deactivated,
+  search
 }) => {
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [counter, setCounter] = useState<number>(0);
+    const [searchTerm, setSearchTerm] = useState<string>("");
     const filterContainerRef = useRef<HTMLDivElement>(null);
 
     const toggleFilter = (key: string) => {
@@ -90,6 +94,10 @@ export const SimpleFilter: React.FC<{
       if (isOpen && Object.keys(filters).length == 0) useNotifyEvent('Falha ao Obter Municípios.', 'error', 1000)
     }, [isOpen])
 
+    const filteredOptions = Object.keys(filters).filter(option =>
+      option.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
       <FilterContainer ref={filterContainerRef}>
         <FilterIcon>
@@ -103,6 +111,15 @@ export const SimpleFilter: React.FC<{
         {!deactivated ? (
           isOpen ? (
             <FilterSimpleList>
+              {search ? (<FilterSearch>
+                <input
+                  type="text"
+                  placeholder="Procurar..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="filter-search-input"
+                />
+              </FilterSearch>) : (<></>)}
               <FilterSelectAllOption key={`filter-option-0000-0000`}>
                 <label>
                   <input
@@ -113,7 +130,8 @@ export const SimpleFilter: React.FC<{
                   <span className="span-container">SELECIONAR TUDO</span>
                 </label>
               </FilterSelectAllOption>
-              {Object.keys(filters).map((option, index) => (
+              {/* Filtra e exibe as opções */}
+              {filteredOptions.map((option, index) => (
                 <FilterListOption key={`filter-option-${index}`}>
                   <label>
                     <input
@@ -135,4 +153,4 @@ export const SimpleFilter: React.FC<{
 
       </FilterContainer>
     )
-  }
+}

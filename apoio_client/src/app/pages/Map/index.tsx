@@ -112,7 +112,7 @@ export const Map = () => {
             </TitlePageContainer>
             <GroupFilterContainer>
                 <GroupFilter>
-                    <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} />
+                    <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} search={true}/>
                 </GroupFilter>
             </GroupFilterContainer>
 

@@ -11,6 +11,10 @@ export enum CITY{
     LESS = "Selecione um municipio para continuar.",
 }
 
+export enum GENERIC_BOOL{
+    EXCESS = 'Selecione apenas uma condição: "SIM" ou "NÃO"'
+}
+
 export enum DATA{
     LESS = "Selecione um período no filtro de data."
 }

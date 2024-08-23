@@ -8,6 +8,16 @@ export const ReportContainer = styled.div`
     align-items: center;
     height: 100%;
     width: 100%;
+    
+`
+
+export const ViewContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    max-height: 100%;
+    width: 95%;
 `
 
 export const TitlePageContainer = styled.div`
@@ -42,6 +52,7 @@ export const GroupFilterContainer = styled.div`
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+    max-width: 95%;
 `
 
 export const GroupFilter = styled.div`
@@ -49,6 +60,7 @@ export const GroupFilter = styled.div`
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    width: 100%;
     flex-wrap: wrap;
     gap: 15px;
     padding: 12px;

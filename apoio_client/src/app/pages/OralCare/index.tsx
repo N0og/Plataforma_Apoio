@@ -38,6 +38,7 @@ import {
     GroupFilterContainer,
     ReportContainer,
     TitlePageContainer,
+    ViewContainer,
     ViewPageContainer
 } from '../../styles';
 
@@ -114,7 +115,7 @@ export const OralCare = () => {
         setValues({})
 
         let useHook = (event === 'download') ? useDownload : useGetData
-        
+
         const verified = useTratament({
             no_empty: [
                 { filter: clientsFilter, enums: CITY }
@@ -127,7 +128,7 @@ export const OralCare = () => {
             const shouldOpenModal = driverFilter.eSUS.condition === true ? await useCheckConnections(clientsFilter, toggleState) : null;
 
             if (shouldOpenModal && Object.keys(shouldOpenModal.result).length > 0) {
-                dispatch({type: ModalActions.VALUE, payload:shouldOpenModal.result})
+                dispatch({ type: ModalActions.VALUE, payload: shouldOpenModal.result })
 
                 dispatch({ type: ModalActions.OPEN });
 
@@ -176,20 +177,22 @@ export const OralCare = () => {
                 </div>
                 {AlertMessage}
             </TitlePageContainer>
-            <GroupFilterContainer>
-                <GroupFilter>
-                    <SimpleFilter name={"CUIDADOS"} filters={oralCareFilter} changeFilter={setOralCareFilter} />
-                    <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} />
-                    <DynamicFilter name={"INSTALAÇÕES"} filters={installationsFilter} changeFilter={setInstallationsFilter} />
-                    <DynamicFilter name={"UNIDADE"} filters={unitsFilter} changeFilter={setUnitsFilter} />
-                    <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
-                    <DateFilter changeFilter={setDataFilters} />
-                </GroupFilter>
-            </GroupFilterContainer>
-            <ViewPageContainer>
-                <Modal isOpen={modalState.isOpen} confirmCallback={modalState.confirmCallback} />
-                <DataTable values={values} handleButton={handleSearchAction} handleProps={'download'} />
-            </ViewPageContainer>
+            <ViewContainer>
+                <GroupFilterContainer>
+                    <GroupFilter>
+                        <SimpleFilter name={"CUIDADOS"} filters={oralCareFilter} changeFilter={setOralCareFilter} search={true}/>
+                        <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} search={true}/>
+                        <DynamicFilter name={"INSTALAÇÕES"} filters={installationsFilter} changeFilter={setInstallationsFilter} />
+                        <DynamicFilter name={"UNIDADE"} filters={unitsFilter} changeFilter={setUnitsFilter} />
+                        <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
+                        <DateFilter changeFilter={setDataFilters} />
+                    </GroupFilter>
+                </GroupFilterContainer>
+                <ViewPageContainer>
+                    <Modal isOpen={modalState.isOpen} confirmCallback={modalState.confirmCallback} />
+                    <DataTable values={values} handleButton={handleSearchAction} handleProps={'download'} />
+                </ViewPageContainer>
+            </ViewContainer>
         </ReportContainer>
     )
 }
