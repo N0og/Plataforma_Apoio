@@ -11,7 +11,8 @@ import {
     Vaccines,
     OralCare,
     Procedures,
-    NotFinished
+    NotFinished,
+    VersionPEC
 } from "../../pages";
 import { Pages } from '../../constants/';
 import React from "react";
@@ -31,7 +32,8 @@ export function renderPage({ currentPage }: { currentPage: Pages }) {
         [Pages.VACCINES]: Vaccines,
         [Pages.ORAL_CARE_PAGE]: OralCare,
         [Pages.PROCEDURES]: Procedures,
-        [Pages.NOT_FINISHED]: NotFinished
+        [Pages.NOT_FINISHED]: NotFinished,
+        [Pages.VERSION_PEC]: VersionPEC
     };
     const PageComponent = pages[currentPage];
     return <PageComponent currentPage={currentPage} />;

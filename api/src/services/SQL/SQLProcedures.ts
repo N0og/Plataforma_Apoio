@@ -43,6 +43,16 @@ export class SQL_PROCEDURES {
                 tb_fat_proced_atend tfpa 
             where 
                 ds_filtro_procedimento like '%0203010086%' 
+        ), diu as (
+            select
+                tfpa.co_seq_fat_proced_atend as cod,
+                tfpa.co_dim_profissional,
+                tfpa.co_dim_unidade_saude,
+                tfpa.co_dim_cbo
+            from 
+                tb_fat_proced_atend tfpa 
+            where 
+                ds_filtro_procedimento like '%0301040141%'
         )
             select
                 tdus.nu_cnes as "CNES",
@@ -140,6 +150,16 @@ export class SQL_PROCEDURES {
         }
     }
 
+    private SQL_DIU() {
+        return {
+            select: `, count(diu.cod) as "QTD. INSERÇÃO DE DIU"`,
+            from: `
+                left join diu
+	                on diu.cod = tfpa.co_seq_fat_proced_atend and diu.co_dim_unidade_saude = tfpa.co_dim_unidade_saude  and diu.co_dim_cbo = tfpa.co_dim_cbo and diu.co_dim_profissional = tfpa.co_dim_profissional 
+            `
+        }
+    }
+
     private SQL_PRE_NATAL() {
         return {
             select: `, count(pnp.cod) as "QTD. PRÉ NATAL PARCEIRO"`,
@@ -197,6 +217,9 @@ export class SQL_PROCEDURES {
         return this.SQL_VISITA_DOMICILAR()
     }
 
+    getDiu(){
+        return this.SQL_DIU()
+    }
 
     setDynamicWhere(clause: string) {
         this.SQL_DYNAMIC_WHERE += clause

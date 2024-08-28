@@ -63,7 +63,7 @@ export class checkConnectionsService {
                     database: instData.db_name_esus!,
                     user: instData.db_user_esus!,
                     password: instData.db_password_esus!,
-                    connectionTimeoutMillis: 500
+                    connectionTimeoutMillis: 1300
                 }) instanceof Error) {
                     console.log(`PEDIDO IP: ${ip} - ${ORDER} - FALHA: ${instData.instalacao_esus}... `)
                     errors.push(instData.instalacao_esus!)

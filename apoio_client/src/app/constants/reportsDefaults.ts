@@ -52,6 +52,7 @@ export const PROCEDURES_DEFAULT = {
     'RASTREAMENTO CÂNCER DE MAMA': { value: 'rastreamento_mama', condition: false },
     'PRÉ-NATAL DO PARCEIRO': { value: 'pre_natal_parceiro', condition: false },
     'VISITA DOMICILIAR': { value: 'visita_domiciliar', condition: false },
+    'INSERÇÃO DE DIU': {value: 'diu', condition: false}
    
 } 
 

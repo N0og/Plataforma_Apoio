@@ -38,6 +38,8 @@ router.get('/api/v1/reports/PROCEDURES', new CheckRequestMiddleware().execute, n
 
 router.get('/api/v1/reports/NOTFINISHED', new CheckRequestMiddleware().execute, new ExtractRulesMiddleware().execute, new ReportController().handleNotFinished);
 
+router.get('/api/v1/reports/PECVERSION', new CheckRequestMiddleware().execute, new ExtractRulesMiddleware().execute, new ReportController().handlePecVersion);
+
 //#endregion
 
 //#region Database

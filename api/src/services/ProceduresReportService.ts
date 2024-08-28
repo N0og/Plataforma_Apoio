@@ -33,6 +33,7 @@ export class ProceduresReportService{
             rastreamento_mama: SQL.getRastreamentoMama.bind(SQL),
             pre_natal_parceiro: SQL.getPreNatal.bind(SQL),
             visita_domiciliar: SQL.getVisitaDomiciliar.bind(SQL),
+            diu: SQL.getDiu.bind(SQL)
         };
 
         if (filtros_params.procedures) {

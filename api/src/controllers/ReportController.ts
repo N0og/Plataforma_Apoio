@@ -25,7 +25,8 @@ import {
     CompletenessReportService,
     AccessEASReportService,
     VaccinesReportService,
-    ProceduresReportService
+    ProceduresReportService,
+    VersionPecReportService
 } from "../services";
 
 import {
@@ -237,5 +238,9 @@ export default class ReportController {
 
     handleNotFinished = async (req: IReportControllerRequest, res: Response) => {
         this.executeHandler(req, res, NotFinishedReportService, `NaoFinalizados`)
+    }
+
+    handlePecVersion = async (req: IReportControllerRequest, res: Response) => {
+        this.executeHandler(req, res, VersionPecReportService, `VersoesPEC`)
     }
 }
