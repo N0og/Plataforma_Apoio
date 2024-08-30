@@ -9,6 +9,7 @@ import {
 //Hooks
 import {
     useEffect,
+    useRef,
     useState
 } from 'react';
 //
@@ -44,6 +45,8 @@ import { getIcon } from './Utils/getIcon';
 
 
 export const Map = () => {
+
+    const mapRef = useRef<any>(null);
 
     const {
         control_states,
@@ -95,11 +98,22 @@ export const Map = () => {
         })
 
         setEquipes(equipes)
+
+        if (IEDFilters.length > 0) {
+            const firstMunicipio = IEDFilters[0][Object.keys(IEDFilters[0])[0]][0];
+            const { latitude, longitude } = firstMunicipio;
+            if (mapRef.current) {
+                mapRef.current.setView([parseFloat(latitude), parseFloat(longitude)], 13);
+            }
+        }
+
     }, [IEDFilters]);
 
     useEffect(() => {
         setAlertMessage(useAlertMessageEvent(control_states));
     }, [control_states])
+
+ 
 
     return (
         <div className='container_map'>
@@ -117,7 +131,7 @@ export const Map = () => {
             </GroupFilterContainer>
 
             <div className='LayerContainer'>
-                <MapContainer center={[-7.11532, -34.861]} zoom={13} >
+                <MapContainer center={[-7.11532, -34.861]} zoom={13} ref={mapRef} >
                     <TileLayer
                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

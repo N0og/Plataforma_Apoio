@@ -25,6 +25,7 @@
             border-radius: 1vi;
             box-shadow: 0px 0.3vw 0.1vw 0px var(--cor-shadow-mid);
             font-size: 2vw;
+            border: solid var(--cor-rose);
         }
 
     }

@@ -131,7 +131,10 @@ export const Vaccines = () => {
 
         if (verified) {
 
-            const shouldOpenModal = driverFilter.eSUS.condition === true ? await useCheckConnections(clientsFilter, toggleState) : null;
+            const shouldOpenModal = driverFilter.eSUS.condition === true ? await useCheckConnections({
+                clients: clientsFilter,
+                installations: installationsFilter
+            }, toggleState) : null;
 
             if (shouldOpenModal && Object.keys(shouldOpenModal.result).length > 0) {
                 dispatch({ type: ModalActions.VALUE, payload: shouldOpenModal.result })
@@ -185,11 +188,11 @@ export const Vaccines = () => {
             <ViewContainer>
                 <GroupFilterContainer>
                     <GroupFilter>
-                        <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} search={true}/>
+                        <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} search={true} />
                         <DynamicFilter name={"INSTALAÇÕES"} filters={installationsFilter} changeFilter={setInstallationsFilter} />
                         <DynamicFilter name={"UNIDADE"} filters={unitsFilter} changeFilter={setUnitsFilter} />
                         <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
-                        <SimpleFilter name={"IMUNOBIOLÓGICO"} filters={vaccinesFilter} changeFilter={setVaccinesFilter} search={true}/>
+                        <SimpleFilter name={"IMUNOBIOLÓGICO"} filters={vaccinesFilter} changeFilter={setVaccinesFilter} search={true} />
                         <AgeFilter name={"IDADE"} />
                         <DateFilter changeFilter={setDataFilters} />
                     </GroupFilter>

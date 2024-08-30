@@ -9,14 +9,16 @@ export const useGetTeams = (unitsFilter: IDynamicFilterPartition, toggleState: (
     const [teamsFilter, setTeamsFilter] = useState<IDynamicFilterPartition>({});
 
     useEffect(() => {
-        if (Object.keys(unitsFilter).length > 0) {
+        const unitsValidated = Object.entries(unitsFilter)
+            .flatMap(([_containerKey, containerValue]) =>
+                Object.entries(containerValue)
+                    .filter(([_key, value]) => value.condition === true))
+
+        if (unitsValidated.length > 0) {
             useGetData(
-                `${process.env.VITE_API_URL}/api/v1/filters/equipes?dbtype=psql${Object.entries(unitsFilter)
-                    .flatMap(([_containerKey, containerValue]) =>
-                        Object.entries(containerValue)
-                            .filter(([_key, value]) => value.condition === true)
-                            .map(([_key, value]) => `&order=${value.value}`)
-                    )
+                `${process.env.VITE_API_URL}/api/v1/filters/equipes?dbtype=psql${
+                    unitsValidated
+                    .map(([_key, value]) => `&order=${value.value}`)
                     .join('')
                 }`,
                 {},
@@ -30,10 +32,10 @@ export const useGetTeams = (unitsFilter: IDynamicFilterPartition, toggleState: (
                             .map(([key, value]) => { return { [key]: value } })
                             .reduce((obj1, obj2) => ({ ...obj1, ...obj2 }), {})
 
-                        const updatedFilter = {...prevFilter};
+                        const updatedFilter = { ...prevFilter };
 
                         Object.entries(responseEntries).forEach(([key1, value1]) => {
-                            Object.entries(value1).forEach(([key2, value2])=>{
+                            Object.entries(value1).forEach(([key2, value2]) => {
                                 if (!(key1 in updatedFilter)) {
                                     updatedFilter[key1] = value1
                                     updatedFilter[key1][key2] = value2;
@@ -50,13 +52,13 @@ export const useGetTeams = (unitsFilter: IDynamicFilterPartition, toggleState: (
                         return updatedFilter
                     });
                 }
-            
+
             }))
-            .catch((error) => {
+                .catch((error) => {
                     useNotifyEvent(error.msg, 'error')
-            })
+                })
         }
-            else setTeamsFilter({})
+        else setTeamsFilter({})
     }, [unitsFilter])
 
     return { teamsFilter, setTeamsFilter }

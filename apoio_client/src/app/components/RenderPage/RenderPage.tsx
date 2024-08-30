@@ -14,10 +14,25 @@ import {
     NotFinished,
     VersionPEC
 } from "../../pages";
-import { Pages } from '../../constants/';
-import React from "react";
+import { Pages, UserActions } from '../../constants/';
+import React, { useEffect } from "react";
+import axios from "axios";
+import { useDispatch } from "react-redux";
 
 export function renderPage({ currentPage }: { currentPage: Pages }) {
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        axios.get(`${process.env.VITE_API_URL}/`, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        }).then(() => {
+            dispatch({ type: UserActions.LOGIN, payload: { isAuthenticated: true } });
+        }).catch(error => {
+            console.error("Erro durante a autenticação", error);
+            dispatch({ type: UserActions.LOGOUT});
+        });
+    }, [currentPage]);
 
     const pages: { [key in Pages]: React.ElementType } = {
         [Pages.DASHBOARD_PAGE]: Dashboard,

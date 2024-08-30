@@ -123,7 +123,10 @@ export const TeamProductivity = () => {
 
         if (verified) {
 
-            const shouldOpenModal = driverFilter.eSUS.condition === true ? await useCheckConnections(clientsFilter, toggleState) : null;
+            const shouldOpenModal = driverFilter.eSUS.condition === true ? await useCheckConnections({
+                clients:clientsFilter,
+                installations:installationsFilter
+            }, toggleState) : null;
 
             if (shouldOpenModal && Object.keys(shouldOpenModal.result).length > 0) {
                 dispatch({ type: ModalActions.VALUE, payload: shouldOpenModal.result })
@@ -157,7 +160,7 @@ export const TeamProductivity = () => {
                 .then((resp: any) => {
                     setValues({ json: resp[Object.keys(resp)[0]].result })
                     console.log(resp)
-                    useNotifyEvent(resp[Object.keys(resp)[0]].msg, 'info')
+                    useNotifyEvent(resp[Object.keys(resp)[0]].msg, 'info', false)
                 })
                 .catch(error => {
                     console.log(error)

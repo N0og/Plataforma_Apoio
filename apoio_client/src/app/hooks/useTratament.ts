@@ -45,7 +45,7 @@ export const useTratament = (filters: filtersTypes, toggleAllFalse: any) => {
 
 
             if (filtered.length == 0) {
-                useNotifyEvent(enums.LESS, 'error')
+                useNotifyEvent(enums.LESS, 'error', 1000)
                 return false
             }
         }
@@ -66,7 +66,7 @@ export const useTratament = (filters: filtersTypes, toggleAllFalse: any) => {
             }
 
             if (filtered.length > 1) {
-                useNotifyEvent(enums.EXCESS, 'error')
+                useNotifyEvent(enums.EXCESS, 'error', 1000)
                 return false;
             }
         }

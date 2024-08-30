@@ -9,6 +9,7 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ element: Component }) => {
+
     const userState = useTypedSelector(state => state.userReducer);
     return userState.isAuthenticated ? <Component /> : <Navigate to="/login" />;
 };

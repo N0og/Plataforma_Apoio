@@ -155,7 +155,7 @@ export default class ReportController {
         else if (IPSESUS && IPSESUS.length > 0) {
             if (this.INSTALLATIONS) {
                 IPSESUS = IPSESUS.filter(conneSUS =>
-                    this.INSTALLATIONS.includes(conneSUS.id.toString()))
+                    this.INSTALLATIONS.includes(conneSUS.dados.id_instalacao_esus.toString()))
             }
 
             return await handleIPSESUS(this.DB_CLIENT, IPSESUS, DB_TYPE, SERVICE_INSTANCE, req);

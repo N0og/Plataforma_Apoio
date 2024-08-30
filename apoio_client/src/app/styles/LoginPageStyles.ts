@@ -26,6 +26,8 @@ export const LoginContainer = styled.div`
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     z-index: 9999;
     user-select: none;
+    opacity: 75%; 
+    transition: 0.4s ease-in-out, filter 0.8s;
 
     @media (max-width:1350px){
         position: relative;
@@ -38,6 +40,16 @@ export const LoginContainer = styled.div`
         height: 100vh;
         position: relative;
         left: 0rem;
+        opacity: 100%; 
+        &:hover{
+            transform: translateY(0);
+        }
+    }
+    
+
+    &:hover{
+        opacity: 100%; 
+        transform: translateY(-0.3vw);
     }
 `;
 
@@ -117,10 +129,18 @@ export const ImageLogoContainer = styled.div`
     position: fixed;
     right: 10rem;
     opacity: 90%;
+    user-select: none;
     img {
         width: 100%;
         max-height: 100vh;
         filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.5));
+        transition: transform 0.6s ease-in-out, filter 0.8s;
+        transform: scale(1);
+        
+    }
+
+    img:hover{
+        transform: scale(1.005);
     }
 
     @media (max-width:1350px){

@@ -9,14 +9,16 @@ export const useGetUnits = (installationsFilters: IDynamicFilterPartition, toggl
     const [unitsFilter, setUnitsFilter] = useState<IDynamicFilterPartition>({});
 
     useEffect(() => {
-        if (Object.keys(installationsFilters).length > 0) {
+        const installationsValidated = Object.entries(installationsFilters)
+            .flatMap(([_containerKey, containerValue]) =>
+                Object.entries(containerValue)
+                    .filter(([_key, value]) => value.condition === true))
+
+        if (installationsValidated.length > 0) {
             useGetData(
-                `${process.env.VITE_API_URL}/api/v1/filters/unidades?dbtype=psql${Object.entries(installationsFilters)
-                    .flatMap(([_containerKey, containerValue]) =>
-                        Object.entries(containerValue)
-                            .filter(([_key, value]) => value.condition === true)
-                            .map(([_key, value]) => `&order=${value.value}`)
-                    )
+                `${process.env.VITE_API_URL}/api/v1/filters/unidades?dbtype=psql${
+                    installationsValidated
+                    .map(([_key, value]) => `&order=${value.value}`)
                     .join('')
                 }`,
                 {},

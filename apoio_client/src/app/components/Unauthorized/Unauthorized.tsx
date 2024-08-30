@@ -15,14 +15,11 @@ export const Unauthorized = () => {
                 <div className='title_container'>
                     <h4>{isAuthenticated ? 'Retorne a URL principal' : 'Realize o login'}</h4>
                 </div>
-                <BackButton emergencyRollBack={isAuthenticated} />
+                {isAuthenticated ? (<BackButton emergencyRollBack={isAuthenticated}/>) : (null)}
             </TitlePageContainer>
             <ViewPageContainer className='dev_moment'>
-                <div className="msg_container">
-
-                    <i className="fa-solid fa-xmark"></i>
-                    <span> NÃO AUTORIZADO </span>
-                    <i className="fa-solid fa-xmark"></i>
+                <div className="msg_container">            
+                    <span> NÃO AUTORIZADO </span>              
                 </div>
             </ViewPageContainer>
         </ReportContainer>

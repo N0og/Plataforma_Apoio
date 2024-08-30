@@ -132,7 +132,10 @@ export const NotFinished = () => {
 
         if (verified) {
 
-            const shouldOpenModal = driverFilter.eSUS.condition === true ? await useCheckConnections(clientsFilter, toggleState) : null;
+            const shouldOpenModal = driverFilter.eSUS.condition === true ? await useCheckConnections({
+                clients: clientsFilter,
+                installations: installationsFilter
+            }, toggleState) : null;
 
             if (shouldOpenModal && Object.keys(shouldOpenModal.result).length > 0) {
                 dispatch({ type: ModalActions.VALUE, payload: shouldOpenModal.result })
@@ -178,19 +181,19 @@ export const NotFinished = () => {
     return (
         <ReportContainer>
             <TitlePageContainer>
-                    <BackButton />
-                    <div className='title_container'>
-                        <h4>NÃO FINALIZADOS</h4>
-                    </div>
-                    {AlertMessage}
-                </TitlePageContainer>
+                <BackButton />
+                <div className='title_container'>
+                    <h4>NÃO FINALIZADOS</h4>
+                </div>
+                {AlertMessage}
+            </TitlePageContainer>
             <ViewContainer>
                 <GroupFilterContainer>
                     <GroupFilter>
                         <SimpleFilter name={"DO TARDIO?"} filters={lateFilter} changeFilter={setLateFilter} />
                         <SimpleFilter name={"DA AGENDA?"} filters={scheduleFilter} changeFilter={setScheduleFilter} />
-                        <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} search={true}/>
-                        <DynamicFilter name={"INSTALAÇÕES"} filters={installationsFilter} changeFilter={setInstallationsFilter}/>
+                        <SimpleFilter name={"MUNICÍPIO"} filters={clientsFilter} changeFilter={setClientFilter} search={true} />
+                        <DynamicFilter name={"INSTALAÇÕES"} filters={installationsFilter} changeFilter={setInstallationsFilter} />
                         <DynamicFilter name={"UNIDADE"} filters={unitsFilter} changeFilter={setUnitsFilter} />
                         <DynamicFilter name={"EQUIPES"} filters={teamsFilter} changeFilter={setTeamsFilter} />
                         <DateFilter changeFilter={setDataFilters} />

@@ -8,18 +8,20 @@ export const FilterContainer = styled.div`
     position: relative;
     width: 180px;
     height: 25px;
+    border-radius: 15px;
+    background-color: var(--cor-min_grey);
+    box-shadow: 0 1px 0.1px 0px var(--cor-shadow-mid);
     
     .FilterInput {
-        width: 100%;
+        width: 55%;
         height: 100%;
         border: none;
-        border-radius: 15px;
-        background-color: var(--cor-min_grey);
-        box-shadow: 0 1px 0.1px 0px var(--cor-shadow-mid);
         outline: none;
         user-select: none;
+        background-color: transparent;
         font-size: 12px;
-        text-align: center;
+        text-align: start;
+        padding-left: 35px;
     }
 
 `
@@ -56,8 +58,8 @@ export const FilterCounter = styled.div`
     justify-content: center;
     align-items: center;
     text-align: center;
-    width: 18px;
-    height: 18px;
+    width: 17px;
+    height: 17px;
     border-radius: 50%;
     z-index: 999;
     font-size: 09px;

@@ -6,7 +6,7 @@ export const useNotifyEvent = (message: string, type: TypeOptions, autoClose?: n
         toast(message,{
             type,
             position:"top-right",
-            autoClose: autoClose ? autoClose : 1000,
+            autoClose: autoClose ? autoClose : 15000,
             hideProgressBar: true,
             closeOnClick: true,
             rtl:false,

@@ -83,6 +83,13 @@ export const SimpleFilter: React.FC<{
       }
     };
 
+    const handleOpenDropDown = () => {
+      if (Object.keys(filters).length > 0){
+        setIsOpen(!isOpen)
+      }
+      else {setIsOpen(false)}
+    }
+
     useEffect(() => {
       document.addEventListener('mousedown', handleClickOutside);
       return () => {
@@ -104,8 +111,8 @@ export const SimpleFilter: React.FC<{
           <i className="fa-solid fa-filter"></i>
         </FilterIcon>
         <input className="FilterInput" disabled={true} type="text" placeholder={name} />
-        <FilterButton onClick={() => setIsOpen(!isOpen)}>
-          {counter > 0 ? <FilterCounter>{counter}</FilterCounter> : ""}
+        {counter > 0 ? <FilterCounter>{counter}</FilterCounter> : ""}
+        <FilterButton onClick={() => handleOpenDropDown()}>
           {isOpen ? <i className="fa-solid fa-caret-up"></i> : <i className="fa-solid fa-caret-down"></i>}
         </FilterButton>
         {!deactivated ? (

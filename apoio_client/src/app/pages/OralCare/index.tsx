@@ -125,7 +125,10 @@ export const OralCare = () => {
 
         if (verified) {
 
-            const shouldOpenModal = driverFilter.eSUS.condition === true ? await useCheckConnections(clientsFilter, toggleState) : null;
+            const shouldOpenModal = driverFilter.eSUS.condition === true ? await useCheckConnections({
+                clients:clientsFilter,
+                installations:installationsFilter
+            }, toggleState) : null;
 
             if (shouldOpenModal && Object.keys(shouldOpenModal.result).length > 0) {
                 dispatch({ type: ModalActions.VALUE, payload: shouldOpenModal.result })
