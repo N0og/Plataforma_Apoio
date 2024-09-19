@@ -115,6 +115,8 @@ export interface IATT_CPF {
     st_recusa_cadastro?: boolean,
     "CIDADÃO"?: string,
     "DOCUMENTO PESSOAL"?: string,
+    "DATA DE NASCIMENTO"?: Date,
+    "MICRO-ÁREA"?: string, 
     "É RESPONSÁVEL FAMILIAR"?: string,
     "ULTIMA ATUALIZAÇÃO"?: Date,
     "STATUS DOCUMENTO"?: string,

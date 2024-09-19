@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { AuthTokenService } from "../services/AuthTokenService";
+import { AuthTokenService } from "../services/auth/AuthTokenService";
 
 export class AuthTokenMiddleware {
 

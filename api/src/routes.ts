@@ -40,6 +40,10 @@ router.get('/api/v1/reports/NOTFINISHED', new CheckRequestMiddleware().execute, 
 
 router.get('/api/v1/reports/PECVERSION', new CheckRequestMiddleware().execute, new ExtractRulesMiddleware().execute, new ReportController().handlePecVersion);
 
+router.get('/api/v1/reports/GUARANTEEDACCESS', new CheckRequestMiddleware().execute, new ExtractRulesMiddleware().execute, new ReportController().handleGuaranteedAccess);
+
+router.get('/api/v1/reports/ORALHEALTH', new CheckRequestMiddleware().execute, new ExtractRulesMiddleware().execute, new ReportController().handleOralHealth);
+
 //#endregion
 
 //#region Database

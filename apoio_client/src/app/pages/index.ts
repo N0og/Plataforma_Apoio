@@ -12,3 +12,4 @@ export { OralCare } from "./OralCare";
 export { Procedures } from "./Procedures";
 export { NotFinished } from "./NotFinished";
 export { VersionPEC } from "./VersionPEC";
+export { GuaranteedAccess } from "./GuaranteedAccess";

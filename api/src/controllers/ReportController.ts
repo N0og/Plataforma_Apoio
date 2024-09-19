@@ -26,7 +26,9 @@ import {
     AccessEASReportService,
     VaccinesReportService,
     ProceduresReportService,
-    VersionPecReportService
+    VersionPecReportService,
+    GuaranteedAccessReportService,
+    OralHealthReportService
 } from "../services";
 
 import {
@@ -35,8 +37,8 @@ import {
 } from "./handlers";
 
 import JSZip, { file } from "jszip";
-import { OralCareReportService } from "../services/OralCareReportService";
-import { NotFinishedReportService } from "../services/NotFinishedReportService";
+import { OralCareReportService } from "../services/reports/OralCareReportService";
+import { NotFinishedReportService } from "../services/reports/NotFinishedReportService";
 
 export default class ReportController {
 
@@ -242,5 +244,13 @@ export default class ReportController {
 
     handlePecVersion = async (req: IReportControllerRequest, res: Response) => {
         this.executeHandler(req, res, VersionPecReportService, `VersoesPEC`)
+    }
+
+    handleGuaranteedAccess = async (req: IReportControllerRequest, res: Response) => {
+        this.executeHandler(req, res, GuaranteedAccessReportService, `GarantiaDeAcesso`)
+    }
+
+    handleOralHealth = async (req: IReportControllerRequest, res: Response) => {
+        this.executeHandler(req, res, OralHealthReportService, `SaudeBucal`)
     }
 }

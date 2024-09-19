@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { LoginService } from "../services/LoginUserService";
-import { RegisterService } from "../services/RegisterUserService";
-import { UpdateUserService } from "../services/UpdateUserService";
-import { UpdatePasswordService } from "../services/UpdatePasswordService";
+import { LoginService } from "../services/auth/LoginUserService";
+import { RegisterService } from "../services/auth/RegisterUserService";
+import { UpdateUserService } from "../services/auth/UpdateUserService";
+import { UpdatePasswordService } from "../services/auth/UpdatePasswordService";
 
 export default class UserController {
     async handleServiceRequest(req: Request, res: Response, serviceClass: any) {

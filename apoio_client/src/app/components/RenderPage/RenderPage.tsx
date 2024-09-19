@@ -12,12 +12,14 @@ import {
     OralCare,
     Procedures,
     NotFinished,
-    VersionPEC
+    VersionPEC,
+    GuaranteedAccess
 } from "../../pages";
 import { Pages, UserActions } from '../../constants/';
 import React, { useEffect } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
+import { OralHealth } from "../../pages/OralHealth";
 
 export function renderPage({ currentPage }: { currentPage: Pages }) {
 
@@ -48,7 +50,9 @@ export function renderPage({ currentPage }: { currentPage: Pages }) {
         [Pages.ORAL_CARE_PAGE]: OralCare,
         [Pages.PROCEDURES]: Procedures,
         [Pages.NOT_FINISHED]: NotFinished,
-        [Pages.VERSION_PEC]: VersionPEC
+        [Pages.VERSION_PEC]: VersionPEC,
+        [Pages.GUARANTEED_ACCESS]: GuaranteedAccess,
+        [Pages.ORAL_HEALTH]: OralHealth
     };
     const PageComponent = pages[currentPage];
     return <PageComponent currentPage={currentPage} />;
