@@ -388,7 +388,7 @@ export class SQL_COMPLETENESS_EAS{
     i.DataAlteracao as "ULTIMA ATUALIZAÇÃO",
     CASE 
         when (i.cpf is null and i.CartaoSUS = '') then 'SEM DOCUMENTO'
-        when i.Cpf is null then 'SEM CPF'
+        when (i.Cpf is null or i.Cpf = '') then 'SEM CPF'
         else 'COM CPF'
     END as "STATUS DOCUMENTO",
     CASE 

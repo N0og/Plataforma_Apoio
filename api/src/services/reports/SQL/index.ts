@@ -11,3 +11,4 @@ export { SQL_PROCEDURES } from "./SQLProcedures";
 export { SQL_NOT_FINISHED } from "./SQLNotFinished";
 export { SQL_PEC_VERSION } from "./SQLPecVersion";
 export { SQL_GUARANTEED_ACCESS } from "./SQLGuaranteedAccess";
+export { SQL_RAAS } from './SQLRAAS'

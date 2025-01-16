@@ -60,6 +60,8 @@ export class SQL_VACCINES{
                 tfvac.dt_nascimento)), ' Dias')
         End As "IDADE NA EXTRAÇÃO",
         Upper(tdi.no_imunobiologico) As "IMUNOBIOLÓGICO",
+		Upper(tfvv.no_lote) as "LOTE",
+        Upper(tfvv.no_fabricante) as "FABRICANTE",
         Upper(tddi.no_dose_imunobiologico) As "DOSE",
         case
             when tdev.no_estrategia_vacinacao is null then 'TRANSCRIÇÃO'

@@ -44,6 +44,8 @@ router.get('/api/v1/reports/GUARANTEEDACCESS', new CheckRequestMiddleware().exec
 
 router.get('/api/v1/reports/ORALHEALTH', new CheckRequestMiddleware().execute, new ExtractRulesMiddleware().execute, new ReportController().handleOralHealth);
 
+router.get('/api/v1/reports/RAAS', new CheckRequestMiddleware().execute, new ExtractRulesMiddleware().execute, new ReportController().handleRaas);
+
 //#endregion
 
 //#region Database

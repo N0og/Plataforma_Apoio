@@ -78,12 +78,12 @@ export default class CheckRequestMiddleware {
             }
         } else {
             // Se order não for "all", converte o parâmetro em um array
-            req.order = Array.isArray(req.query.order) ? req.query.order : [req.query.order as string];
+            req.order = Array.isArray(req.query.order) ? req.query.order as string[] : [req.query.order as string];
         }
 
         // Processa o parâmetro installations se presente na consulta
         if (req.query.installations) {
-            req.installations = Array.isArray(req.query.installations) ? req.query.installations : [req.query.installations as string];
+            req.installations = Array.isArray(req.query.installations) ? req.query.installations as string[] : [req.query.installations as string];
         }
 
         // Passa o controle para o próximo middleware na cadeia

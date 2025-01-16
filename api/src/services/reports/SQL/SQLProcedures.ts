@@ -53,6 +53,86 @@ export class SQL_PROCEDURES {
                 tb_fat_proced_atend tfpa 
             where 
                 ds_filtro_procedimento like '%0301040141%'
+        ), hiv_gest_pai as (
+            select
+                tfpa.co_seq_fat_proced_atend as cod,
+                tfpa.co_dim_profissional,
+                tfpa.co_dim_unidade_saude,
+                tfpa.co_dim_cbo
+            from 
+                tb_fat_proced_atend tfpa 
+            where 
+                ds_filtro_procedimento like '%0214010040%'
+        ), hiv_teste_rapido as (
+            select
+                tfpa.co_seq_fat_proced_atend as cod,
+                tfpa.co_dim_profissional,
+                tfpa.co_dim_unidade_saude,
+                tfpa.co_dim_cbo
+            from 
+                tb_fat_proced_atend tfpa 
+            where 
+                ds_filtro_procedimento like '%0214010058%'
+        ), vdrl_gest as (
+            select
+                tfpa.co_seq_fat_proced_atend as cod,
+                tfpa.co_dim_profissional,
+                tfpa.co_dim_unidade_saude,
+                tfpa.co_dim_cbo
+            from 
+                tb_fat_proced_atend tfpa 
+            where 
+                ds_filtro_procedimento like '%0202031179%'
+        ), sifilis_gest_pai as (
+            select
+                tfpa.co_seq_fat_proced_atend as cod,
+                tfpa.co_dim_profissional,
+                tfpa.co_dim_unidade_saude,
+                tfpa.co_dim_cbo
+            from 
+                tb_fat_proced_atend tfpa 
+            where 
+                ds_filtro_procedimento like '%0214010082%'
+        ), hepatiteB as (
+            select
+                tfpa.co_seq_fat_proced_atend as cod,
+                tfpa.co_dim_profissional,
+                tfpa.co_dim_unidade_saude,
+                tfpa.co_dim_cbo
+            from 
+                tb_fat_proced_atend tfpa 
+            where 
+                ds_filtro_procedimento like '%0214010104%'
+        ), hepatiteC as (
+            select
+                tfpa.co_seq_fat_proced_atend as cod,
+                tfpa.co_dim_profissional,
+                tfpa.co_dim_unidade_saude,
+                tfpa.co_dim_cbo
+            from 
+                tb_fat_proced_atend tfpa 
+            where 
+                ds_filtro_procedimento like '%0214010090%'
+        ), sifilis as (
+            select
+                tfpa.co_seq_fat_proced_atend as cod,
+                tfpa.co_dim_profissional,
+                tfpa.co_dim_unidade_saude,
+                tfpa.co_dim_cbo
+            from 
+                tb_fat_proced_atend tfpa 
+            where 
+                ds_filtro_procedimento like '%0214010074%'
+        ), sars_cov2 as (
+            select
+                tfpa.co_seq_fat_proced_atend as cod,
+                tfpa.co_dim_profissional,
+                tfpa.co_dim_unidade_saude,
+                tfpa.co_dim_cbo
+            from 
+                tb_fat_proced_atend tfpa 
+            where 
+                ds_filtro_procedimento like '%021401016-3%'
         )
             select
                 tdus.nu_cnes as "CNES",
@@ -160,6 +240,87 @@ export class SQL_PROCEDURES {
         }
     }
 
+    private SQL_HIV_GEST_PAI() {
+        return {
+            select: `, count(hiv_gest_pai.cod) as "QTD. TESTE RÁPIDO HIV GEST. PAI."`,
+            from: `
+                left join hiv_gest_pai
+	                on hiv_gest_pai.cod = tfpa.co_seq_fat_proced_atend and hiv_gest_pai.co_dim_unidade_saude = tfpa.co_dim_unidade_saude  and hiv_gest_pai.co_dim_cbo = tfpa.co_dim_cbo and hiv_gest_pai.co_dim_profissional = tfpa.co_dim_profissional 
+            `
+        }
+    }
+
+    private SQL_HIV_TESTE_RAPIDO() {
+        return {
+            select: `, count(hiv_teste_rapido.cod) as "QTD. TESTE RÁPIDO HIV"`,
+            from: `
+                left join hiv_teste_rapido
+	                on hiv_teste_rapido.cod = tfpa.co_seq_fat_proced_atend and hiv_teste_rapido.co_dim_unidade_saude = tfpa.co_dim_unidade_saude  and hiv_teste_rapido.co_dim_cbo = tfpa.co_dim_cbo and hiv_teste_rapido.co_dim_profissional = tfpa.co_dim_profissional 
+            `
+        }
+    }
+
+    private SQL_VDRL_GEST() {
+        return {
+            select: `, count(vdrl_gest.cod) as "QTD. VDRL P/ DETECÇÃO DE SÍFILIS"`,
+            from: `
+                left join vdrl_gest
+	                on vdrl_gest.cod = tfpa.co_seq_fat_proced_atend and vdrl_gest.co_dim_unidade_saude = tfpa.co_dim_unidade_saude  and vdrl_gest.co_dim_cbo = tfpa.co_dim_cbo and vdrl_gest.co_dim_profissional = tfpa.co_dim_profissional 
+            `
+        }
+    }
+
+    private SQL_SIFILIS_GEST_PAI() {
+        return {
+            select: `, count(sifilis_gest_pai.cod) as "QTD. TESTE RÁPIDO SÍFILIS GEST. PAI."`,
+            from: `
+                left join sifilis_gest_pai
+	                on sifilis_gest_pai.cod = tfpa.co_seq_fat_proced_atend and sifilis_gest_pai.co_dim_unidade_saude = tfpa.co_dim_unidade_saude  and sifilis_gest_pai.co_dim_cbo = tfpa.co_dim_cbo and sifilis_gest_pai.co_dim_profissional = tfpa.co_dim_profissional 
+            `
+        }
+    }
+
+    private SQL_HEPATITEB() {
+        return {
+            select: `, count(hepatiteB.cod) as "QTD. TESTE RÁPIDO HEPATITE B."`,
+            from: `
+                left join hepatiteB
+	                on hepatiteB.cod = tfpa.co_seq_fat_proced_atend and hepatiteB.co_dim_unidade_saude = tfpa.co_dim_unidade_saude  and hepatiteB.co_dim_cbo = tfpa.co_dim_cbo and hepatiteB.co_dim_profissional = tfpa.co_dim_profissional 
+            `
+        }
+    }
+
+    private SQL_HEPATITEC() {
+        return {
+            select: `, count(hepatiteC.cod) as "QTD. TESTE RÁPIDO HEPATITE C."`,
+            from: `
+                left join hepatiteC
+	                on hepatiteC.cod = tfpa.co_seq_fat_proced_atend and hepatiteC.co_dim_unidade_saude = tfpa.co_dim_unidade_saude  and hepatiteC.co_dim_cbo = tfpa.co_dim_cbo and hepatiteC.co_dim_profissional = tfpa.co_dim_profissional 
+            `
+        }
+    }
+
+    private SQL_SIFILIS() {
+        return {
+            select: `, count(sifilis.cod) as "QTD. TESTE RÁPIDO SÍFILIS."`,
+            from: `
+                left join sifilis
+	                on sifilis.cod = tfpa.co_seq_fat_proced_atend and sifilis.co_dim_unidade_saude = tfpa.co_dim_unidade_saude  and sifilis.co_dim_cbo = tfpa.co_dim_cbo and sifilis.co_dim_profissional = tfpa.co_dim_profissional 
+            `
+        }
+    }
+
+    private SQL_SARS_COV_2() {
+        return {
+            select: `, count(sars_cov2.cod) as "QTD. TESTE RÁPIDO SARS-COV-2."`,
+            from: `
+                left join sars_cov2
+	                on sars_cov2.cod = tfpa.co_seq_fat_proced_atend and sars_cov2.co_dim_unidade_saude = tfpa.co_dim_unidade_saude  and sars_cov2.co_dim_cbo = tfpa.co_dim_cbo and sars_cov2.co_dim_profissional = tfpa.co_dim_profissional 
+            `
+        }
+    }
+
+
     private SQL_PRE_NATAL() {
         return {
             select: `, count(pnp.cod) as "QTD. PRÉ NATAL PARCEIRO"`,
@@ -219,6 +380,38 @@ export class SQL_PROCEDURES {
 
     getDiu(){
         return this.SQL_DIU()
+    }
+
+    getHIVGP(){
+        return this.SQL_HIV_GEST_PAI()
+    }
+
+    getHIVTR(){
+        return this.SQL_HIV_TESTE_RAPIDO()
+    }
+
+    getVDRL(){
+        return this.SQL_VDRL_GEST()
+    }
+
+    getSifilisGest(){
+        return this.SQL_SIFILIS_GEST_PAI()
+    }
+
+    getHepatiteB(){
+        return this.SQL_HEPATITEB()
+    }
+
+    getHepatiteC(){
+        return this.SQL_HEPATITEC()
+    }
+
+    getSifilis(){
+        return this.SQL_SIFILIS()
+    }
+
+    getSarsCov(){
+        return this.SQL_SARS_COV_2()
     }
 
     setDynamicWhere(clause: string) {

@@ -33,7 +33,15 @@ export class ProceduresReportService{
             rastreamento_mama: SQL.getRastreamentoMama.bind(SQL),
             pre_natal_parceiro: SQL.getPreNatal.bind(SQL),
             visita_domiciliar: SQL.getVisitaDomiciliar.bind(SQL),
-            diu: SQL.getDiu.bind(SQL)
+            diu: SQL.getDiu.bind(SQL),
+            hiv_gest_pai: SQL.getHIVGP.bind(SQL),
+            hiv_teste_rapido: SQL.getHIVTR.bind(SQL),
+            vdrl_gest: SQL.getVDRL.bind(SQL),
+            sifilis_gest_pai: SQL.getSifilisGest.bind(SQL),
+            hepatiteB: SQL.getHepatiteB.bind(SQL),
+            hepatiteC: SQL.getHepatiteC.bind(SQL),
+            sifilis: SQL.getSifilis.bind(SQL),
+            sars_cov2: SQL.getSarsCov.bind(SQL),
         };
 
         if (filtros_params.procedures) {

@@ -801,7 +801,7 @@ export class SQL_PRIORITY_VISITS{
             LEFT JOIN RegionalEstabelecimento re ON (re.Estabelecimento_Id = p.Estabelecimento_Id) 
             LEFT JOIN Regional r ON (r.Id = re.Regional_Id)
         WHERE 
-            p.Ocupacao_Id =  1349 
+            (p.Ocupacao_Id =  1349 or p.Ocupacao_Id = 2581)
             and p.Ativo = 1
     `
 
