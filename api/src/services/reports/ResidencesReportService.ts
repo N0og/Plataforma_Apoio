@@ -9,13 +9,13 @@ import {
 } from "../../utils";
 
 import {
-    SQL_COMPLETENESS_ESUS,
-    SQL_COMPLETENESS_EAS
+    SQL_RESIDENCES_EAS,
+    SQL_RESIDENCES_ESUS
 } from "./SQL";
 import { ExecuteSQL } from "../../database/execute";
 import { ConnectDBs } from "../../database/init";
 
-export class CompletenessReportService {
+export class ResidencesReportService {
 
     DYNAMIC_PARAMETERS: DynamicParameters = new DynamicParameters()
     QUERY_FILTERS: string = ""
@@ -45,21 +45,14 @@ export class CompletenessReportService {
 
             if (filtros_params.micro_area != null) {
                 this.QUERY_FILTERS += `
-                    AND tfci.nu_micro_area = :micro_area
+                    AND tccd.nu_micro_area = :micro_area
                 `
                 this.DYNAMIC_PARAMETERS.Add(":micro_area", filtros_params.micro_area)
             }
 
-            if (filtros_params.profissionalId && filtros_params.profissionalId > 0) {
-                this.QUERY_FILTERS += `
-                    AND tdp.nu_cns = :profissionalId
-                `
-                this.DYNAMIC_PARAMETERS.Add(":profissionalId", filtros_params.profissionalId)
-            }
-
             if (filtros_params.data_inicial != null && filtros_params.data_final != null) {
                 this.QUERY_FILTERS += `
-                    and tdtficha.dt_registro between :data_inicio and :data_final
+                    and tccd.dt_cad_domiciliar between :data_inicio and :data_final
                 `
                 this.DYNAMIC_PARAMETERS.Add('data_inicio', filtros_params.data_inicial);
                 this.DYNAMIC_PARAMETERS.Add('data_final', filtros_params.data_final);
@@ -86,30 +79,22 @@ export class CompletenessReportService {
             if (filtros_params.micro_area != null) {
                 this.QUERY_FILTERS +=
                     `
-                    AND i.MicroArea = :micro_area
+                    AND d.MicroArea = :micro_area
                 `
                 this.DYNAMIC_PARAMETERS.Add(":micro_area", filtros_params.micro_area)
             }
-
-            if (filtros_params.profissionalId && filtros_params.profissionalId > 0) {
-                this.QUERY_FILTERS +=
-                    `
-                    AND p.CartaoSus = :profissionalId
-                `
-                this.DYNAMIC_PARAMETERS.Add(":profissionalId", filtros_params.profissionalId)
-            }
-
+    
             if (filtros_params.data_inicial != null && filtros_params.data_final != null) {
                 this.QUERY_FILTERS +=
                     `
-                    and i.DataAlteracao between :data_inicio and :data_final
+                    and d.DataAlteracao between :data_inicio and :data_final
                 `
                 this.DYNAMIC_PARAMETERS.Add('data_inicio', filtros_params.data_inicial);
                 this.DYNAMIC_PARAMETERS.Add('data_final', filtros_params.data_final);
             }
         }
 
-        const SQL_COMMAND = (this.DBTYPE === 'psql') ? new SQL_COMPLETENESS_ESUS().getBase() + this.QUERY_FILTERS : new SQL_COMPLETENESS_EAS().getBase() + this.QUERY_FILTERS
+        const SQL_COMMAND = (this.DBTYPE === 'psql') ? new SQL_RESIDENCES_ESUS().getBase() + this.QUERY_FILTERS : new SQL_RESIDENCES_EAS().getBase() + this.QUERY_FILTERS
 
         const RESULT_QUERY_ATT_CPF = await ExecuteSQL(this.DBTYPE, SQL_COMMAND, this.DYNAMIC_PARAMETERS, dbClient) as any[];
 
@@ -117,43 +102,7 @@ export class CompletenessReportService {
             return new Error('Falha na consulta.')
         }
 
-        let dataExport: IATT_CPF[] = []
-
-        RESULT_QUERY_ATT_CPF.forEach((row) => {
-
-            //const COMPLETUDE = checkFieldsFCI(row)
-            dataExport.push(
-                {
-                    "CIDADÃO": row.CIDADÃO,
-                    "DOCUMENTO PESSOAL": row["DOCUMENTO PESSOAL"],
-                    "DATA DE NASCIMENTO": row["DATA DE NASCIMENTO"],
-                    "MICRO-ÁREA": row["MICRO-ÁREA"],
-                    "É RESPONSÁVEL FAMILIAR": row["É RESPONSÁVEL FAMILIAR"],
-                    "ULTIMA ATUALIZAÇÃO": row["ULTIMA ATUALIZAÇÃO"],
-                    "STATUS DOCUMENTO": row["STATUS DOCUMENTO"],
-                    "TEMPO SEM ATUALIZAR": row["TEMPO SEM ATUALIZAR"],
-                    "MESES SEM ATUALIZAR": row["MESES SEM ATUALIZAR"],
-                    "DISTRITO": row["DISTRITO"],
-                    "MICRO ÁREA": row["MICRO ÁREA"],
-                    "PROFISSIONAL CADASTRANTE": row["PROFISSIONAL CADASTRANTE"],
-                    "CBO PROFISSIONAL": row["CBO PROFISSIONAL"],
-                    "DESCRIÇÃO CBO": row["DESCRIÇÃO CBO"],
-                    "UNIDADE DE SAÚDE": row["UNIDADE DE SAÚDE"],
-                    "CNES": row.CNES,
-                    "NOME EQUIPE": row["NOME EQUIPE"],
-                    "INE": row.INE,
-                    "TIPO DE EQUIPE": row["TIPO DE EQUIPE"],
-                    "STATUS DE RECUSA": row["STATUS DE RECUSA"],
-                    "FAMÍLIA?": row["FAMILIA?"]
-                }
-                    /*"COMPLETUDE": `${COMPLETUDE['status']}%`,
-                    "ERROS": COMPLETUDE['erros'].join(', ')
-                }*/
-            )
-
-        })
-
-        return dataExport!
+        return RESULT_QUERY_ATT_CPF!
 
     }
 }

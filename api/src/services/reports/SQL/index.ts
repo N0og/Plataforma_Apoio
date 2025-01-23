@@ -1,6 +1,6 @@
 export { SQL_PROD_ACS, SQL_PROD_ACS_DAY} from "./SQLProdACS";
-export { SQL_COMPLETENESS_ESUS } from "./SQLCompleteness";
-export { SQL_COMPLETENESS_EAS } from "./SQLCompleteness";
+export { SQL_COMPLETENESS_ESUS, SQL_COMPLETENESS_EAS } from "./SQLCompleteness";
+export { SQL_RESIDENCES_ESUS, SQL_RESIDENCES_EAS  } from "./SQLResidences";
 export { SQL_DUPLICATES_PEC } from "./SQLDuplicatesPEC";
 export { SQL_PROD_UBS } from "./SQLProdUBS";
 export { SQL_ACCESS_EAS } from "./SQLAccessEAS";

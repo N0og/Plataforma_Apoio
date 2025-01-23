@@ -20,6 +20,7 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { OralHealth } from "../../pages/OralHealth";
+import { Residences } from "../../pages/Residences";
 
 export function renderPage({ currentPage }: { currentPage: Pages }) {
 
@@ -52,7 +53,8 @@ export function renderPage({ currentPage }: { currentPage: Pages }) {
         [Pages.NOT_FINISHED]: NotFinished,
         [Pages.VERSION_PEC]: VersionPEC,
         [Pages.GUARANTEED_ACCESS]: GuaranteedAccess,
-        [Pages.ORAL_HEALTH]: OralHealth
+        [Pages.ORAL_HEALTH]: OralHealth,
+        [Pages.RESIDENCES]: Residences
     };
     const PageComponent = pages[currentPage];
     return <PageComponent currentPage={currentPage} />;

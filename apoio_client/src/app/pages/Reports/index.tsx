@@ -25,6 +25,7 @@ export const Reports = () => {
                 <CardsContainer>
                     <Card icon={'fa-solid fa-hospital'} title="Produtividade UBS" page={Pages.TEAM_PROD_PAGE} />
                     <Card icon={'fa-solid fa-user'} title="Cadastros Individuais" page={Pages.COMPLETENESS} />
+                    <Card icon={'fa-solid fa-house'} title="Cadastros de Domicílios" page={Pages.RESIDENCES} />
                     <Card icon={'fa-solid fa-user-group'} title="Cadastros Duplicados" page={Pages.DUPLICATES_PAGE} />
                     <Card icon={'fa-solid fa-syringe'} title="Imunização" page={Pages.VACCINES} />
                     <Card icon={'fa-solid fa-people-roof'} title="Visitas Prioritárias" page={Pages.PRIORITY_VISITS_PAGE} />

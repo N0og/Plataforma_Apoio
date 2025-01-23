@@ -43,6 +43,7 @@ import {
 import { OralCareReportService } from "../services/reports/OralCareReportService";
 import { NotFinishedReportService } from "../services/reports/NotFinishedReportService";
 import { RaasReportService } from "../services/reports/RaasReportService";
+import { ResidencesReportService } from "../services/reports/ResidencesReportService";
 
 export default class ReportController {
 
@@ -322,5 +323,9 @@ export default class ReportController {
 
     handleRaas = async (req: IReportControllerRequest, res: Response) => {
         this.executeHandler(req, res, RaasReportService, `Raas`)
+    }
+
+    handleResidences = async (req: IReportControllerRequest, res: Response) => {
+        this.executeHandler(req, res, ResidencesReportService, `Domicilios`)
     }
 }

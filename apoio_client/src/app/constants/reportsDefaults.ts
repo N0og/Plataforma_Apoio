@@ -52,7 +52,21 @@ export const PROCEDURES_DEFAULT = {
     'RASTREAMENTO CÂNCER DE MAMA': { value: 'rastreamento_mama', condition: false },
     'PRÉ-NATAL DO PARCEIRO': { value: 'pre_natal_parceiro', condition: false },
     'VISITA DOMICILIAR': { value: 'visita_domiciliar', condition: false },
-    'INSERÇÃO DE DIU': {value: 'diu', condition: false}
+    'INSERÇÃO DE DIU': {value: 'diu', condition: false},
+    'T. RÁPIDO HIV GEST. PAI.': {value: 'hiv_gest_pai', condition:false},
+    'T. RÁPIDO HIV': {value: 'hiv_teste_rapido', condition:false},
+    'VDRL DETECÇÃO DE SÍFILIS': {value: 'vdrl_gest', condition:false},
+    'T. RÁPIDO SÍFILIS GEST. PAI.': {value: 'sifilis_gest_pai', condition:false},
+    'T. RÁPIDO HEPATITE B': {value: 'hepatiteB', condition:false},
+    'T. RÁPIDO HEPATITE C': {value: 'hepatiteC', condition:false},
+    'T. RÁPIDO SÍFILIS': {value: 'sifilis', condition:false},
+    'T. RÁPIDO SARS-COV-2': {value: 'sars_cov2', condition:false},
+
+
+
+
+
+
    
 } 
 

@@ -133,8 +133,9 @@ export interface IATT_CPF {
     "INE"?: string,
     "TIPO DE EQUIPE"?: string,
     "STATUS DE RECUSA"?: string,
-    "COMPLETUDE": string,
-    "ERROS": string 
+    "FAMÍLIA?": string,
+    "COMPLETUDE"?: string,
+    "ERROS"?: string 
 }
 
 export interface ICompletudeFilters{
