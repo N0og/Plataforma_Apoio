@@ -66,7 +66,7 @@ export const DateFilter: React.FC<{
           selectsEnd
           startDate={startDate}
           endDate={endDate}
-          minDate={startDate}
+          minDate={startDate!}
           locale="pt"
           placeholderText="Data Final"
           className="fimSelect"
