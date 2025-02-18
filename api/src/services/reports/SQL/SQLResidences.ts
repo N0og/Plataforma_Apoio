@@ -16,6 +16,16 @@ export class SQL_RESIDENCES_ESUS{
 )
 select 
  			tccd.dt_cad_domiciliar  as "Data Cadastro",
+            case 
+            when (extract(year from justify_interval(now() - tccd.dt_cad_domiciliar))*12+extract(month from justify_interval(now() - tccd.dt_cad_domiciliar))) <= 4 then 'ATÉ 4 MESES'
+            when (extract(year from justify_interval(now() - tccd.dt_cad_domiciliar))*12+extract(month from justify_interval(now() - tccd.dt_cad_domiciliar))) <= 12 then '5 A 12 MESES'
+            when (extract(year from justify_interval(now() - tccd.dt_cad_domiciliar))*12+extract(month from justify_interval(now() - tccd.dt_cad_domiciliar))) <= 24 then '13 A 24 MESES'
+            when (extract(year from justify_interval(now() - tccd.dt_cad_domiciliar))*12+extract(month from justify_interval(now() - tccd.dt_cad_domiciliar))) > 24 then 'MAIS DE 2 ANOS'
+        end as "TEMPO SEM ATUALIZAR",
+        case 
+            when (extract(year from justify_interval(now() - tccd.dt_cad_domiciliar))*12+extract(month from justify_interval(now() - tccd.dt_cad_domiciliar))) = 1 then concat((extract(year from justify_interval(now() - tccd.dt_cad_domiciliar))*12+extract(month from justify_interval(now() - tccd.dt_cad_domiciliar))), ' MÊS')
+            else concat((extract(year from justify_interval(now() - tccd.dt_cad_domiciliar))*12+extract(month from justify_interval(now() - tccd.dt_cad_domiciliar))), ' MESES')
+        end as "MESES SEM ATUALIZAR",
  			tdus.no_unidade_saude  as "Estabelecimento",
  			tdus.nu_cnes as "CNES",
  			tde.no_equipe as "Equipe",
@@ -54,6 +64,16 @@ export class SQL_RESIDENCES_EAS{
     `
     select 
             	d.DataCadastro as "Data Cadastro",
+                CASE 
+            WHEN TIMESTAMPDIFF(MONTH, d.DataAlteracao, NOW()) <= 4 THEN 'ATÉ 4 MESES'
+            WHEN TIMESTAMPDIFF(MONTH, d.DataAlteracao, NOW()) <= 12 THEN '5 A 12 MESES'
+            WHEN TIMESTAMPDIFF(MONTH, d.DataAlteracao, NOW()) <= 24 THEN '13 A 24 MESES'
+            ELSE 'MAIS DE 2 ANOS'
+        END AS "TEMPO SEM ATUALIZAR",
+        CASE 
+            WHEN TIMESTAMPDIFF(MONTH, d.DataAlteracao, NOW()) = 1 THEN CONCAT(TIMESTAMPDIFF(MONTH, d.DataAlteracao, NOW()), ' MÊS')
+            ELSE CONCAT(TIMESTAMPDIFF(MONTH, d.DataAlteracao, NOW()), ' MESES')
+        END AS "MESES SEM ATUALIZAR",
             	e.Nome as "Estabelecimento",
             	e.cnes as "CNES",
             	eq.nome as "Equipe",
